@@ -29,11 +29,8 @@ $method = $uri[4];
 
 //validate jwt token
 $jwt= substr(getallheaders()["Authorization"], 7);
-
-$key = 'example_key';
 $now = new DateTimeImmutable();
 $serverName = "http://localhost/rdma_web";
-
 
 if($jwt){
  
@@ -42,13 +39,23 @@ if($jwt){
         $decoded = JWT::decode($jwt, new key($key,'HS256'));
         
         // if decode fails, it means jwt is invalid
-       if ($decoded->iss !== $serverName || $decoded->exp < $now->getTimestamp())
+       if ($decoded->iss !== $serverName)
         {
             header('HTTP/1.1 401 Unauthorized');
             // show error details
             echo json_encode(array(
-            "error" => "Access denied, incorrect token."
+            "error" => "Access denied, Incorrect Token."
         ));
+
+        if($decoded->exp < $now->getTimestamp())
+        {
+            header('HTTP/1.1 401 Unauthorized');
+            // if token expires, automatically logout
+            echo json_encode(array(
+            "logout" => "Token has expired, please login again."
+            //logout function call from frontend 
+            ));
+        }
             exit;
         }
 
@@ -67,7 +74,6 @@ if($jwt){
     $logger = new Logger('token_validation');
     $logger->pushHandler(new StreamHandler(__DIR__ . '/app.log', Logger::DEBUG));
     $logger->error($e->getMessage());
-
 /*
 // setting error logging to be active
 ini_set("log_errors", TRUE); 

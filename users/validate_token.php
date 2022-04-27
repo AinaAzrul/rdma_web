@@ -7,8 +7,8 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 // required to decode jwt
-include_once './config/core.php';
-require './vendor/autoload.php';
+include_once '../config/core.php';
+require '../vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\KEY;
@@ -37,8 +37,6 @@ if($jwt){
             "message" => "Access granted.",
             "data" => $decoded->data
         ));
-         echo "true";
-         return true;
     }
  
     // if decode fails, it means jwt is invalid
@@ -52,8 +50,6 @@ catch (Exception $e){
         "message" => "Access denied.",
         "error" => $e->getMessage()
     ));
-    echo "false"; 
-    return false;
 }
 
 }

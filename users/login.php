@@ -39,9 +39,6 @@ if($email_exists && password_verify($data->password, $user->password)){
        "iss" => $issuer,
        "data" => array(
            "id" => $user->id,
-           "firstname" => $user->firstname,
-           "lastname" => $user->lastname,
-           "email" => $user->email,
            "role" => $user->role
        )
     );

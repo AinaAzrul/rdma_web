@@ -60,6 +60,7 @@ function create(){
     return false;
 }
  
+
 // emailExists() method will be here
 // check if given email exist in the database
 function emailExists(){

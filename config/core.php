@@ -45,7 +45,7 @@ date_default_timezone_set('Asia/Kuala_Lumpur');
  
 
 // variables used for jwt
-$key = "example_key";
+$key = "33F06AED8BF74357226AB8EDD16F684FC12E2948C5F818BAB1B2C8E56518630D";
 $issued_at = time();
 $expiration_time = $issued_at + (60 * 60); // valid for 1 hour
 $issuer = "http://localhost/rdma_web";
