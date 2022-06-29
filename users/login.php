@@ -1,22 +1,22 @@
 <?php
 
 // required headers
-header("Access-Control-Allow-Origin: http://localhost/rdma_web/");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 //both of these include_once will be ok if deleted 
-include_once '../config/core.php';
+// include_once '../config/core.php';
 
 include_once 'user.php';
 require '../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 
 // get database connection
-$databas = new Database();
-$db = $databas->getConnection();
+$database = new Database();
+$db = $database->getConnection();
  
 // instantiate user object
 $user = new User($db);
@@ -50,6 +50,7 @@ if($email_exists && password_verify($data->password, $user->password)){
     $jwt = JWT::encode($token, $key, 'HS256');
     echo json_encode(
             array(
+                "status" => http_response_code(200),
                 "message" => "Successful login.",
                 "jwt" => $jwt
             )

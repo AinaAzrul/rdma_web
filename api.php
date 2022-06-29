@@ -1,9 +1,9 @@
 <?php
 // required headers
-header("Access-Control-Allow-Origin: http://localhost/rdma_web/");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, POST, DELETE, OPTIONS");
+header("Access-Control-Max-Age: 86400");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 require_once('vendor/autoload.php');
@@ -23,91 +23,98 @@ $logger->warning('This is a log warning! ^_^ ');
 $logger->error('This is a log error! ^_^ ');*/
 
 //parse URL to get the mthod name
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = explode( '/', $uri );
-$method = $uri[4];
+// $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// $uri = explode( '/', $uri );
+// $method = $uri[4];
+
+// Get HTTP POST XML contents
+$input = json_decode(file_get_contents("php://input"));
 
 //validate jwt token
-$jwt= substr(getallheaders()["Authorization"], 7);
-$now = new DateTimeImmutable();
-$serverName = "http://localhost/rdma_web";
+// $jwt= substr(getallheaders()["Authorization"], 7);
+// $now = new DateTimeImmutable();
+// $serverName = "http://localhost/rdma_web";
 
-if($jwt){
+// if($jwt){
  
-    try {
-        // decode jwt
-        $decoded = JWT::decode($jwt, new key($key,'HS256'));
+//     try {
+//         // decode jwt
+//         $decoded = JWT::decode($jwt, new key($key,'HS256'));
         
-        // if decode fails, it means jwt is invalid
-       if ($decoded->iss !== $serverName)
-        {
-            header('HTTP/1.1 401 Unauthorized');
-            // show error details
-            echo json_encode(array(
-            "error" => "Access denied, Incorrect Token."
-        ));
+//         // if decode fails, it means jwt is invalid
+//        if ($decoded->iss !== $serverName)
+//         {
+//             header('HTTP/1.1 401 Unauthorized');
+//             // show error details
+//             echo json_encode(array(
+//             "error" => "Access denied, Incorrect Token."
+//         ));
 
-        if($decoded->exp < $now->getTimestamp())
-        {
-            header('HTTP/1.1 401 Unauthorized');
-            // if token expires, automatically logout
-            echo json_encode(array(
-            "logout" => "Token has expired, please login again."
-            //logout function call from frontend 
-            ));
-        }
-            exit;
-        }
+//         if($decoded->exp < $now->getTimestamp())
+//         {
+//             header('HTTP/1.1 401 Unauthorized');
+//             // if token expires, automatically logout
+//             echo json_encode(array(
+//             "logout" => "Token has expired, please login again."
+//             //logout function call from frontend 
+//             ));
+//         }
+//             exit;
+//         }
 
-        // set response code
-        http_response_code(200);
  
-        // show user details
-        echo json_encode(array(
-            "message" => "Access granted."
-        ));
-        $result = true;
+//         // show user details
+//         echo json_encode(array(
+//             "status" => http_response_code(200),
+//             "message" => "Access granted."
+//         ));
+//         $result = true;
 
-    }catch (Exception $e){
+//     }catch (Exception $e){
 
-    //add logging
-    $logger = new Logger('token_validation');
-    $logger->pushHandler(new StreamHandler(__DIR__ . '/app.log', Logger::DEBUG));
-    $logger->error($e->getMessage());
-/*
-// setting error logging to be active
-ini_set("log_errors", TRUE); 
+//     //add logging
+//     $logger = new Logger('token_validation');
+//     $logger->pushHandler(new StreamHandler(__DIR__ . '/app.log', Logger::DEBUG));
+//     $logger->error($e->getMessage());
+// /*
+// // setting error logging to be active
+// ini_set("log_errors", TRUE); 
   
-// setting the logging file in php.ini
-ini_set('error_log', $log_file);
+// // setting the logging file in php.ini
+// ini_set('error_log', $log_file);
   
-// logging the error
-error_log($error_message);
-    */
+// // logging the error
+// error_log($error_message);
+//     */
     
-    // set response code
-    http_response_code(401);
-    // tell the user access denied  & show error message
-    echo json_encode(array(
-        "message" => "Access denied.",
-        "error" => $e->getMessage()
-    ));
-    $result = false; 
-}
-}else{
- 
-    // set response code
-    http_response_code(401);
- 
-    // tell the user access denied
-    echo json_encode(array("message" => "Access denied."));
-    $result = false;
-}
+//     // set response code
+//     http_response_code(401);
+//     // tell the user access denied  & show error message
+//     echo json_encode(array(
+//         "message" => "Access denied.",
+//         "error" => $e->getMessage()
+//     ));
+//     $result = false; 
+// }
 
-if ($result == true){
+// }else{
+ 
+//     // set response code
+//     http_response_code(401);
+ 
+//     // tell the user access denied
+//     echo json_encode(array("message" => "Access denied."));
+//     $result = false;
+// }if ($result == true)
+
+if (true){
     
 //execute method
-switch($method){
+switch($input->{"method"}){
+
+    case "login"://need to put validation method in each case.
+        include 'users/login.php';
+    break;
 
     //for user class
     case "get_user":
