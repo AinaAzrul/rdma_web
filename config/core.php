@@ -5,12 +5,15 @@
 define("PROJECT_ROOT_PATH", __DIR__ ."/../" );
  
 // include main configuration file
-//so other files dint need to declare database.php
+//so other files dont need to declare database.php
 include __DIR__ . "/database.php"; 
 
 
 // include the user file
 require_once PROJECT_ROOT_PATH . "/users/user.php";
+
+// include the user file
+require_once PROJECT_ROOT_PATH . "/users/login.php";
 
 // include the master file
 require_once PROJECT_ROOT_PATH . "/master/master.php";

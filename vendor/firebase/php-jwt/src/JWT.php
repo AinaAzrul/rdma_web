@@ -224,6 +224,7 @@ class JWT
         switch ($function) {
             case 'hash_hmac':
                 if (!is_string($key)) {
+                    
                     throw new InvalidArgumentException('key must be a string when using hmac');
                 }
                 return \hash_hmac($algorithm, $msg, $key, true);

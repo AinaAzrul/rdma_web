@@ -55,7 +55,9 @@ if($num>0){
     http_response_code(200);
   
     // show products data in json format
-    echo json_encode($masters_arr);
+    echo json_encode(array(
+        "status" =>http_response_code(200),
+        "data"=>$masters_arr));
 }
   
 // no products found will be here

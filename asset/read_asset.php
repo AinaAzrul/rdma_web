@@ -9,7 +9,6 @@ include_once 'asset.php';*/
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 $strErrorDesc = '';
 
-if (strtoupper($requestMethod) == 'GET'){
 // instantiate database and asset object
 $database = new Database();
 $db = $database->getConnection();
@@ -45,17 +44,29 @@ if($num>0){
         $Company_name = $arr[2];
 
         //display the values
+        // $asset_item=array(
+        //     "Asset_no" => $Asset_no,
+        //     "Asset_desc" => html_entity_decode($Asset_desc),
+        //     "Category" => $Category,
+        //     "Location" => $Location,
+        //     "CalibDate_start" => $CalibDate_start,
+        //     "CalibDate_end" => $CalibDate_end,
+        //     "Company_name" => $Company_name,
+        // );
+
         $asset_item=array(
             "Asset_no" => $Asset_no,
             "Asset_desc" => html_entity_decode($Asset_desc),
             "Category" => $Category,
             "Location" => $Location,
-            "CalibDate_start" => $CalibDate_start,
-            "CalibDate_end" => $CalibDate_end,
-            "Company_name" => $Company_name,
+            "First_calib" => $First_calib,
+            "Second_calib" => $Second_calib,
+            "Third_calib" => $Third_calib,
         );
   
         array_push($assets_arr["records"], $asset_item);
+
+
     }
   
 }
@@ -68,20 +79,21 @@ else{
          array("message" => "No assets found."));
     return false;
 }
-}
+
   
-else{
-    $strErrorDesc = 'Method not supported';
-    $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
-}
+// else{
+//     $strErrorDesc = 'Method not supported';
+//     $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+// }
 
 // send output
 if (!$strErrorDesc) {
-    // set response code - 200 OK
-    http_response_code(200);
   
     // show assets data in json format
-    echo json_encode($assets_arr);
+    echo json_encode(array(
+        "status" =>http_response_code(200),
+        "data"=>$assets_arr));
+
 } else {
     // set response code - 422 unprocessable Entity 
     http_response_code(422);

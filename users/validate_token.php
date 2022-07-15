@@ -1,25 +1,27 @@
 <?php
 // required headers
-header("Access-Control-Allow-Origin: http://localhost/rdma_web/");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+// header("Access-Control-Allow-Origin: http://localhost/rdma_web/");
+// header("Content-Type: application/json; charset=UTF-8");
+// header("Access-Control-Allow-Methods: POST");
+// header("Access-Control-Max-Age: 3600");
+// header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 // required to decode jwt
-include_once '../config/core.php';
+// include_once '../config/core.php';
 require '../vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\KEY;
 
+function authToken(){
+    $key = "33F06AED8BF74357226AB8EDD16F684FC12E2948C5F818BAB1B2C8E56518630D";
 // retrieve gieve jwt here
 // get posted data
-//$data = json_decode(file_get_contents("php://input"));
+$data = json_decode(file_get_contents("php://input"));
  
 // get jwt
-//$jwt=isset($data->jwt) ? $data->jwt : "";
-$jwt= substr(getallheaders()["Authorization"], 7);
+$jwt=isset($data->token) ? $data->token : "";
+// $jwt= substr(getallheaders()["Authorization"], 7);
 
 // if jwt is not empty
 if($jwt){
@@ -64,5 +66,5 @@ else{
     echo json_encode(array("message" => "Access denied."));
     return false;
 }
-
+}
 ?>

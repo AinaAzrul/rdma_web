@@ -14,8 +14,19 @@ use \Firebase\JWT\KEY;
  
 // files needed to connect to database
 /*include_once '../config/database.php';*/
-//include_once 'user.php';
+include_once 'user.php';
  
+function  update_user(){
+
+    // set your default time-zone
+date_default_timezone_set('Asia/Kuala_Lumpur');
+
+// variables used for jwt
+$key = "33F06AED8BF74357226AB8EDD16F684FC12E2948C5F818BAB1B2C8E56518630D";
+$issued_at = time();
+$expiration_time = $issued_at + (60 * 60); // valid for 1 hour
+$issuer = "http://localhost/rdma_web";
+
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
@@ -27,8 +38,8 @@ $user = new User($db);
 $data = json_decode(file_get_contents("php://input"));
  
 // get jwt
-//$jwt=isset($data->jwt) ? $data->jwt : "";
-$jwt = substr(getallheaders()["Authorization"], 7);
+$jwt=isset($data->token) ? $data->token : "";
+// $jwt = substr(getallheaders()["Authorization"], 7);
 
 // decode jwt here
 // if jwt is not empty
@@ -39,15 +50,15 @@ if($jwt){
         
         // decode jwt
         $decoded = JWT::decode($jwt, new Key($key,'HS256'));
-        
+        $userData= $data->data;
         // set user property values here
         // set user property values
-$user->firstname = $data->firstname;
-$user->lastname = $data->lastname;
-$user->email = $data->email;
-$user->password = $data->password;
-$user->role = $data->role;
-$user->id = $data->id;
+$user->firstname = $userData->firstname;
+$user->lastname = $userData->lastname;
+$user->email = $userData->email;
+$user->password = $userData->password;
+$user->role = $userData->role;
+$user->id = $userData->id;
  
 // update user will be here
 // update the user record
@@ -72,8 +83,8 @@ $token = array(
  // response in json format
  echo json_encode(
          array(
-             "message" => "User was updated.",
-             "jwt" => $jwt
+             "status" =>http_response_code(200),
+             "data" => $userData
         )
      );
 
@@ -92,9 +103,10 @@ else{
     }catch (Exception $e){// catch failed decoding will be here
  
 
-    $logger = new Logger('update');
-    $logger->pushHandler(new StreamHandler(__DIR__ . '/app.log', Logger::DEBUG));
-    $logger->error($e->getMessage());
+    // $logger = new Logger('update');
+    // $logger->pushHandler(new StreamHandler(__DIR__ . '/app.log', Logger::DEBUG));
+    // $logger->error();
+    error_log($e->getMessage());
 
     // set response code
     http_response_code(401);
@@ -111,6 +123,6 @@ else{
     http_response_code(401);
  
     // tell the user access denied
-    echo json_encode(array("message" => "Access denied."));
-}
+    echo json_encode(array("message" => "Access denied2."));
+}}
 ?>

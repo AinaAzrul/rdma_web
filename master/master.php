@@ -26,12 +26,17 @@ class Master{
 function read(){
   
     // select all query
+//     $query = "SELECT
+//     m.Entry_id, a.Asset_no as Asset_no, m.Asset_desc, m.Taken_by, m.Date_taken, m.Return_by, m.Date_return, m.Remarks, a.Category as Category
+//      FROM   " . $this->table_name . " m
+//  LEFT JOIN asset_list a ON m.Asset_no = a.Asset_no
+// ORDER BY
+//     m.Entry_id ASC";
+
     $query = "SELECT
-    m.Entry_id, a.Asset_no as Asset_no, m.Asset_desc, m.Taken_by, m.Date_taken, m.Return_by, m.Date_return, m.Remarks, a.Category as Category
-     FROM   " . $this->table_name . " m
- LEFT JOIN asset_list a ON m.Asset_no = a.Asset_no
-ORDER BY
-    m.Entry_id ASC";
+    Entry_id, Asset_no, Asset_desc, Taken_by, Date_taken, Return_by, Date_return, Remarks, Category
+     FROM   " . $this->table_name . " ORDER BY Entry_id DESC";
+
 
     // prepare query statement
     $stmt = $this->conn->prepare($query);
