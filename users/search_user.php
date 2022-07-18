@@ -7,7 +7,8 @@ header("Content-Type: application/json; charset=UTF-8");
 // include database and object files
 /*include_once '../config/database.php';
 include_once 'user.php';*/
-  
+
+function search_user(){ //18/7
 // instantiate database and user object
 $database = new Database();
 $db = $database->getConnection();
@@ -66,5 +67,6 @@ else{
     echo json_encode(
         array("message" => "No user item found.")
     );
+}
 }
 ?>

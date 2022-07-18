@@ -180,16 +180,16 @@ ORDER BY
 function delete(){
   
     // delete query
-    $query = "DELETE FROM " . $this->table_name . " WHERE firstname = ?";
+    $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
   
     // sanitize
-    $this->firstname=htmlspecialchars(strip_tags($this->firstname));
+    $this->id=htmlspecialchars(strip_tags($this->id));
   
     // bind id of record to delete
-    $stmt->bindParam(1, $this->firstname);
+    $stmt->bindParam(1, $this->id);
   
     // execute query
     $stmt->execute();

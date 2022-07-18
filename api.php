@@ -5,6 +5,9 @@ require_once('users/validate_token.php');
 require_once('users/login.php');
 require_once('users/get_user.php');
 require_once('users/update_user.php');
+require_once('users/delete_user.php');
+require_once('users/create_user.php');
+require_once('users/search_user.php');
 // require_once('master/master.php');
 // require_once('asset/asset.php');
 
@@ -27,7 +30,7 @@ class TestPoint{
     public function __construct(){
     //    $database = new Database();
     //     $db = $database->getConnection();
-        // $this->user = new authUser();
+    //       $this->user = new authUser();
     //     $this->asset = new Asset($db);
     //     $this->master = new Master($db);
         
@@ -39,6 +42,17 @@ class TestPoint{
     
     $input = json_decode(file_get_contents("php://input"));
     $meth = $input->method;
+    $jwt = isset($input->token) ? $input->token : "";
+
+    
+    // if ($this->authGuard()==401){
+    //     echo authToken();
+    //     error_log("false");
+    //     login();
+    // }
+    // else {
+    //     error_log("valid token");
+    // }
 
     //Routes
     switch($meth){
@@ -48,28 +62,69 @@ class TestPoint{
         break;
 
         case "validate_token":
-            authToken();
+            $token= authToken();
+            echo $token;
          break;
 
         //for user class
         case "get_user":
-            get_user();
-            
-
-            // if(authToken()){
-            //     return get_user();
-            // }
-            
+            if ($this->authGuard()==200){
+                get_user();
+            }
         break;
 
         case "update_user":
             update_user();
          break;
 
+         case "delete_user":
+            delete_user();
+         break;
+
+         case "create_user":
+            create_user();
+         break;
+
+         case "search_user":
+            search_user();
+         break;
+
+
         default:
         break;
-    }
+    
 }
+
+// if($jwt){}
+
+// else{
+//     login($input);
+// }
+}
+
+
+public function authGuard() {
+    // Auth token
+    $result = authToken();
+    $try = json_decode($result,true);
+    return $try['status'];
+    // $result = 44;
+    // echo json_decode(var_dump($result)); 
+    // if($result == false){
+    //     error_log("Invalid token");
+    //     return false;
+    // }
+    // else {
+    //     error_log("valid token");
+    //     return true;
+    // }
+    
+}
+
+
+
+
+
 }
 
 

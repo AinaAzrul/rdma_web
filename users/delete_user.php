@@ -16,6 +16,7 @@ require '../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\KEY;
 
+function delete_user(){
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
@@ -27,7 +28,7 @@ $user = new User($db);
 $data = json_decode(file_get_contents("php://input"));
   
 // set user id to be deleted
-$user->firstname = $data->firstname;
+$user->id = $data->data->id;
   
 // delete the user
 if($user->delete()==true){
@@ -35,8 +36,13 @@ if($user->delete()==true){
     // set response code - 200 ok
     http_response_code(200);
   
-    // tell the user
-    echo json_encode(array("message" => "user item was deleted."));
+    // response in json format
+    echo json_encode(
+    array(
+        "status" =>http_response_code(200),
+        "data" => "user item was deleted."
+   )
+);
 }
   
 // if unable to delete the user
@@ -44,9 +50,14 @@ else{
   
     // set response code - 503 service unavailable
     http_response_code(503);
-  
-    // tell the user
-    echo json_encode(array("message" => "Unable to delete user."));
+    
+    // response in json format
+     echo json_encode(
+    array(
+        "status" =>http_response_code(503),
+        "data" => "Unable to delete user."
+   )
+);
 }
-
+}
 ?>

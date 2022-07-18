@@ -11,6 +11,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 //include_once '../config/database.php';
 //include_once 'user.php';
  
+function create_user(){
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
@@ -21,13 +22,14 @@ $user = new User($db);
 // submitted data will be here
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
- 
+
+$dataUser = $data->data; 
 // set product property values
-$user->firstname = $data->firstname;
-$user->lastname = $data->lastname;
-$user->email = $data->email;
-$user->password = $data->password;
-$user->role = $data->role;
+$user->firstname = $dataUser->firstname;
+$user->lastname = $dataUser->lastname;
+$user->email = $dataUser->email;
+$user->password = $dataUser->password;
+$user->role = $dataUser->role;
  
 // use the create() method here
 // create the user
@@ -40,9 +42,14 @@ if(
  
     // set response code
     http_response_code(200);
- 
-    // display message: user was created
-    echo json_encode(array("message" => "User was created."));
+
+    // response in json format
+    echo json_encode(
+        array(
+            "status" =>http_response_code(200),
+            "data" => "User was created."
+        )
+        );
 }
  
 // message if unable to create user
@@ -50,8 +57,14 @@ else{
  
     // set response code
     http_response_code(400);
- 
-    // display message: unable to create user
-    echo json_encode(array("message" => "Unable to create user."));
+
+    // response in json format
+    echo json_encode(
+        array(
+            "status" =>http_response_code(400),
+            "data" => "Unable to create user."
+       )
+    );
+}
 }
 ?>

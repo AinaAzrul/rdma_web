@@ -31,11 +31,10 @@ if($jwt){
         // decode jwt
         $decoded = JWT::decode($jwt, new key($key,'HS256'));
         
-        // set response code
-        http_response_code(200);
- 
-        // show user details
-        echo json_encode(array(
+        // show user details 
+        //omit echo
+        return json_encode(array(
+            "status" =>http_response_code(200),
             "message" => "Access granted.",
             "data" => $decoded->data
         ));
@@ -45,13 +44,16 @@ if($jwt){
 catch (Exception $e){
  
     // set response code
-    http_response_code(401);
+    // http_response_code(401);
  
     // tell the user access denied  & show error message
-    echo json_encode(array(
+     return json_encode(array(
+        "status" => 401,
         "message" => "Access denied.",
         "error" => $e->getMessage()
     ));
+    // return false;
+
 }
 
 }
@@ -63,8 +65,8 @@ else{
     http_response_code(401);
  
     // tell the user access denied
-    echo json_encode(array("message" => "Access denied."));
-    return false;
+    return json_encode(array("message" => "Empty token"));
+    // return false;
 }
 }
 ?>
