@@ -12,6 +12,8 @@ include_once '../config/database.php';
 // instantiate master object
 include_once 'master.php';
   */
+
+function create_master(){
 $database = new Database();
 $db = $database->getConnection();
   
@@ -23,22 +25,24 @@ $data = json_decode(file_get_contents("php://input"));
 
 // make sure data is not empty
 if(
-    !empty($data->Asset_no) &&
-    !empty($data->Asset_desc) &&
-    !empty($data->Taken_by) &&
-    !empty($data->Date_taken) 
+    !empty($data->data->Asset_no) &&
+    !empty($data->data->Asset_desc) &&
+    !empty($data->data->Taken_by) &&
+    !empty($data->data->Date_taken) 
    
 ){
+
+    $u= $data->data;
   
     // set master property values
-    $master->Asset_no = $data->Asset_no;
-    $master->Asset_desc = $data->Asset_desc;
-    $master->Taken_by = $data->Taken_by;
-    $master->Date_taken = $data->Date_taken;
-    $master->Return_by = $data->Return_by;
-    $master->Date_return = $data->Date_return;
-    $master->Remarks = $data->Remarks;
-    $master->Category= $data->Category;
+    $master->Asset_no = $u->Asset_no;
+    $master->Asset_desc = $u->Asset_desc;
+    $master->Taken_by = $u->Taken_by;
+    $master->Date_taken = $u->Date_taken;
+    $master->Return_by = $u->Return_by;
+    $master->Date_return = $u->Date_return;
+    $master->Remarks = $u->Remarks;
+    $master->Category= $u->Category;
 
     // create the master
     if($master->create()){
@@ -68,5 +72,6 @@ else{
   
     // tell the user
     echo json_encode(array("message" => "Unable to create master. Data is incomplete."));
+}
 }
 ?>

@@ -1,14 +1,21 @@
 <?php
 
 require_once('vendor/autoload.php');
+
+//User component
 require_once('users/validate_token.php');
 require_once('users/login.php');
 require_once('users/get_user.php');
 require_once('users/update_user.php');
 require_once('users/delete_user.php');
 require_once('users/create_user.php');
-require_once('users/search_user.php');
-// require_once('master/master.php');
+
+//master component
+require_once('master/read_master.php');
+require_once('master/create_master.php');
+
+
+
 // require_once('asset/asset.php');
 
 require __DIR__ . "/config/core.php";
@@ -62,14 +69,16 @@ class TestPoint{
         break;
 
         case "validate_token":
-            $token= authToken();
-            echo $token;
+             echo authToken();
          break;
 
         //for user class
         case "get_user":
             if ($this->authGuard()==200){
                 get_user();
+            }
+            else{
+                echo authToken();
             }
         break;
 
@@ -85,9 +94,16 @@ class TestPoint{
             create_user();
          break;
 
-         case "search_user":
-            search_user();
+         //for master class
+         case "read_master":
+            read_master();
          break;
+
+         case "create_master":
+            create_master();
+         break;
+
+
 
 
         default:

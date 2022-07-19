@@ -7,7 +7,8 @@ header("Content-Type: application/json; charset=UTF-8");
 // include database and object files
 //include_once '../config/database.php';
 //include_once 'master.php';
-  
+
+function read_master(){
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
@@ -70,4 +71,5 @@ else{
     echo json_encode(
         array("message" => "No products found.")
     );
+}
 }
