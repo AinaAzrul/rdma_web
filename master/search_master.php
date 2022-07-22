@@ -8,7 +8,7 @@ header("Content-Type: application/json; charset=UTF-8");
 /*include_once '../config/core.php';
 include_once '../config/database.php';
 include_once 'master.php';*/
-  
+
 // instantiate database and master object
 $database = new Database();
 $db = $database->getConnection();

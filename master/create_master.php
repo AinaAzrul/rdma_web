@@ -50,7 +50,13 @@ if(
         http_response_code(201);
   
         // tell the user
-        echo json_encode(array("message" => "master item was created."));
+        echo json_encode(
+            array(
+                "status" =>http_response_code(201),
+                "data" => $master
+           )
+            );
+
     }
   
     // if unable to create the master, tell the user

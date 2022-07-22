@@ -9,7 +9,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // include database and object file
 /*include_once '../config/database.php';
 include_once 'master.php';*/
-  
+
+function delete_master(){
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
@@ -19,29 +20,38 @@ $master = new Master($db);
   
 // get master id
 $data = json_decode(file_get_contents("php://input"));
-  
+$dataMstr = $data->data; 
+
 // set master id to be deleted
-$master->Entry_id = $data->Entry_id;
+$master->Entry_id = $dataMstr->Entry_id;
   
 // delete the master
 
 if($master->delete()==true){
   
-    // set response code - 200 ok
-    http_response_code(200);
-  
-    // tell the user
-    echo json_encode(array("message" => "master item was deleted."));
+    // response in json format
+    echo json_encode(
+    array(
+        "status" =>http_response_code(200),
+        "data" => $master
+   )
+    );
+
 }
   
 // if unable to delete the master
 else{
   
-    // set response code - 503 service unavailable
-    http_response_code(503);
-  
-    // tell the user
-    echo json_encode(array("message" => "Unable to delete master."));
-}
+    // response in json format
+    echo json_encode(
+        array(
+            "status" =>http_response_code(503),
+            "data" => $master,
+            "message" => "Unable to delete master."
+       )
+    );
 
+        
+}
+}
 ?>

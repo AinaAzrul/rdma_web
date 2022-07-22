@@ -6,6 +6,7 @@ header("Content-Type: application/json; charset=UTF-8");
 // include database and object files
 /*include_once '../config/database.php';
 include_once 'asset.php';*/
+function read_asset(){
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 $strErrorDesc = '';
 
@@ -66,8 +67,8 @@ if($num>0){
   
         array_push($assets_arr["records"], $asset_item);
 
-
     }
+
   
 }
 else{
@@ -101,5 +102,6 @@ if (!$strErrorDesc) {
     // tell the user no assets found
     echo json_encode(
         array("error" => "Method not supported."));
+}
 }
 ?>

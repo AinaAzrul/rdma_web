@@ -9,7 +9,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // include database and object files
 /*include_once '../config/database.php';
 include_once 'master.php';*/
-  
+
+function update_master(){
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
@@ -21,35 +22,41 @@ $master = new Master($db);
 $data = json_decode(file_get_contents("php://input"));
   
 // set ID property of master to be edited
-$master->Entry_id = $data->Entry_id;
+$master->Entry_id = $data->data->Entry_id;
+
+$dataMstr = $data->data;
   
 // set master property values
-$master->Asset_no = $data->Asset_no;
-$master->Asset_desc = $data->Asset_desc;
-$master->Taken_by = $data->Taken_by;
-$master->Date_taken = $data->Date_taken;
-$master->Return_by = $data->Return_by;
-$master->Date_return = $data->Date_return;
-$master->Remarks = $data->Remarks;
-$master->Category = $data->Category;
+$master->Asset_no = $dataMstr->Asset_no;
+$master->Asset_desc = $dataMstr->Asset_desc;
+$master->Taken_by = $dataMstr->Taken_by;
+$master->Date_taken = $dataMstr->Date_taken;
+$master->Return_by = $dataMstr->Return_by;
+$master->Date_return = $dataMstr->Date_return;
+$master->Remarks = $dataMstr->Remarks;
+$master->Category = $dataMstr->Category;
 
 // update the master
 if($master->update()){
-  
-    // set response code - 200 ok
-    http_response_code(200);
-  
-    // tell the user
-    echo json_encode(array("message" => "master was updated."));
+    // response in json format
+ echo json_encode(
+    array(
+        "status" =>http_response_code(200),
+        "data" => $master
+   )
+    );
+
 }
   
 // if unable to update the master, tell the user
 else{
   
-    // set response code - 503 service unavailable
-    http_response_code(503);
-  
-    // tell the user
-    echo json_encode(array("message" => "Unable to update master."));
+    echo json_encode(
+        array(
+            "status" =>http_response_code(503),
+            "data" => $master
+       )
+        );
+}
 }
 ?>

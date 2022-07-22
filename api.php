@@ -12,8 +12,12 @@ require_once('users/create_user.php');
 
 //master component
 require_once('master/read_master.php');
+require_once('master/update_master.php');
 require_once('master/create_master.php');
+require_once('master/delete_master.php');
 
+//Asset component
+require_once('asset/read_asset.php');
 
 
 // require_once('asset/asset.php');
@@ -103,19 +107,24 @@ class TestPoint{
             create_master();
          break;
 
+         case "update_master":
+            update_master();
+         break;
 
+         case "delete_master":
+            delete_master();
+         break;
 
+         //for Asset class
+         case "read_asset";
+            read_asset();
+         break;
 
         default:
         break;
     
 }
 
-// if($jwt){}
-
-// else{
-//     login($input);
-// }
 }
 
 
