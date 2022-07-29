@@ -12,7 +12,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
   
 // instantiate asset object
 //include_once 'asset.php';
-  
+function create_asset(){
 $database = new Database();
 $db = $database->getConnection();
   
@@ -21,39 +21,42 @@ $asset = new Asset($db);
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
 
+$newData = $data->data;
 //implode the data receive from user input into one array
-$dateStart = $data->CalibDate_start;
-$dateEnd = $data->CalibDate_end;
-$compName = $data->Company_name;
-$arr = array($dateStart,$dateEnd,$compName);
-$First_calib = implode(',', $arr);
+// $dateStart = $data->CalibDate_start;ws
+// $dateEnd = $data->CalibDate_end;
+// $compName = $data->Company_name;
+// $arr = array($dateStart,$dateEnd,$compName);
+// $First_calib = implode(',', $arr);
 
 
 // make sure data is not empty
 if(
-    !empty($data->Asset_no) &&
-    !empty($data->Asset_desc) 
+    !empty($newData->Asset_no) &&
+    !empty($newData->Asset_desc) 
 ){
   
     // set asset property values
-    $asset->Asset_no = $data->Asset_no;
-    $asset->Asset_desc = $data->Asset_desc;
-    $asset->Category = $data->Category;
-    $asset->Location = $data->Location;
-    $asset->CalibDate_start = $data->CalibDate_start;
-    $asset->CalibDate_end = $data->CalibDate_end;
-    $asset->Company_name = $data->Company_name;
-    $asset->First_calib = $First_calib;
+    $asset->Asset_no = $newData->Asset_no;
+    $asset->Asset_desc = $newData->Asset_desc;
+    $asset->Category = $newData->Category;
+    $asset->Calib_no = $newData->Calib_no;
+    $asset->Location = $newData->Location;
+    $asset->Start_date = $newData->Start_date;
+    $asset->End_date = $newData->End_date;
+    $asset->Company_name = $newData->Company_name;
     
   
     // create the asset
     if($asset->create()){
   
-        // set response code - 201 created
-        http_response_code(201);
-  
-        // tell the user
-        echo json_encode(array("message" => "asset was created."));
+        // // tell the user
+        // echo json_encode(array("message" => "asset was created."));
+        
+        // show products data in json format
+        echo json_encode(array(
+        "status" =>http_response_code(200),
+        "data"=>$asset));
     }
   
     // if unable to create the asset, tell the user
@@ -75,5 +78,6 @@ else{
   
     // tell the user
     echo json_encode(array("message" => "Unable to create asset. Data is incomplete."));
+}
 }
 ?>

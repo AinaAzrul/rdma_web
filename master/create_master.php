@@ -26,9 +26,9 @@ $data = json_decode(file_get_contents("php://input"));
 // make sure data is not empty
 if(
     !empty($data->data->Asset_no) &&
-    !empty($data->data->Asset_desc) &&
-    !empty($data->data->Taken_by) &&
-    !empty($data->data->Date_taken) 
+    !empty($data->data->Asset_desc) 
+    // && !empty($data->data->Taken_by) &&
+    // !empty($data->data->Date_taken) 
    
 ){
 

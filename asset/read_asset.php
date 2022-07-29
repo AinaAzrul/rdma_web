@@ -38,32 +38,33 @@ if($num>0){
         extract($row);
 
         //explode the values in First_calib array into separate values
-        $message = $row['First_calib'];
-        $arr = explode(",", $message);
-        $CalibDate_start = $arr[0];
-        $CalibDate_end = $arr[1];
-        $Company_name = $arr[2];
+        // $message = $row['First_calib'];
+        // $arr = explode(",", $message);
+        // $CalibDate_start = $arr[0];
+        // $CalibDate_end = $arr[1];
+        // $Company_name = $arr[2];
 
         //display the values
-        // $asset_item=array(
-        //     "Asset_no" => $Asset_no,
-        //     "Asset_desc" => html_entity_decode($Asset_desc),
-        //     "Category" => $Category,
-        //     "Location" => $Location,
-        //     "CalibDate_start" => $CalibDate_start,
-        //     "CalibDate_end" => $CalibDate_end,
-        //     "Company_name" => $Company_name,
-        // );
-
         $asset_item=array(
             "Asset_no" => $Asset_no,
             "Asset_desc" => html_entity_decode($Asset_desc),
             "Category" => $Category,
             "Location" => $Location,
-            "First_calib" => $First_calib,
-            "Second_calib" => $Second_calib,
-            "Third_calib" => $Third_calib,
+            "Calib_no" => $Calib_no,
+            "Start_date" => $Start_date,
+            "End_date" => $End_date,
+            "Company_name" => $Company_name,
         );
+
+        // $asset_item=array(
+        //     "Asset_no" => $Asset_no,
+        //     "Asset_desc" => html_entity_decode($Asset_desc),
+        //     "Category" => $Category,
+        //     "Location" => $Location,
+        //     "First_calib" => $First_calib,
+        //     "Second_calib" => $Second_calib,
+        //     "Third_calib" => $Third_calib,
+        // );
   
         array_push($assets_arr["records"], $asset_item);
 

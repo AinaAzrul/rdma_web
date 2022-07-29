@@ -42,6 +42,7 @@ if($asset->update()){
     // tell the user
     echo json_encode(array("message" => "asset was updated."));
 }
+
   
 // if unable to update the asset, tell the user
 else{

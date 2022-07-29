@@ -18,6 +18,10 @@ require_once('master/delete_master.php');
 
 //Asset component
 require_once('asset/read_asset.php');
+require_once('asset/create_asset.php');
+require_once('asset/delete_asset.php');
+
+
 
 
 // require_once('asset/asset.php');
@@ -118,6 +122,14 @@ class TestPoint{
          //for Asset class
          case "read_asset";
             read_asset();
+         break;
+
+         case "create_asset";
+            create_asset();
+         break;
+
+         case "delete_asset";
+            delete_asset();
          break;
 
         default:

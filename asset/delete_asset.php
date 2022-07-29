@@ -9,7 +9,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // include database and object file
 /*include_once '../config/database.php';
 include_once 'asset.php';*/
-  
+
+function delete_asset(){
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
@@ -21,16 +22,18 @@ $asset = new Asset($db);
 $data = json_decode(file_get_contents("php://input"));
   
 // set asset Asset_no to be deleted
-$asset->Asset_no = $data->Asset_no;
+$asset->Asset_no = $data->data->Asset_no;
   
 // delete the asset
 if($asset->delete()==true){
   
-    // set response code - 200 ok
-    http_response_code(200);
-  
-    // tell the user
-    echo json_encode(array("message" => "asset was deleted."));
+     // response in json format
+     echo json_encode(
+        array(
+            "status" =>http_response_code(200),
+            "data" => $asset
+       )
+    );
 }
   
 // if unable to delete the asset
@@ -41,5 +44,6 @@ else{
   
     // tell the user
     echo json_encode(array("message" => "Unable to delete asset."));
+}
 }
 ?>

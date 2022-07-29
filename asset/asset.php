@@ -3,17 +3,18 @@ class Asset{
   
     // database connection and table Asset_no
     private $conn;
-    private $table_name = "assetlist";
+    private $table_name = "asset_list";
   
     // object properties
-    public $id;
+    // public $id;
     public $Asset_no;
     public $Asset_desc;
     public $Category;
     public $Location;
-    public $CalibDate_start;
-    public $CalibDate_end;
-    public $Company_Asset_no;
+    public $Calib_no;
+    public $Start_date;
+    public $End_date;
+    public $Company_name;
   
     public function __construct($db){
         $this->conn = $db;
@@ -33,14 +34,13 @@ class Asset{
 
     // used by select drop-down list
 public function read(){
-  
-        //select all data
-        $query = "SELECT *
-        FROM
-             " . $this->table_name . "
-            ORDER BY
-                id";
-  
+
+        $query = "SELECT  a.Asset_no, Asset_desc,Category, Location, Calib_no, Start_date, End_date,Company_name
+        FROM calibration_list c
+        RIGHT JOIN asset_list a
+        ON c.Asset_no = a.Asset_no
+        ORDER BY  a.Asset_no DESC";
+
         $stmt = $this->conn->prepare( $query );
         $stmt->execute();
     
@@ -51,7 +51,7 @@ public function read(){
 function create(){
     
     // query to insert record
-    $query = "INSERT INTO " . $this->table_name . " SET  Asset_no=:Asset_no, Asset_desc=:Asset_desc, Category=:Category, Location=:Location, First_calib=:First_calib";
+    $query = "INSERT INTO " . $this->table_name . " SET  Asset_no=:Asset_no, Asset_desc=:Asset_desc, Category=:Category, Location=:Location";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -59,20 +59,39 @@ function create(){
     // sanitize
     $this->Asset_no=htmlspecialchars(strip_tags($this->Asset_no));
     $this->Asset_desc=htmlspecialchars(strip_tags($this->Asset_desc));
-    $this->Category=htmlspecialchars(strip_tags($this->Category));
-    $this->Location=htmlspecialchars(strip_tags($this->Location));
-    $this->First_calib=htmlspecialchars(strip_tags($this->First_calib));
+    $this->Category=htmlspecialchars(strip_tags((string)$this->Category));
+    $this->Location=htmlspecialchars(strip_tags((string)$this->Location));
   
     // bind values
     $stmt->bindParam(":Asset_no", $this->Asset_no);
     $stmt->bindParam(":Asset_desc", $this->Asset_desc);
     $stmt->bindParam(":Category", $this->Category);
     $stmt->bindParam(":Location", $this->Location);
-    $stmt->bindParam(":First_calib", $this->First_calib);
- 
+    $stmt->execute();
+
+    
+    $query2 = "INSERT INTO calibration_list (Asset_no, Calib_no, Start_date,  End_date, Company_name )
+    VALUES  (:Asset_no, :Calib_no,:Start_date, :End_date, :Company_name)";
+			
+            $stmt = $this->conn->prepare($query2);
+			// sanitize
+            $this->Asset_no=htmlspecialchars(strip_tags($this->Asset_no));
+            $this->Calib_no=htmlspecialchars(strip_tags((string)$this->Calib_no));
+            $this->Start_date=htmlspecialchars(strip_tags((string)$this->Start_date));
+            $this->End_date=htmlspecialchars(strip_tags((string)$this->End_date));
+            $this->Company_name=htmlspecialchars(strip_tags((string)$this->Company_name));
+
+          
+            // bind values
+            $stmt->bindParam(":Asset_no", $this->Asset_no);
+            $stmt->bindParam(":Calib_no",  $this->Calib_no);
+            $stmt->bindParam(":Start_date", $this->Start_date);
+            $stmt->bindParam(":End_date", $this->End_date);
+            $stmt->bindParam(":Company_name", $this->Company_name); 
+            $stmt->execute();
 
     // execute query
-    if($stmt->execute()){
+    if(true){
 
         return true;
     }
