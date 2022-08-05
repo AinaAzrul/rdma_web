@@ -46,4 +46,41 @@ else{
     echo json_encode(array("message" => "Unable to delete asset."));
 }
 }
+
+function deleteCalib(){
+    // get database connection
+    $database = new Database();
+    $db = $database->getConnection();
+      
+    // prepare asset object
+    $asset = new Asset($db);
+      
+    // get asset Asset_no
+    $data = json_decode(file_get_contents("php://input"));
+      
+    // set asset Asset_no to be deleted
+    $asset->id = $data->data->id;
+      
+    // delete the asset
+    if($asset->delete_calib()==true){
+      
+         // response in json format
+         echo json_encode(
+            array(
+                "status" =>http_response_code(200),
+                "data" => $asset->id
+           )
+        );
+    }
+      
+    // if unable to delete the asset
+    else{
+      
+        // set response code - 503 service unavailable
+        http_response_code(503);
+      
+        // tell the user
+        echo json_encode(array("message" => "Unable to delete calibration."));
+    }
+    }
 ?>

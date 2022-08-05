@@ -1,6 +1,4 @@
 <?php
-//function to add new calibration column if there is non created
-// if exist, just put in the existing column.
 
 // required headers
 header("Access-Control-Allow-Origin: *");
@@ -9,49 +7,73 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
   
-// include database and object files
-/*include_once '../config/database.php';
-include_once 'asset.php';*/
-  
 // get database connection
+//include_once '../config/database.php';
+  
+// instantiate asset object
+//include_once 'asset.php';
+function create_calib(){
 $database = new Database();
 $db = $database->getConnection();
   
-// prepare asset object
 $asset = new Asset($db);
   
-// get id of asset to be edited
+// get posted data
 $data = json_decode(file_get_contents("php://input"));
 
+$newData = $data->data;
 //implode the data receive from user input into one array
-$Column_name = $data->Column_name;
-$dateStart = $data->CalibDate_start;
-$dateEnd = $data->CalibDate_end;
-$compName = $data->Company_name;
-$arr = array($dateStart,$dateEnd,$compName);
-$new_calib = implode(',', $arr);
+// $dateStart = $data->CalibDate_start;ws
+// $dateEnd = $data->CalibDate_end;
+// $compName = $data->Company_name;
+// $arr = array($dateStart,$dateEnd,$compName);
+// $First_calib = implode(',', $arr);
 
-// set ID property of asset to be edited
-$asset->id = $data->id;
 
-// update the asset
-//Pass column_name and new_calib(the imploded value)
-if($asset->add_calib($Column_name,$new_calib)){
+// make sure data is not empty
+if(
+    !empty($newData->Asset_no)
+){
   
-    // set response code - 200 ok
-    http_response_code(200);
+    // set asset property values
+    $asset->Asset_no = $newData->Asset_no;
+    $asset->Calib_no = $newData->Calib_no;
+    $asset->Start_date = $newData->Start_date;
+    $asset->End_date = $newData->End_date;
+    $asset->Company_name = $newData->Company_name;
+    
   
-    // tell the user
-    echo json_encode(array("message" => "asset was updated."));
+    // create the asset
+    if($asset->add_calib()){
+  
+        // // tell the user
+        // echo json_encode(array("message" => "asset was created."));
+        
+        // show products data in json format
+        echo json_encode(array(
+        "status" =>http_response_code(200),
+        "data"=>$asset));
+    }
+  
+    // if unable to create the asset, tell the user
+    else{
+  
+        // set response code - 503 service unavailable
+        http_response_code(503);
+  
+        // tell the user
+        echo json_encode(array("message" => "Unable to create asset."));
+    }
 }
   
-// if unable to update the asset, tell the user
+// tell the user data is incomplete
 else{
   
-    // set response code - 503 service unavailable
-    http_response_code(503);
+    // set response code - 400 bad request
+    http_response_code(400);
   
     // tell the user
-    echo json_encode(array("message" => "Unable to update asset."));
+    echo json_encode(array("message" => "Unable to create asset. Data is incompletereeer."));
+}
 }
 ?>

@@ -20,6 +20,10 @@ require_once('master/delete_master.php');
 require_once('asset/read_asset.php');
 require_once('asset/create_asset.php');
 require_once('asset/delete_asset.php');
+require_once('asset/update_asset.php');
+require_once('asset/add_calib_asset.php');
+
+
 
 
 
@@ -56,7 +60,7 @@ class TestPoint{
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     
     $input = json_decode(file_get_contents("php://input"));
-    $meth = $input->method;
+    $meth = $input->{'method'};
     $jwt = isset($input->token) ? $input->token : "";
 
     
@@ -131,6 +135,22 @@ class TestPoint{
          case "delete_asset";
             delete_asset();
          break;
+         
+         case "update_asset";
+            update_asset();
+         break;
+
+         case "update_calib";
+            update_calib();
+         break;
+
+         case "create_calib";
+            create_calib();
+         break;
+
+         case "deleteCalib";
+            deleteCalib();
+         break;
 
         default:
         break;
@@ -155,7 +175,6 @@ public function authGuard() {
     //     error_log("valid token");
     //     return true;
     // }
-    
 }
 
 

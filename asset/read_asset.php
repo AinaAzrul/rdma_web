@@ -54,6 +54,7 @@ if($num>0){
             "Start_date" => $Start_date,
             "End_date" => $End_date,
             "Company_name" => $Company_name,
+            "id" => $id
         );
 
         // $asset_item=array(

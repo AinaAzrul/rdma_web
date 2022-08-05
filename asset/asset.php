@@ -6,7 +6,7 @@ class Asset{
     private $table_name = "asset_list";
   
     // object properties
-    // public $id;
+    public $id;
     public $Asset_no;
     public $Asset_desc;
     public $Category;
@@ -33,9 +33,9 @@ class Asset{
     }
 
     // used by select drop-down list
-public function read(){
+    public function read(){
 
-        $query = "SELECT  a.Asset_no, Asset_desc,Category, Location, Calib_no, Start_date, End_date,Company_name
+        $query = "SELECT  a.Asset_no, Asset_desc,Category, Location,id, Calib_no, Start_date, End_date,Company_name
         FROM calibration_list c
         RIGHT JOIN asset_list a
         ON c.Asset_no = a.Asset_no
@@ -69,7 +69,21 @@ function create(){
     $stmt->bindParam(":Location", $this->Location);
     $stmt->execute();
 
-    
+    if($this->Calib_no){
+       $this->add_calib();
+}
+    // execute query
+    if(true){
+        error_log("add_calib");
+        return true;
+    }
+  
+        return false;
+}
+  
+//add calibration in asset
+public function add_calib(){
+     
     $query2 = "INSERT INTO calibration_list (Asset_no, Calib_no, Start_date,  End_date, Company_name )
     VALUES  (:Asset_no, :Calib_no,:Start_date, :End_date, :Company_name)";
 			
@@ -77,21 +91,19 @@ function create(){
 			// sanitize
             $this->Asset_no=htmlspecialchars(strip_tags($this->Asset_no));
             $this->Calib_no=htmlspecialchars(strip_tags((string)$this->Calib_no));
-            $this->Start_date=htmlspecialchars(strip_tags((string)$this->Start_date));
-            $this->End_date=htmlspecialchars(strip_tags((string)$this->End_date));
+            $this->Start_date=htmlspecialchars($this->Start_date);
+            $this->End_date=htmlspecialchars($this->End_date);
             $this->Company_name=htmlspecialchars(strip_tags((string)$this->Company_name));
-
-          
+            
             // bind values
             $stmt->bindParam(":Asset_no", $this->Asset_no);
             $stmt->bindParam(":Calib_no",  $this->Calib_no);
             $stmt->bindParam(":Start_date", $this->Start_date);
             $stmt->bindParam(":End_date", $this->End_date);
             $stmt->bindParam(":Company_name", $this->Company_name); 
-            $stmt->execute();
 
     // execute query
-    if(true){
+    if($stmt->execute()){
 
         return true;
     }
@@ -177,9 +189,39 @@ function delete(){
         return true;
     }
     else{
-        return false;
-    }
+        return false
+    ;}
 }
+
+// delete the asset
+function delete_calib(){
+  
+    // delete query by asset_no
+    $query = "DELETE FROM calibration_list WHERE id = ?";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    $this->id=htmlspecialchars(strip_tags($this->id));
+  
+    // bind Asset_no of record to delete
+    $stmt->bindParam(1, $this->id);
+  
+    // execute query
+    $stmt->execute();
+    //count the number of row afected by the query
+    $count = $stmt->rowCount();
+
+    //check is there any query successfully executed
+    if($count != '0'){
+        return true;
+    }
+    else{
+        return false
+    ;}
+}
+
 
 // search asset
 function search($keywords,$id){
@@ -260,7 +302,7 @@ function search($keywords,$id){
 }
 
 // update an asset 
-function update(){
+function updateAsset(){
 
     $query = "UPDATE
                 " . $this->table_name . "
@@ -268,12 +310,9 @@ function update(){
                 Asset_no = :Asset_no,
                 Asset_desc = :Asset_desc,
                 Category = :Category,
-                Location = :Location,
-                First_calib = :First_calib,
-                Second_calib = :Second_calib,
-                Third_calib = :Third_calib
+                Location = :Location
             WHERE
-                id = :id";
+            Asset_no = :Asset_no";
   
     // prepare query statement
     $stmt = $this->conn->prepare($query);
@@ -283,21 +322,14 @@ function update(){
     $this->Asset_desc = htmlspecialchars(strip_tags($this->Asset_desc));
     $this->Category = htmlspecialchars(strip_tags($this->Category));
     $this->Location = htmlspecialchars(strip_tags($this->Location));
-    $this->First_calib = htmlspecialchars(strip_tags($this->First_calib));
-    $this->Second_calib = htmlspecialchars(strip_tags($this->Second_calib));
-    $this->Third_calib = htmlspecialchars(strip_tags($this->Third_calib));
-    $this->id = htmlspecialchars(strip_tags($this->id));
+    
   
     // bind new values
     $stmt->bindParam(':Asset_no', $this->Asset_no);
     $stmt->bindParam(':Asset_desc', $this->Asset_desc);
     $stmt->bindParam(':Category', $this->Category);
     $stmt->bindParam(':Location', $this->Location);
-    $stmt->bindParam(':First_calib', $this->First_calib);
-    $stmt->bindParam(':Second_calib', $this->Second_calib);
-    $stmt->bindParam(':Third_calib', $this->Third_calib);
-    $stmt->bindParam(':id', $this->id);
-  
+ 
     // execute the query
     if($stmt->execute()){
         return true;
@@ -306,71 +338,114 @@ function update(){
     return false;
 }
 
-// add/update calibration values
-function add_calib($Column_name,$new_calib){
+// update an asset calibration
+function updateCalib(){
 
-    //check if the column exist or not
-    $query="SHOW COLUMNS FROM " . $this->table_name . " LIKE '$Column_name'";
+    $query = "UPDATE
+                calibration_list
+            SET
+                id = :id,
+                Calib_no = :Calib_no,
+                Start_date = :Start_date,
+                End_date = :End_date,
+                Company_name = :Company_name
+            WHERE
+            id = :id";
+  
+    // prepare query statement
     $stmt = $this->conn->prepare($query);
-    $stmt->execute();
-    $row1=$stmt->fetchColumn();
+  
+    // sanitize
+    $this->id = htmlspecialchars(strip_tags($this->id));
+    $this->Calib_no = htmlspecialchars(strip_tags($this->Calib_no));
+    $this->Start_date = htmlspecialchars(strip_tags($this->Start_date));
+    $this->End_date = htmlspecialchars(strip_tags($this->End_date));
+    $this->Company_name = htmlspecialchars(strip_tags($this->Company_name));
+    
+  
+    // bind new values
+    $stmt->bindParam(':id', $this->id);
+    $stmt->bindParam(':Calib_no', $this->Calib_no);
+    $stmt->bindParam(':Start_date', $this->Start_date);
+    $stmt->bindParam(':End_date', $this->End_date);
+    $stmt->bindParam(':Company_name', $this->Company_name);
 
-    //if the column name is included
-    if($row1==true){   
-
-    switch($Column_name){
-        case "Second_calib":
-                 $query = "UPDATE " . $this->table_name . "
-                SET Second_calib = :new_calib
-                WHERE id = :id";
-
-            // prepare query statement
-            $stmt = $this->conn->prepare($query);
-
-            // sanitize
-            $this->id = htmlspecialchars(strip_tags($this->id));
-            $this->Second_calib = htmlspecialchars(strip_tags($new_calib));
-   
-            // bind new values
-            $stmt->bindParam(':new_calib',$this->Second_calib); 
-            $stmt->bindParam(':id', $this->id);
-            break;
-
-        case "Third_calib":
-                $query = "UPDATE " . $this->table_name . "
-                SET Third_calib = :new_calib
-                WHERE id = :id";
-
-            // prepare query statement
-            $stmt = $this->conn->prepare($query);
-
-            // sanitize
-            $this->id = htmlspecialchars(strip_tags($this->id));
-            $this->Third_calib = htmlspecialchars(strip_tags($new_calib));
-   
-            // bind new values
-            $stmt->bindParam(':new_calib',$this->Third_calib); 
-            $stmt->bindParam(':id', $this->id);
-            break;
-
-    default:
-            break;
-    }
-
-        // execute the query
-        if($stmt->execute()){
+ 
+    // execute the query
+    if($stmt->execute()){
         return true;
-        }
-
-        else{
-            return false;
-        }
-  }
-
-  else{
-      return false;
-  }
+    }
+  
+    return false;
 }
+
+
+
+// add/update calibration values
+// function add_calib($Column_name,$new_calib){
+
+//     //check if the column exist or not
+//     $query="SHOW COLUMNS FROM " . $this->table_name . " LIKE '$Column_name'";
+//     $stmt = $this->conn->prepare($query);
+//     $stmt->execute();
+//     $row1=$stmt->fetchColumn();
+
+//     //if the column name is included
+//     if($row1==true){   
+
+//     switch($Column_name){
+//         case "Second_calib":
+//                  $query = "UPDATE " . $this->table_name . "
+//                 SET Second_calib = :new_calib
+//                 WHERE id = :id";
+
+//             // prepare query statement
+//             $stmt = $this->conn->prepare($query);
+
+//             // sanitize
+//             $this->id = htmlspecialchars(strip_tags($this->id));
+//             $this->Second_calib = htmlspecialchars(strip_tags($new_calib));
+   
+//             // bind new values
+//             $stmt->bindParam(':new_calib',$this->Second_calib); 
+//             $stmt->bindParam(':id', $this->id);
+//             break;
+
+//         case "Third_calib":
+//                 $query = "UPDATE " . $this->table_name . "
+//                 SET Third_calib = :new_calib
+//                 WHERE id = :id";
+
+//             // prepare query statement
+//             $stmt = $this->conn->prepare($query);
+
+//             // sanitize
+//             $this->id = htmlspecialchars(strip_tags($this->id));
+//             $this->Third_calib = htmlspecialchars(strip_tags($new_calib));
+   
+//             // bind new values
+//             $stmt->bindParam(':new_calib',$this->Third_calib); 
+//             $stmt->bindParam(':id', $this->id);
+//             break;
+
+//     default:
+//             break;
+//     }
+
+//         // execute the query
+//         if($stmt->execute()){
+//         return true;
+//         }
+
+//         else{
+//             return false;
+//         }
+//   }
+
+//   else{
+//       return false;
+//   }
+// }
 
 // read asset with pagination
 public function readPaging($from_record_num, $records_per_page){
