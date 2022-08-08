@@ -50,8 +50,6 @@ if($asset->updateAsset()){
   
 // if unable to update the asset, tell the user
 else{
-  
-
     echo json_encode(
         array(
             "status" =>http_response_code(503),

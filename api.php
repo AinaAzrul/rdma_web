@@ -85,13 +85,14 @@ class TestPoint{
          break;
 
         //for user class
-        case "get_user":
-            if ($this->authGuard()==200){
-                get_user();
-            }
-            else{
-                echo authToken();
-            }
+        case "get_user": 
+            get_user();
+            // if ($this->authGuard()==200){
+            //    get_user();
+            // }
+            // else{
+            //     echo authToken();
+            // }
         break;
 
         case "update_user":
