@@ -1,0 +1,35 @@
+{
+  "name": "setbased/helper-code-store-mysql",
+  "description": "Helper class for indenting automatically generated MySQL compound syntax code",
+  "keywords": [
+    "code",
+    "generation",
+    "mysql",
+    "compound",
+    "syntax"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=7.3",
+    "setbased/helper-code-store": "^2.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0",
+    "phing/phing": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SetBased\\Helper\\CodeStore\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SetBased\\Helper\\CodeStore\\Test\\": "test/"
+    }
+  },
+  "config": {
+    "bin-dir": "bin/",
+    "sort-packages": true
+  }
+}

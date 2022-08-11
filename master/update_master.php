@@ -38,6 +38,11 @@ $master->Category = $dataMstr->Category;
 
 // update the master
 if($master->update()){
+
+    //add to activity log
+    $details = "Master list entry for asset number $master->Asset_no updated";
+    save_log($details);
+
     // response in json format
  echo json_encode(
     array(

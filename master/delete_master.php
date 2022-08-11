@@ -28,7 +28,11 @@ $master->Entry_id = $dataMstr->Entry_id;
 // delete the master
 
 if($master->delete()==true){
-  
+
+   //add to activity log
+   $details = "Master list entry id $master->Entry_id deleted";
+   save_log($details); 
+   
     // response in json format
     echo json_encode(
     array(

@@ -26,7 +26,7 @@ date_default_timezone_set('Asia/Kuala_Lumpur');
 // variables used for jwt
 $key = "33F06AED8BF74357226AB8EDD16F684FC12E2948C5F818BAB1B2C8E56518630D";
 $issued_at = time();
-$expiration_time = $issued_at + (60 * 60); // valid for 1 hour
+$expiration_time = $issued_at + (60 * 60 * 24); // valid for 1 hour
 $issuer = "http://localhost/rdma_web";
 
 
@@ -59,7 +59,7 @@ if($email_exists && password_verify($data->data->password, $user->password)){
            "role" => $user->role
        )
     );
-   
+
     // generate jwt
     $jwt = JWT::encode($token, $key, 'HS256');
     echo json_encode(
@@ -75,7 +75,7 @@ if($email_exists && password_verify($data->data->password, $user->password)){
 // login failed will be here
 // login failed
 else{
-//   http_response_code(401);
+//http_response_code(401);
     // tell the user login failed
     echo json_encode(array(
 

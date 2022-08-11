@@ -23,13 +23,10 @@ require_once('asset/delete_asset.php');
 require_once('asset/update_asset.php');
 require_once('asset/add_calib_asset.php');
 
-
-
-
-
+//Logging
+require_once('shared/activity_audit.php');
 
 // require_once('asset/asset.php');
-
 require __DIR__ . "/config/core.php";
 use Firebase\JWT\JWT;
 use Firebase\JWT\KEY;
@@ -38,6 +35,16 @@ use Firebase\JWT\KEY;
 require __DIR__ . '/vendor/autoload.php';
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+
+//symfony 
+// use Symfony\Component\Console\Application;
+
+// $application = new Application();
+
+// // ... register commands
+
+// $application->run();
+// $application->add(new GenerateAdminCommand());
 
 ////FINAL EDIT
 $testpoint = new TestPoint();
@@ -49,7 +56,7 @@ class TestPoint{
     public function __construct(){
     //    $database = new Database();
     //     $db = $database->getConnection();
-    //       $this->user = new authUser();
+    //      $this->user = new authUser();
     //     $this->asset = new Asset($db);
     //     $this->master = new Master($db);
         
@@ -86,13 +93,14 @@ class TestPoint{
 
         //for user class
         case "get_user": 
-            get_user();
-            // if ($this->authGuard()==200){
-            //    get_user();
-            // }
-            // else{
-            //     echo authToken();
-            // }
+            // get_user();
+            if ($this->authGuard()==200){
+               get_user();
+               
+            }
+            else{
+                echo authToken();
+            }
         break;
 
         case "update_user":
@@ -177,11 +185,6 @@ public function authGuard() {
     //     return true;
     // }
 }
-
-
-
-
-
 }
 
 

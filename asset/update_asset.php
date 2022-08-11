@@ -35,8 +35,10 @@ $asset->Location = $info->Location;
   
 // update the asset
 if($asset->updateAsset()){ 
-    // set response code - 200 ok
-    http_response_code(200);
+
+    //add to log
+    $details = "Asset number $asset->Asset_no updated";
+    save_log($details);
   
     // response in json format
      echo json_encode(
@@ -84,14 +86,19 @@ function update_calib(){
       
     // update the asset
     if($asset->updateCalib()){
-          // response in json format
+    
+     //add to activity log
+     $details = "Calibration number $asset->Calib_no updated";
+     save_log($details);
+
+    // response in json format
     echo json_encode(
     array(
         "status" =>http_response_code(200),
         "data" => $asset
         )
     );
-    }
+}
     
       
     // if unable to update the asset, tell the user

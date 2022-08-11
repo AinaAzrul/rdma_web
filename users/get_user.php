@@ -2,7 +2,7 @@
 // required headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-  
+require_once("shared/activity_audit.php");
 
 function get_user(){
 //include_once '../config/core.php';

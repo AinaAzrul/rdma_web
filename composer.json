@@ -1,6 +1,7 @@
 {
     "require": {
         "firebase/php-jwt": "^6.1",
-        "monolog/monolog": "^2.5"
+        "monolog/monolog": "^2.5",
+        "setbased/php-audit": "*"
     }
 }

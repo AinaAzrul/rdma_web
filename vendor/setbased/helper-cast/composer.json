@@ -1,0 +1,30 @@
+{
+  "name": "setbased/helper-cast",
+  "description": "Safely cast mixed values to bool, float, int, or string",
+  "keywords": [
+    "safely",
+    "cast"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=7.3"
+  },
+  "require-dev": {
+    "phing/phing": "^2.0",
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SetBased\\Helper\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SetBased\\Helper\\Test\\": "test/"
+    }
+  },
+  "config": {
+    "bin-dir": "bin/",
+    "sort-packages": true
+  }
+}

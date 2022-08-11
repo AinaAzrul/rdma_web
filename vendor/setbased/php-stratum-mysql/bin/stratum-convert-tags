@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use SetBased\ErrorHandler\ErrorHandler;
+use SetBased\Stratum\MySql\Helper\ConvertTagsHelper;
+
+//----------------------------------------------------------------------------------------------------------------------
+$files = [__DIR__.'/../vendor/autoload.php',
+          __DIR__.'/../../vendor/autoload.php',
+          __DIR__.'/../../../vendor/autoload.php',
+          __DIR__.'/../../../../vendor/autoload.php'];
+
+foreach ($files as $file)
+{
+  if (file_exists($file))
+  {
+    require $file;
+    break;
+  }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+$handler = new ErrorHandler();
+$handler->registerErrorHandler();
+
+$helper= new ConvertTagsHelper();
+$helper->convert($argv[1]);

@@ -1,0 +1,24 @@
+{
+  "name": "setbased/php-stratum-backend",
+  "description": "PhpStratum Backend: The glue between PhpStratum and backends for RDBMS",
+  "keywords": [
+    "PhpStratum"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=7.4",
+    "symfony/console": "^5.2"
+  },
+  "require-dev": {
+    "phing/phing": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SetBased\\Stratum\\Backend\\": "src/"
+    }
+  },
+  "config": {
+    "bin-dir": "bin/",
+    "sort-packages": true
+  }
+}

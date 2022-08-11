@@ -46,8 +46,10 @@ if(
 
     // create the master
     if($master->create()){
-        // set response code - 201 created
-        http_response_code(201);
+
+    //add to activity log
+     $details = "Master list entry for asset number $master->Asset_no created";
+     save_log($details);
   
         // tell the user
         echo json_encode(
@@ -55,7 +57,7 @@ if(
                 "status" =>http_response_code(201),
                 "data" => $master
            )
-            );
+        );
 
     }
   

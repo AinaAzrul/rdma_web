@@ -52,11 +52,13 @@ if(
   
         // // tell the user
         // echo json_encode(array("message" => "asset was created."));
-        
+        $details = "Asset number $asset->Asset_no created";
+        save_log($details);
         // show products data in json format
         echo json_encode(array(
         "status" =>http_response_code(200),
         "data"=>$asset));
+        
     }
   
     // if unable to create the asset, tell the user

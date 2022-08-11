@@ -46,9 +46,10 @@ if(
     // create the asset
     if($asset->add_calib()){
   
-        // // tell the user
-        // echo json_encode(array("message" => "asset was created."));
-        
+        //add to log
+        $details = "Calibration $asset->Calib_no for asset $asset->Asset_no created";
+        save_log($details);
+
         // show products data in json format
         echo json_encode(array(
         "status" =>http_response_code(200),

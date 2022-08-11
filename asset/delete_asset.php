@@ -26,6 +26,9 @@ $asset->Asset_no = $data->data->Asset_no;
   
 // delete the asset
 if($asset->delete()==true){
+    //add to log
+    $details = "Asset number $asset->Asset_no deleted";
+    save_log($details);
   
      // response in json format
      echo json_encode(
@@ -60,9 +63,17 @@ function deleteCalib(){
       
     // set asset Asset_no to be deleted
     $asset->id = $data->data->id;
+    $asset->asset_no = $data->data->asset_no;
+    $asset->Calib_no = $data->data->Calib_no;
+
       
     // delete the asset
     if($asset->delete_calib()==true){
+
+        //add to activity log
+        $details = "Calibration number $asset->Calib_no from asset $asset->asset_no deleted";
+        save_log($details);
+
       
          // response in json format
          echo json_encode(
@@ -75,7 +86,6 @@ function deleteCalib(){
       
     // if unable to delete the asset
     else{
-      
         // set response code - 503 service unavailable
         http_response_code(503);
       

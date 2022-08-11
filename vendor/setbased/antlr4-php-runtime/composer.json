@@ -1,0 +1,39 @@
+{
+  "name": "setbased/antlr4-php-runtime",
+  "type": "library",
+  "description": "PHP 7 & 8 runtime for ANTLR 4",
+  "keywords": [
+    "antlr4",
+    "php",
+    "runtime"
+  ],
+  "license": [
+    "BSD-3-Clause"
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "ext-readline": "*",
+    "phing/phing": "^2.16",
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Antlr\\Antlr4\\Runtime\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Antlr\\Antlr4\\Runtime\\Test\\": "test/"
+    }
+  },
+  "conflict": {
+    "antlr/antlr4-php-runtime": "*"
+  },
+  "config": {
+    "bin-dir": "bin/",
+    "sort-packages": true
+  }
+}
