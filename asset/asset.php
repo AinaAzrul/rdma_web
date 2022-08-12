@@ -47,6 +47,19 @@ class Asset{
         return $stmt;
 }
 
+ // used by select drop-down list
+ public function read_list(){
+
+    $query = "SELECT *
+    FROM asset_list
+    ORDER BY Asset_no DESC";
+
+    $stmt = $this->conn->prepare( $query );
+    $stmt->execute();
+
+    return $stmt;
+}
+
 // create asset
 function create(){
     

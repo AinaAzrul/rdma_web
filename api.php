@@ -137,6 +137,10 @@ class TestPoint{
             read_asset();
          break;
 
+         case "read_asset_list";
+            read_asset_list();
+         break;
+
          case "create_asset";
             create_asset();
          break;
@@ -159,6 +163,10 @@ class TestPoint{
 
          case "deleteCalib";
             deleteCalib();
+         break;
+
+         case "get_log";
+            get_log();
          break;
 
         default:

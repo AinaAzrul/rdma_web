@@ -13,7 +13,7 @@ require '../vendor/autoload.php';
 function save_log($log){
     
 
-    // get database connection
+// get database connection
  $database = new Database();
  $db = $database->getConnection();
  $data = json_decode(file_get_contents("php://input"));
@@ -35,6 +35,56 @@ $action_made = $data->method;
      // set response code - 503 service unavailable
      http_response_code(503);
      // tell the user
-     echo json_encode(array("message" => "Unable to create asset."));
+     echo json_encode(array("message" => "Unable to save log."));
  }
+}
+
+function get_log(){
+    // get database connection
+ $database = new Database();
+ $db = $database->getConnection();
+
+ $audit_arr["records"]=array();
+
+ $query = "SELECT a.user_id,  u.firstname, a.action, a.details, a.datetime, u.lastname
+		FROM rdma_audit a
+		INNER JOIN users u
+		ON a.user_id = u.id
+        ORDER BY a.audit_id DESC";
+
+ $stmt = $db->prepare( $query );
+ $stmt->execute();
+
+ if($stmt){
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+ extract($row);
+
+ $audit_item=array(
+    "user_id" => $user_id,
+    "firstname" => $firstname,
+    "action" => $action,
+    "details" => html_entity_decode($details),
+    "datetime" => $datetime,
+    "lastname" => $lastname,
+);
+
+array_push($audit_arr["records"], $audit_item);
+    }
+ // show assets data in json format
+ echo json_encode(array(
+    "status" =>http_response_code(200),
+    "data"=>$audit_arr));
+
+}else{
+    // set response code - 503 service unavailable
+    http_response_code(503);
+    // tell the user
+    echo json_encode(array("message" => "Unable to save log."));
+}
+
+
+
+
+
 }
