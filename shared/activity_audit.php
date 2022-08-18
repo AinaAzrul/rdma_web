@@ -23,10 +23,10 @@ function save_log($log){
  //decode token to get user session id
  $key = "33F06AED8BF74357226AB8EDD16F684FC12E2948C5F818BAB1B2C8E56518630D";
  $decoded = JWT::decode($jwt, new key($key,'HS256'));
-$user_id = $decoded->data->id;
-$action_made = $data->method;
-//  print_r($data->method);
-//  print_r($log);
+ $user_id = $decoded->data->id;
+ $action_made = $data->method;
+ //  print_r($data->method);
+ //  print_r($log);
 
  $sql = "INSERT INTO rdma_audit (user_id , action, details ) VALUES ('{$user_id}','{$action_made}', '{$log}')";
  $stmt = $db->prepare($sql);
@@ -46,10 +46,10 @@ function get_log(){
 
  $audit_arr["records"]=array();
 
- $query = "SELECT a.user_id,  u.firstname, a.action, a.details, a.datetime, u.lastname
+ $query = "SELECT a.user_id, u.firstname, a.action, a.details, a.datetime, u.lastname
 		FROM rdma_audit a
 		INNER JOIN users u
-		ON a.user_id = u.id
+		ON a.user_id = u.id 
         ORDER BY a.audit_id DESC";
 
  $stmt = $db->prepare( $query );

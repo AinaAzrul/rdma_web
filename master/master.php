@@ -65,16 +65,17 @@ function create(){
   
     // prepare query
     $stmt = $this->conn->prepare($query);
-  
+    error_log($this->Date_taken);
+    
     // sanitize
     $this->Asset_no=htmlspecialchars(strip_tags($this->Asset_no));
     $this->Asset_desc=htmlspecialchars(strip_tags($this->Asset_desc));
     $this->Taken_by=htmlspecialchars(strip_tags($this->Taken_by));
     $this->Date_taken=htmlspecialchars(strip_tags($this->Date_taken));
-    $this->Return_by=htmlspecialchars(strip_tags($this->Return_by));
+    $this->Return_by=htmlspecialchars(strip_tags((string)$this->Return_by));
     $this->Date_return=htmlspecialchars(strip_tags($this->Date_return));
-    $this->Remarks=htmlspecialchars(strip_tags($this->Remarks));
-    $this->Category=htmlspecialchars(strip_tags($this->Category));
+    $this->Remarks=htmlspecialchars(strip_tags((string)$this->Remarks));
+    $this->Category=htmlspecialchars(strip_tags((string)$this->Category));
 
     // bind values
     $stmt->bindParam(":Asset_no", $this->Asset_no);

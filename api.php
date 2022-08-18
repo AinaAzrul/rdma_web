@@ -96,7 +96,6 @@ class TestPoint{
             // get_user();
             if ($this->authGuard()==200){
                get_user();
-               
             }
             else{
                 echo authToken();
@@ -161,8 +160,8 @@ class TestPoint{
             create_calib();
          break;
 
-         case "deleteCalib";
-            deleteCalib();
+         case "delete_calib";
+            delete_calib();
          break;
 
          case "get_log";
@@ -178,7 +177,7 @@ class TestPoint{
 
 
 public function authGuard() {
-    // Auth token
+    // Call function auth token
     $result = authToken();
     $try = json_decode($result,true);
     return $try['status'];

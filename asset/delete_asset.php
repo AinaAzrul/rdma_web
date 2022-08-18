@@ -50,7 +50,7 @@ else{
 }
 }
 
-function deleteCalib(){
+function delete_calib(){
     // get database connection
     $database = new Database();
     $db = $database->getConnection();
@@ -91,6 +91,5 @@ function deleteCalib(){
       
         // tell the user
         echo json_encode(array("message" => "Unable to delete calibration."));
-    }
-    }
+    }}
 ?>

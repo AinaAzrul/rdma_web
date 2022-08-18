@@ -1,10 +1,4 @@
 <?php
-// required headers
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 // required to encode json web token
 //include_once '../config/core.php';
@@ -53,26 +47,26 @@ if($jwt){
         $userData= $data->data;
         // set user property values here
         // set user property values
-$user->firstname = $userData->firstname;
-$user->lastname = $userData->lastname;
-$user->email = $userData->email;
-$user->password = $userData->password;
-$user->role = $userData->role;
-$user->id = $userData->id;
+        $user->firstname = $userData->firstname;
+        $user->lastname = $userData->lastname;
+        $user->email = $userData->email;
+        $user->password = $userData->password;
+        $user->role = $userData->role;
+        $user->id = $userData->id;
  
-// update user will be here
-// update the user record
-if($user->update()){
-    // regenerate jwt will be here
-    // we need to re-generate jwt because user details might be different
-$token = array(
-    "iat" => $issued_at,
-    "exp" => $expiration_time,
-    "iss" => $issuer,
-    "data" => array(
-        "id" => $user->id,
-        "email" => $user->email
-    )
+        // update user will be here
+        // update the user record
+        if($user->update()){
+            // regenerate jwt will be here
+            // we need to re-generate jwt because user details might be different
+        $token = array(
+            "iat" => $issued_at,
+            "exp" => $expiration_time,
+            "iss" => $issuer,
+            "data" => array(
+                "id" => $user->id,
+                "email" => $user->email
+            )
  );
  
  $jwt = JWT::encode($token, $key, 'HS256');

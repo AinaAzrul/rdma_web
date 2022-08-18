@@ -37,13 +37,6 @@ if($num>0){
         // just $name only
         extract($row);
 
-        //explode the values in First_calib array into separate values
-        // $message = $row['First_calib'];
-        // $arr = explode(",", $message);
-        // $CalibDate_start = $arr[0];
-        // $CalibDate_end = $arr[1];
-        // $Company_name = $arr[2];
-
         //display the values
         $asset_item=array(
             "Asset_no" => $Asset_no,
