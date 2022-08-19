@@ -67,7 +67,8 @@ class TestPoint{
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     
     $input = json_decode(file_get_contents("php://input"));
-    $meth = $input->{'method'};
+   //  $meth = "get_user";
+    $meth = $input->{"method"};
     $jwt = isset($input->token) ? $input->token : "";
 
     

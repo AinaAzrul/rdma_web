@@ -2,7 +2,7 @@
 include_once 'user.php';
 require '../vendor/autoload.php';
 use \Firebase\JWT\JWT;
-
+// use rdma\model;
 
  
 // required headers
@@ -40,7 +40,7 @@ $user = new User($db);
 // check email existence here
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
-error_log("data".$data->data->password);
+error_log("data".$data->data->email);
 // error_log("data".$data);
 // set product property values
 $user->email = $data->data->email;

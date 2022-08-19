@@ -1,7 +1,20 @@
 <?php
+// namespace rdma\model;
+
+use OpenApi\Annotations as OA;
+
+/**
+ * @OA\Info(
+ *     title="API Live Test",
+ *     version="1.0"
+ * )
+ */
+
+
+
+
 // 'user' object
 class User{
- 
     // database connection and table name
     private $conn;
     private $table_name = "users";
@@ -18,7 +31,38 @@ class User{
     public function __construct($db){
         $this->conn = $db;
     }
- 
+
+    /*
+     * @OA\Get(
+     *     path="/rdma_web/users/user.php", 
+     * tags= {"Users"},
+     *     @OA\Response
+     *      ( response="200", description="Success" )
+     *      ( response="404", description="No Users Found" )
+     * 
+     */
+    
+
+
+ // read users
+  function read(){
+  
+        // select all query
+        $query = "SELECT
+        id, firstname, lastname, email, role
+        FROM   " . $this->table_name . "
+        ORDER BY
+        id ASC";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // execute query
+        $stmt->execute();
+    
+        return $stmt;
+}
+
 // create() method will be here
 // create new user record
 function create(){
@@ -157,24 +201,7 @@ public function update(){
     return false;
 }
 
-  // read masters
-  function read(){
   
-    // select all query
-    $query = "SELECT
-     id, firstname, lastname, email, role
-     FROM   " . $this->table_name . "
-ORDER BY
-    id ASC";
-
-    // prepare query statement
-    $stmt = $this->conn->prepare($query);
-  
-    // execute query
-    $stmt->execute();
-  
-    return $stmt;
-}
 
 // delete the product
 function delete(){

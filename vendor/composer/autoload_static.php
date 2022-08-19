@@ -27,7 +27,9 @@ class ComposerStaticInit32c9370f0a66913a456c47abad5fbb15
             'Symfony\\Polyfill\\Intl\\Grapheme\\' => 31,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Service\\' => 26,
+            'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\String\\' => 25,
+            'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\Console\\' => 26,
             'SetBased\\Stratum\\MySql\\' => 23,
             'SetBased\\Stratum\\Middle\\' => 24,
@@ -44,6 +46,11 @@ class ComposerStaticInit32c9370f0a66913a456c47abad5fbb15
         array (
             'Psr\\Log\\' => 8,
             'Psr\\Container\\' => 14,
+            'Psr\\Cache\\' => 10,
+        ),
+        'O' => 
+        array (
+            'OpenApi\\' => 8,
         ),
         'N' => 
         array (
@@ -56,6 +63,11 @@ class ComposerStaticInit32c9370f0a66913a456c47abad5fbb15
         'F' => 
         array (
             'Firebase\\JWT\\' => 13,
+        ),
+        'D' => 
+        array (
+            'Doctrine\\Common\\Lexer\\' => 22,
+            'Doctrine\\Common\\Annotations\\' => 28,
         ),
         'A' => 
         array (
@@ -92,9 +104,17 @@ class ComposerStaticInit32c9370f0a66913a456c47abad5fbb15
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
+        'Symfony\\Component\\Yaml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/yaml',
+        ),
         'Symfony\\Component\\String\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/string',
+        ),
+        'Symfony\\Component\\Finder\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/finder',
         ),
         'Symfony\\Component\\Console\\' => 
         array (
@@ -119,8 +139,8 @@ class ComposerStaticInit32c9370f0a66913a456c47abad5fbb15
         'SetBased\\Helper\\CodeStore\\' => 
         array (
             0 => __DIR__ . '/..' . '/setbased/helper-code-store/src',
-            1 => __DIR__ . '/..' . '/setbased/helper-code-store-php/src',
-            2 => __DIR__ . '/..' . '/setbased/helper-code-store-mysql/src',
+            1 => __DIR__ . '/..' . '/setbased/helper-code-store-mysql/src',
+            2 => __DIR__ . '/..' . '/setbased/helper-code-store-php/src',
         ),
         'SetBased\\Helper\\' => 
         array (
@@ -150,6 +170,14 @@ class ComposerStaticInit32c9370f0a66913a456c47abad5fbb15
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
+        'Psr\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/cache/src',
+        ),
+        'OpenApi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zircote/swagger-php/src',
+        ),
         'Noodlehaus\\' => 
         array (
             0 => __DIR__ . '/..' . '/hassankhan/config/src',
@@ -161,6 +189,14 @@ class ComposerStaticInit32c9370f0a66913a456c47abad5fbb15
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
+        'Doctrine\\Common\\Lexer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
+        ),
+        'Doctrine\\Common\\Annotations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
         ),
         'Antlr\\Antlr4\\Runtime\\' => 
         array (
