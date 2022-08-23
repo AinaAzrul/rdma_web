@@ -6,7 +6,7 @@ class Asset{
     private $table_name = "asset_list";
   
     // object properties
-    public $id;
+    // public $id;
     public $Asset_no;
     public $Asset_desc;
     public $Category;

@@ -29,12 +29,10 @@ $newData = $data->data;
 // $arr = array($dateStart,$dateEnd,$compName);
 // $First_calib = implode(',', $arr);
 
-
 // make sure data is not empty
 if(
     !empty($newData->Asset_no)
 ){
-  
     // set asset property values
     $asset->Asset_no = $newData->Asset_no;
     $asset->Calib_no = $newData->Calib_no;
@@ -44,8 +42,7 @@ if(
     
   
     // create the asset
-    if($asset->add_calib()){
-  
+    if($asset->add_calib()){ 
         //add to log
         $details = "Calibration $asset->Calib_no for asset $asset->Asset_no created";
         save_log($details);

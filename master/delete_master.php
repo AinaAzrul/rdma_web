@@ -37,7 +37,7 @@ if($master->delete()==true){
     echo json_encode(
     array(
         "status" =>http_response_code(200),
-        "data" => $master
+        "data" => "Entry id: ". $dataMstr->Entry_id
    )
     );
 

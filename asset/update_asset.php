@@ -26,9 +26,6 @@ $data = json_decode(file_get_contents("php://input"));
 // set ID property of asset to be edited
 $info = $data->data;
 $asset->Asset_no = $info->Asset_no;
-
-// set asset property values
-
 $asset->Asset_desc = $info->Asset_desc;
 $asset->Category = $info->Category;
 $asset->Location = $info->Location;
@@ -59,7 +56,6 @@ else{
             "message" => "Unable to update asset."
        )
     );
-
 }
 };
 

@@ -1,16 +1,14 @@
 <?php
 // namespace rdma\model;
 
-use OpenApi\Annotations as OA;
+// use OpenApi\Annotations as OA;
 
 /**
  * @OA\Info(
- *     title="API Live Test",
+ *     title="API Openapi Test",
  *     version="1.0"
  * )
  */
-
-
 
 
 // 'user' object
@@ -34,15 +32,13 @@ class User{
 
     /*
      * @OA\Get(
-     *     path="/rdma_web/users/user.php", 
-     * tags= {"Users"},
-     *     @OA\Response
-     *      ( response="200", description="Success" )
-     *      ( response="404", description="No Users Found" )
-     * 
+     *     path="/rdma_web/api.php", 
+     *     summary="Method to read all the saved users from database."
+     *     tags= {"User"},
+     *     @OA\Response ( response="200", description="Success" ),
+     *     @OA\Response ( response="404", description="Not Found" ),
+     *     )
      */
-    
-
 
  // read users
   function read(){
@@ -53,7 +49,6 @@ class User{
         FROM   " . $this->table_name . "
         ORDER BY
         id ASC";
-
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     

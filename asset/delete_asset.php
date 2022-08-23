@@ -34,14 +34,12 @@ if($asset->delete()==true){
      echo json_encode(
         array(
             "status" =>http_response_code(200),
-            "data" => $asset
-       )
-    );
+            "data" => "Asset Number: " . $asset->Asset_no
+        ));
 }
   
 // if unable to delete the asset
 else{
-  
     // set response code - 503 service unavailable
     http_response_code(503);
   
@@ -74,12 +72,11 @@ function delete_calib(){
         $details = "Calibration number $asset->Calib_no from asset $asset->asset_no deleted";
         save_log($details);
 
-      
          // response in json format
          echo json_encode(
             array(
                 "status" =>http_response_code(200),
-                "data" => $asset->id
+                "data" => "Calibration id: ".$asset->id
            )
         );
     }
