@@ -20,48 +20,59 @@ class SingletonPredictionContext extends PredictionContext
     /** @var int */
     public $returnState;
 
-    public function __construct(int $returnState, ?PredictionContext $parent = null)
-    {
+    public function __construct(
+        int $returnState,
+        ?PredictionContext $parent = null
+    ) {
         parent::__construct();
 
         $this->parent = $parent;
         $this->returnState = $returnState;
     }
 
-    public static function create(?PredictionContext $parent, int $returnState) : PredictionContext
-    {
+    public static function create(
+        ?PredictionContext $parent,
+        int $returnState
+    ): PredictionContext {
         // someone can pass in the bits of an array ctx that mean $
-        if ($returnState === PredictionContext::EMPTY_RETURN_STATE && $parent === null) {
+        if (
+            $returnState === PredictionContext::EMPTY_RETURN_STATE &&
+            $parent === null
+        ) {
             return PredictionContext::empty();
         }
 
         return new SingletonPredictionContext($returnState, $parent);
     }
 
-    public function getLength() : int
+    public function getLength(): int
     {
         return 1;
     }
 
-    public function getParent(int $index) : ?PredictionContext
+    public function getParent(int $index): ?PredictionContext
     {
         if ($index !== 0) {
-            throw new \InvalidArgumentException('Singleton prediction context has only one parent.');
+            throw new \InvalidArgumentException(
+                "Singleton prediction context has only one parent."
+            );
         }
 
         return $this->parent;
     }
 
-    public function getReturnState(int $index) : int
+    public function getReturnState(int $index): int
     {
         if ($index !== 0) {
-            throw new \InvalidArgumentException('Singleton prediction context has only one parent.');
+            throw new \InvalidArgumentException(
+                "Singleton prediction context has only one parent."
+            );
         }
 
         return $this->returnState;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
@@ -78,22 +89,22 @@ class SingletonPredictionContext extends PredictionContext
         return Equality::equals($this->parent, $other->parent);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        $up = $this->parent === null ? '' : (string) $this->parent;
+        $up = $this->parent === null ? "" : (string) $this->parent;
 
-        if ($up === '') {
+        if ($up === "") {
             if ($this->returnState === PredictionContext::EMPTY_RETURN_STATE) {
                 return '$';
             }
 
-            return '' . $this->returnState;
+            return "" . $this->returnState;
         }
 
-        return '' . $this->returnState . ' ' . $up;
+        return "" . $this->returnState . " " . $up;
     }
 
-    protected function computeHashCode() : int
+    protected function computeHashCode(): int
     {
         if ($this->parent === null) {
             return Hasher::hash(0);

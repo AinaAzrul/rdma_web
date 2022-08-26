@@ -38,9 +38,16 @@ class ProxyErrorListener implements ANTLRErrorListener
         int $charPositionInLine,
         string $msg,
         ?RecognitionException $e
-    ) : void {
+    ): void {
         foreach ($this->delegates as $listener) {
-            $listener->syntaxError($recognizer, $offendingSymbol, $line, $charPositionInLine, $msg, $e);
+            $listener->syntaxError(
+                $recognizer,
+                $offendingSymbol,
+                $line,
+                $charPositionInLine,
+                $msg,
+                $e
+            );
         }
     }
 
@@ -52,9 +59,17 @@ class ProxyErrorListener implements ANTLRErrorListener
         bool $exact,
         ?BitSet $ambigAlts,
         ATNConfigSet $configs
-    ) : void {
+    ): void {
         foreach ($this->delegates as $listener) {
-            $listener->reportAmbiguity($recognizer, $dfa, $startIndex, $stopIndex, $exact, $ambigAlts, $configs);
+            $listener->reportAmbiguity(
+                $recognizer,
+                $dfa,
+                $startIndex,
+                $stopIndex,
+                $exact,
+                $ambigAlts,
+                $configs
+            );
         }
     }
 
@@ -65,7 +80,7 @@ class ProxyErrorListener implements ANTLRErrorListener
         int $stopIndex,
         ?BitSet $conflictingAlts,
         ATNConfigSet $configs
-    ) : void {
+    ): void {
         foreach ($this->delegates as $listener) {
             $listener->reportAttemptingFullContext(
                 $recognizer,
@@ -85,9 +100,16 @@ class ProxyErrorListener implements ANTLRErrorListener
         int $stopIndex,
         int $prediction,
         ATNConfigSet $configs
-    ) : void {
+    ): void {
         foreach ($this->delegates as $listener) {
-            $listener->reportContextSensitivity($recognizer, $dfa, $startIndex, $stopIndex, $prediction, $configs);
+            $listener->reportContextSensitivity(
+                $recognizer,
+                $dfa,
+                $startIndex,
+                $stopIndex,
+                $prediction,
+                $configs
+            );
         }
     }
 }

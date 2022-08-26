@@ -39,17 +39,23 @@ trait OperationTrait
         ?array $attachables = null
     ) {
         parent::__construct([
-                'path' => $path ?? Generator::UNDEFINED,
-                'operationId' => $operationId ?? Generator::UNDEFINED,
-                'description' => $description ?? Generator::UNDEFINED,
-                'summary' => $summary ?? Generator::UNDEFINED,
-                'security' => $security ?? Generator::UNDEFINED,
-                'servers' => $servers ?? Generator::UNDEFINED,
-                'tags' => $tags ?? Generator::UNDEFINED,
-                'callbacks' => $callbacks ?? Generator::UNDEFINED,
-                'deprecated' => $deprecated ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($requestBody, $responses, $parameters, $externalDocs, $attachables),
-            ]);
+            "path" => $path ?? Generator::UNDEFINED,
+            "operationId" => $operationId ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "summary" => $summary ?? Generator::UNDEFINED,
+            "security" => $security ?? Generator::UNDEFINED,
+            "servers" => $servers ?? Generator::UNDEFINED,
+            "tags" => $tags ?? Generator::UNDEFINED,
+            "callbacks" => $callbacks ?? Generator::UNDEFINED,
+            "deprecated" => $deprecated ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine(
+                $requestBody,
+                $responses,
+                $parameters,
+                $externalDocs,
+                $attachables
+            ),
+        ]);
     }
 }

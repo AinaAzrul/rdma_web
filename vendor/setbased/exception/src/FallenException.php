@@ -8,44 +8,48 @@ namespace SetBased\Exception;
  */
 class FallenException extends LogicException
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Object constructor.
-   *
-   * @param string $name  The name or description of the variable of expression.
-   * @param mixed  $value The actual value the variable or expression.
-   *
-   * @since 1.0.0
-   * @api
-   *
-   * Example:
-   * ```
-   *  $size = 'xxl';
-   *  switch ($size)
-   *  {
-   *    case 'S':
-   *      echo 'small';
-   *      break;
-   *
-   *    case 'M':
-   *      echo 'medium';
-   *      break;
-   *
-   *    case 'L':
-   *      echo 'small';
-   *      break;
-   *
-   *    default:
-   *      throw new FallenException('size', $size);
-   *  }
-   * ```
-   */
-  public function __construct(string $name, $value)
-  {
-    parent::__construct("Unknown or unexpected value '%s' for '%s'.", $value, $name);
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Object constructor.
+     *
+     * @param string $name  The name or description of the variable of expression.
+     * @param mixed  $value The actual value the variable or expression.
+     *
+     * @since 1.0.0
+     * @api
+     *
+     * Example:
+     * ```
+     *  $size = 'xxl';
+     *  switch ($size)
+     *  {
+     *    case 'S':
+     *      echo 'small';
+     *      break;
+     *
+     *    case 'M':
+     *      echo 'medium';
+     *      break;
+     *
+     *    case 'L':
+     *      echo 'small';
+     *      break;
+     *
+     *    default:
+     *      throw new FallenException('size', $size);
+     *  }
+     * ```
+     */
+    public function __construct(string $name, $value)
+    {
+        parent::__construct(
+            "Unknown or unexpected value '%s' for '%s'.",
+            $value,
+            $name
+        );
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

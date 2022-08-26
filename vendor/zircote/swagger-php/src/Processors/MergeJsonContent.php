@@ -27,27 +27,46 @@ class MergeJsonContent
 
         foreach ($annotations as $jsonContent) {
             $parent = $jsonContent->_context->nested;
-            if (!($parent instanceof Response) && !($parent instanceof RequestBody) && !($parent instanceof Parameter)) {
+            if (
+                !($parent instanceof Response) &&
+                !($parent instanceof RequestBody) &&
+                !($parent instanceof Parameter)
+            ) {
                 if ($parent) {
-                    $jsonContent->_context->logger->warning('Unexpected ' . $jsonContent->identity() . ' in ' . $parent->identity() . ' in ' . $parent->_context);
+                    $jsonContent->_context->logger->warning(
+                        "Unexpected " .
+                            $jsonContent->identity() .
+                            " in " .
+                            $parent->identity() .
+                            " in " .
+                            $parent->_context
+                    );
                 } else {
-                    $jsonContent->_context->logger->warning('Unexpected ' . $jsonContent->identity() . ' must be nested');
+                    $jsonContent->_context->logger->warning(
+                        "Unexpected " .
+                            $jsonContent->identity() .
+                            " must be nested"
+                    );
                 }
                 continue;
             }
             if (Generator::isDefault($parent->content)) {
                 $parent->content = [];
             }
-            $parent->content['application/json'] = $mediaType = new MediaType([
-                'schema' => $jsonContent,
-                'example' => $jsonContent->example,
-                'examples' => $jsonContent->examples,
-                '_context' => new Context(['generated' => true], $jsonContent->_context),
-                '_aux' => true,
+            $parent->content["application/json"] = $mediaType = new MediaType([
+                "schema" => $jsonContent,
+                "example" => $jsonContent->example,
+                "examples" => $jsonContent->examples,
+                "_context" => new Context(
+                    ["generated" => true],
+                    $jsonContent->_context
+                ),
+                "_aux" => true,
             ]);
             $analysis->addAnnotation($mediaType, $mediaType->_context);
             if (!$parent instanceof Parameter) {
-                $parent->content['application/json']->mediaType = 'application/json';
+                $parent->content["application/json"]->mediaType =
+                    "application/json";
             }
             $jsonContent->example = Generator::UNDEFINED;
             $jsonContent->examples = Generator::UNDEFINED;

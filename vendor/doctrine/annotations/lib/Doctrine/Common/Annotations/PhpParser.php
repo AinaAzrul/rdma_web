@@ -39,7 +39,7 @@ final class PhpParser
      */
     public function parseUseStatements($reflection): array
     {
-        if (method_exists($reflection, 'getUseStatements')) {
+        if (method_exists($reflection, "getUseStatements")) {
             return $reflection->getUseStatements();
         }
 
@@ -49,15 +49,22 @@ final class PhpParser
             return [];
         }
 
-        $content = $this->getFileContent($filename, $reflection->getStartLine());
+        $content = $this->getFileContent(
+            $filename,
+            $reflection->getStartLine()
+        );
 
         if ($content === null) {
             return [];
         }
 
         $namespace = preg_quote($reflection->getNamespaceName());
-        $content   = preg_replace('/^.*?(\bnamespace\s+' . $namespace . '\s*[;{].*)$/s', '\\1', $content);
-        $tokenizer = new TokenParser('<?php ' . $content);
+        $content = preg_replace(
+            "/^.*?(\bnamespace\s+" . $namespace . '\s*[;{].*)$/s',
+            '\\1',
+            $content
+        );
+        $tokenizer = new TokenParser("<?php " . $content);
 
         return $tokenizer->parseUseStatements($reflection->getNamespaceName());
     }
@@ -72,14 +79,14 @@ final class PhpParser
      */
     private function getFileContent($filename, $lineNumber)
     {
-        if (! is_file($filename)) {
+        if (!is_file($filename)) {
             return null;
         }
 
-        $content = '';
+        $content = "";
         $lineCnt = 0;
-        $file    = new SplFileObject($filename);
-        while (! $file->eof()) {
+        $file = new SplFileObject($filename);
+        while (!$file->eof()) {
             if ($lineCnt++ === $lineNumber) {
                 break;
             }

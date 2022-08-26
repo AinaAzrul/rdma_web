@@ -22,8 +22,12 @@ class PredicateTransition extends AbstractPredicateTransition
      */
     public $isCtxDependent;
 
-    public function __construct(ATNState $target, int $ruleIndex, int $predIndex, bool $isCtxDependent)
-    {
+    public function __construct(
+        ATNState $target,
+        int $ruleIndex,
+        int $predIndex,
+        bool $isCtxDependent
+    ) {
         parent::__construct($target);
 
         $this->ruleIndex = $ruleIndex;
@@ -31,44 +35,51 @@ class PredicateTransition extends AbstractPredicateTransition
         $this->isCtxDependent = $isCtxDependent;
     }
 
-    public function matches(int $symbol, int $minVocabSymbol, int $maxVocabSymbol) : bool
-    {
+    public function matches(
+        int $symbol,
+        int $minVocabSymbol,
+        int $maxVocabSymbol
+    ): bool {
         return false;
     }
 
-    public function getPredicate() : Predicate
+    public function getPredicate(): Predicate
     {
-        return new Predicate($this->ruleIndex, $this->predIndex, $this->isCtxDependent);
+        return new Predicate(
+            $this->ruleIndex,
+            $this->predIndex,
+            $this->isCtxDependent
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isEpsilon() : bool
+    public function isEpsilon(): bool
     {
         return true;
     }
 
-    public function getSerializationType() : int
+    public function getSerializationType(): int
     {
         return self::PREDICATE;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        return $other instanceof self
-            && $this->ruleIndex === $other->ruleIndex
-            && $this->predIndex === $other->predIndex
-            && $this->isCtxDependent === $other->isCtxDependent
-            && $this->target->equals($other->target);
+        return $other instanceof self &&
+            $this->ruleIndex === $other->ruleIndex &&
+            $this->predIndex === $other->predIndex &&
+            $this->isCtxDependent === $other->isCtxDependent &&
+            $this->target->equals($other->target);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return \sprintf('pred_%d:%d', $this->ruleIndex, $this->predIndex);
+        return \sprintf("pred_%d:%d", $this->ruleIndex, $this->predIndex);
     }
 }

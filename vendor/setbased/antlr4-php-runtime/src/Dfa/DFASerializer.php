@@ -24,13 +24,13 @@ class DFASerializer
         $this->vocabulary = $vocabulary;
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         if ($this->dfa->s0 === null) {
-            return '';
+            return "";
         }
 
-        $string = '';
+        $string = "";
 
         /** @var DFAState $state */
         foreach ($this->dfa->getStates() as $state) {
@@ -40,12 +40,16 @@ class DFASerializer
                 /** @var DFAState $t */
                 $t = $state->edges[$i];
 
-                if ($t !== null && $t->stateNumber !== 0x7FFFFFFF) {
+                if ($t !== null && $t->stateNumber !== 0x7fffffff) {
                     $string .= $this->getStateString($state);
 
                     $label = $this->getEdgeLabel($i);
 
-                    $string .= \sprintf("-%s->%s\n", $label, $this->getStateString($t));
+                    $string .= \sprintf(
+                        "-%s->%s\n",
+                        $label,
+                        $this->getStateString($t)
+                    );
                 }
             }
         }
@@ -53,36 +57,39 @@ class DFASerializer
         return $string;
     }
 
-    protected function getEdgeLabel(int $i) : string
+    protected function getEdgeLabel(int $i): string
     {
         return $this->vocabulary->getDisplayName($i - 1);
     }
 
-    protected function getStateString(DFAState $state) : string
+    protected function getStateString(DFAState $state): string
     {
         if ($state->equals(ATNSimulator::error())) {
-            return 'ERROR';
+            return "ERROR";
         }
 
         $baseStateStr = \sprintf(
-            '%ss%d%s',
-            $state->isAcceptState ? ':' : '',
+            "%ss%d%s",
+            $state->isAcceptState ? ":" : "",
             $state->stateNumber,
-            $state->requiresFullContext ? '^' : ''
+            $state->requiresFullContext ? "^" : ""
         );
 
         if ($state->isAcceptState) {
             if ($state->predicates !== null) {
-                return $baseStateStr . '=>[' . \implode(', ', $state->predicates) . ']';
+                return $baseStateStr .
+                    "=>[" .
+                    \implode(", ", $state->predicates) .
+                    "]";
             }
 
-            return $baseStateStr . '=>' . $state->prediction;
+            return $baseStateStr . "=>" . $state->prediction;
         }
 
         return $baseStateStr;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->toString();
     }

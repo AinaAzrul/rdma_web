@@ -22,8 +22,10 @@ class LogglyFormatter extends JsonFormatter
      * Overrides the default batch mode to new lines for compatibility with the
      * Loggly bulk API.
      */
-    public function __construct(int $batchMode = self::BATCH_MODE_NEWLINES, bool $appendNewline = false)
-    {
+    public function __construct(
+        int $batchMode = self::BATCH_MODE_NEWLINES,
+        bool $appendNewline = false
+    ) {
         parent::__construct($batchMode, $appendNewline);
     }
 
@@ -35,8 +37,13 @@ class LogglyFormatter extends JsonFormatter
      */
     public function format(array $record): string
     {
-        if (isset($record["datetime"]) && ($record["datetime"] instanceof \DateTimeInterface)) {
-            $record["timestamp"] = $record["datetime"]->format("Y-m-d\TH:i:s.uO");
+        if (
+            isset($record["datetime"]) &&
+            $record["datetime"] instanceof \DateTimeInterface
+        ) {
+            $record["timestamp"] = $record["datetime"]->format(
+                "Y-m-d\TH:i:s.uO"
+            );
             unset($record["datetime"]);
         }
 

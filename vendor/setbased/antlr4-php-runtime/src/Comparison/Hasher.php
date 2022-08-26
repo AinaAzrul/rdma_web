@@ -10,7 +10,7 @@ final class Hasher
     {
     }
 
-    public static function hash(...$values) : int
+    public static function hash(...$values): int
     {
         return self::hashArray($values);
     }
@@ -18,7 +18,7 @@ final class Hasher
     /**
      * @param array<mixed> $values
      */
-    private static function hashArray(array $values) : int
+    private static function hashArray(array $values): int
     {
         $result = 1;
         foreach ($values as $value) {
@@ -29,7 +29,7 @@ final class Hasher
         return $result;
     }
 
-    public static function hashValue($value) : int
+    public static function hashValue($value): int
     {
         if ($value === null) {
             return 0;

@@ -22,7 +22,7 @@ use Symfony\Component\Console\Exception\CommandNotFoundException;
  */
 class ApplicationDescription
 {
-    public const GLOBAL_NAMESPACE = '_global';
+    public const GLOBAL_NAMESPACE = "_global";
 
     private $application;
     private $namespace;
@@ -43,8 +43,11 @@ class ApplicationDescription
      */
     private $aliases;
 
-    public function __construct(Application $application, string $namespace = null, bool $showHidden = false)
-    {
+    public function __construct(
+        Application $application,
+        string $namespace = null,
+        bool $showHidden = false
+    ) {
         $this->application = $application;
         $this->namespace = $namespace;
         $this->showHidden = $showHidden;
@@ -77,7 +80,9 @@ class ApplicationDescription
     public function getCommand(string $name): Command
     {
         if (!isset($this->commands[$name]) && !isset($this->aliases[$name])) {
-            throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
+            throw new CommandNotFoundException(
+                sprintf('Command "%s" does not exist.', $name)
+            );
         }
 
         return $this->commands[$name] ?? $this->aliases[$name];
@@ -88,13 +93,20 @@ class ApplicationDescription
         $this->commands = [];
         $this->namespaces = [];
 
-        $all = $this->application->all($this->namespace ? $this->application->findNamespace($this->namespace) : null);
+        $all = $this->application->all(
+            $this->namespace
+                ? $this->application->findNamespace($this->namespace)
+                : null
+        );
         foreach ($this->sortCommands($all) as $namespace => $commands) {
             $names = [];
 
             /** @var Command $command */
             foreach ($commands as $name => $command) {
-                if (!$command->getName() || (!$this->showHidden && $command->isHidden())) {
+                if (
+                    !$command->getName() ||
+                    (!$this->showHidden && $command->isHidden())
+                ) {
                     continue;
                 }
 
@@ -107,7 +119,10 @@ class ApplicationDescription
                 $names[] = $name;
             }
 
-            $this->namespaces[$namespace] = ['id' => $namespace, 'commands' => $names];
+            $this->namespaces[$namespace] = [
+                "id" => $namespace,
+                "commands" => $names,
+            ];
         }
     }
 
@@ -118,7 +133,7 @@ class ApplicationDescription
         $sortedCommands = [];
         foreach ($commands as $name => $command) {
             $key = $this->application->extractNamespace($name, 1);
-            if (\in_array($key, ['', self::GLOBAL_NAMESPACE], true)) {
+            if (\in_array($key, ["", self::GLOBAL_NAMESPACE], true)) {
                 $globalCommands[$name] = $command;
             } else {
                 $namespacedCommands[$key][$name] = $command;

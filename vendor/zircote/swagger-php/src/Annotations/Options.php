@@ -14,12 +14,10 @@ class Options extends Operation
     /**
      * @inheritdoc
      */
-    public $method = 'options';
+    public $method = "options";
 
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        PathItem::class,
-    ];
+    public static $_parents = [PathItem::class];
 }

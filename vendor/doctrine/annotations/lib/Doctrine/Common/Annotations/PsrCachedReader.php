@@ -36,11 +36,14 @@ final class PsrCachedReader implements Reader
     /** @var int[] */
     private $loadedFilemtimes = [];
 
-    public function __construct(Reader $reader, CacheItemPoolInterface $cache, bool $debug = false)
-    {
+    public function __construct(
+        Reader $reader,
+        CacheItemPoolInterface $cache,
+        bool $debug = false
+    ) {
         $this->delegate = $reader;
-        $this->cache    = $cache;
-        $this->debug    = (bool) $debug;
+        $this->cache = $cache;
+        $this->debug = (bool) $debug;
     }
 
     /**
@@ -54,7 +57,12 @@ final class PsrCachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        $annots = $this->fetchFromCache($cacheKey, $class, 'getClassAnnotations', $class);
+        $annots = $this->fetchFromCache(
+            $cacheKey,
+            $class,
+            "getClassAnnotations",
+            $class
+        );
 
         return $this->loadedAnnotations[$cacheKey] = $annots;
     }
@@ -78,14 +86,19 @@ final class PsrCachedReader implements Reader
      */
     public function getPropertyAnnotations(ReflectionProperty $property)
     {
-        $class    = $property->getDeclaringClass();
+        $class = $property->getDeclaringClass();
         $cacheKey = $class->getName() . '$' . $property->getName();
 
         if (isset($this->loadedAnnotations[$cacheKey])) {
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        $annots = $this->fetchFromCache($cacheKey, $class, 'getPropertyAnnotations', $property);
+        $annots = $this->fetchFromCache(
+            $cacheKey,
+            $class,
+            "getPropertyAnnotations",
+            $property
+        );
 
         return $this->loadedAnnotations[$cacheKey] = $annots;
     }
@@ -93,8 +106,10 @@ final class PsrCachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
-    {
+    public function getPropertyAnnotation(
+        ReflectionProperty $property,
+        $annotationName
+    ) {
         foreach ($this->getPropertyAnnotations($property) as $annot) {
             if ($annot instanceof $annotationName) {
                 return $annot;
@@ -109,14 +124,19 @@ final class PsrCachedReader implements Reader
      */
     public function getMethodAnnotations(ReflectionMethod $method)
     {
-        $class    = $method->getDeclaringClass();
-        $cacheKey = $class->getName() . '#' . $method->getName();
+        $class = $method->getDeclaringClass();
+        $cacheKey = $class->getName() . "#" . $method->getName();
 
         if (isset($this->loadedAnnotations[$cacheKey])) {
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        $annots = $this->fetchFromCache($cacheKey, $class, 'getMethodAnnotations', $method);
+        $annots = $this->fetchFromCache(
+            $cacheKey,
+            $class,
+            "getMethodAnnotations",
+            $method
+        );
 
         return $this->loadedAnnotations[$cacheKey] = $annots;
     }
@@ -124,8 +144,10 @@ final class PsrCachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
-    {
+    public function getMethodAnnotation(
+        ReflectionMethod $method,
+        $annotationName
+    ) {
         foreach ($this->getMethodAnnotations($method) as $annot) {
             if ($annot instanceof $annotationName) {
                 return $annot;
@@ -138,7 +160,7 @@ final class PsrCachedReader implements Reader
     public function clearLoadedAnnotations(): void
     {
         $this->loadedAnnotations = [];
-        $this->loadedFilemtimes  = [];
+        $this->loadedFilemtimes = [];
     }
 
     /** @return mixed[] */
@@ -151,8 +173,13 @@ final class PsrCachedReader implements Reader
         $cacheKey = rawurlencode($cacheKey);
 
         $item = $this->cache->getItem($cacheKey);
-        if (($this->debug && ! $this->refresh($cacheKey, $class)) || ! $item->isHit()) {
-            $this->cache->save($item->set($this->delegate->{$method}($reflector)));
+        if (
+            ($this->debug && !$this->refresh($cacheKey, $class)) ||
+            !$item->isHit()
+        ) {
+            $this->cache->save(
+                $item->set($this->delegate->{$method}($reflector))
+            );
         }
 
         return $item->get();
@@ -171,7 +198,7 @@ final class PsrCachedReader implements Reader
             return true;
         }
 
-        $item = $this->cache->getItem('[C]' . $cacheKey);
+        $item = $this->cache->getItem("[C]" . $cacheKey);
         if ($item->isHit() && $item->get() >= $lastModification) {
             return true;
         }
@@ -194,36 +221,45 @@ final class PsrCachedReader implements Reader
 
         $parent = $class->getParentClass();
 
-        $lastModification =  max(array_merge(
-            [$filename ? filemtime($filename) : 0],
-            array_map(function (ReflectionClass $reflectionTrait): int {
-                return $this->getTraitLastModificationTime($reflectionTrait);
-            }, $class->getTraits()),
-            array_map(function (ReflectionClass $class): int {
-                return $this->getLastModification($class);
-            }, $class->getInterfaces()),
-            $parent ? [$this->getLastModification($parent)] : []
-        ));
+        $lastModification = max(
+            array_merge(
+                [$filename ? filemtime($filename) : 0],
+                array_map(function (ReflectionClass $reflectionTrait): int {
+                    return $this->getTraitLastModificationTime(
+                        $reflectionTrait
+                    );
+                }, $class->getTraits()),
+                array_map(function (ReflectionClass $class): int {
+                    return $this->getLastModification($class);
+                }, $class->getInterfaces()),
+                $parent ? [$this->getLastModification($parent)] : []
+            )
+        );
 
         assert($lastModification !== false);
 
         return $this->loadedFilemtimes[$filename] = $lastModification;
     }
 
-    private function getTraitLastModificationTime(ReflectionClass $reflectionTrait): int
-    {
+    private function getTraitLastModificationTime(
+        ReflectionClass $reflectionTrait
+    ): int {
         $fileName = $reflectionTrait->getFileName();
 
         if (isset($this->loadedFilemtimes[$fileName])) {
             return $this->loadedFilemtimes[$fileName];
         }
 
-        $lastModificationTime = max(array_merge(
-            [$fileName ? filemtime($fileName) : 0],
-            array_map(function (ReflectionClass $reflectionTrait): int {
-                return $this->getTraitLastModificationTime($reflectionTrait);
-            }, $reflectionTrait->getTraits())
-        ));
+        $lastModificationTime = max(
+            array_merge(
+                [$fileName ? filemtime($fileName) : 0],
+                array_map(function (ReflectionClass $reflectionTrait): int {
+                    return $this->getTraitLastModificationTime(
+                        $reflectionTrait
+                    );
+                }, $reflectionTrait->getTraits())
+            )
+        );
 
         assert($lastModificationTime !== false);
 

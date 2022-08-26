@@ -97,11 +97,11 @@ final class CommonToken implements WritableToken
         int $stop = -1
     ) {
         if ($source !== null && !$source->a instanceof TokenSource) {
-            throw new \RuntimeException('Unexpected token source type.');
+            throw new \RuntimeException("Unexpected token source type.");
         }
 
         if ($source !== null && !$source->b instanceof CharStream) {
-            throw new \RuntimeException('Unexpected stream type.');
+            throw new \RuntimeException("Unexpected stream type.");
         }
 
         $this->source = $source ?? self::emptySource();
@@ -122,7 +122,7 @@ final class CommonToken implements WritableToken
      * An empty {@see Pair}, which is used as the default value of
      * {@see CommonToken::source()} for tokens that do not have a source.
      */
-    public static function emptySource() : Pair
+    public static function emptySource(): Pair
     {
         static $source;
 
@@ -140,9 +140,15 @@ final class CommonToken implements WritableToken
      * constructed from the result of {@see Token::getTokenSource()} and
      * {@see Token::getInputStream()}.
      */
-    public function clone() : CommonToken
+    public function clone(): CommonToken
     {
-        $token = new self($this->type, $this->source, $this->channel, $this->start, $this->stop);
+        $token = new self(
+            $this->type,
+            $this->source,
+            $this->channel,
+            $this->start,
+            $this->stop
+        );
 
         $token->index = $this->index;
         $token->line = $this->line;
@@ -153,27 +159,27 @@ final class CommonToken implements WritableToken
         return $token;
     }
 
-    public function getType() : int
+    public function getType(): int
     {
         return $this->type;
     }
 
-    public function setType(int $type) : void
+    public function setType(int $type): void
     {
         $this->type = $type;
     }
 
-    public function getLine() : int
+    public function getLine(): int
     {
         return $this->line;
     }
 
-    public function setLine(int $line) : void
+    public function setLine(int $line): void
     {
         $this->line = $line;
     }
 
-    public function getText() : ?string
+    public function getText(): ?string
     {
         if ($this->text !== null) {
             return $this->text;
@@ -191,7 +197,7 @@ final class CommonToken implements WritableToken
             return $input->getText($this->start, $this->stop);
         }
 
-        return '<EOF>';
+        return "<EOF>";
     }
 
     /**
@@ -203,98 +209,98 @@ final class CommonToken implements WritableToken
      *                     if the text should be obtained from the input
      *                     along with the start and stop indexes of the token.
      */
-    public function setText(?string $text) : void
+    public function setText(?string $text): void
     {
         $this->text = $text;
     }
 
-    public function getCharPositionInLine() : int
+    public function getCharPositionInLine(): int
     {
         return $this->charPositionInLine;
     }
 
-    public function setCharPositionInLine(int $charPositionInLine) : void
+    public function setCharPositionInLine(int $charPositionInLine): void
     {
         $this->charPositionInLine = $charPositionInLine;
     }
 
-    public function getChannel() : int
+    public function getChannel(): int
     {
         return $this->channel;
     }
 
-    public function setChannel(int $channel) : void
+    public function setChannel(int $channel): void
     {
         $this->channel = $channel;
     }
 
-    public function getStartIndex() : int
+    public function getStartIndex(): int
     {
         return $this->start;
     }
 
-    public function setStartIndex(int $index) : void
+    public function setStartIndex(int $index): void
     {
         $this->start = $index;
     }
 
-    public function getStopIndex() : int
+    public function getStopIndex(): int
     {
         return $this->stop;
     }
 
-    public function setStopIndex(int $index) : void
+    public function setStopIndex(int $index): void
     {
         $this->stop = $index;
     }
 
-    public function getTokenIndex() : int
+    public function getTokenIndex(): int
     {
         return $this->index;
     }
 
-    public function setTokenIndex(int $tokenIndex) : void
+    public function setTokenIndex(int $tokenIndex): void
     {
         $this->index = $tokenIndex;
     }
 
-    public function getTokenSource() : ?TokenSource
+    public function getTokenSource(): ?TokenSource
     {
         $source = $this->source->a;
 
         if ($source !== null && !$source instanceof TokenSource) {
-            throw new \RuntimeException('Unexpected token source type.');
+            throw new \RuntimeException("Unexpected token source type.");
         }
 
         return $source;
     }
 
-    public function getInputStream() : ?CharStream
+    public function getInputStream(): ?CharStream
     {
         $stream = $this->source->b;
 
         if ($stream !== null && !$stream instanceof CharStream) {
-            throw new \RuntimeException('Unexpected token source type.');
+            throw new \RuntimeException("Unexpected token source type.");
         }
 
         return $stream;
     }
 
-    public function getSource() : Pair
+    public function getSource(): Pair
     {
         return $this->source;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return \sprintf(
             '[@%d,%d:%d=\'%s\',<%d>%s,%d:%d]',
             $this->getTokenIndex(),
             $this->start,
             $this->stop,
-            StringUtils::escapeWhitespace($this->getText() ?? ''),
+            StringUtils::escapeWhitespace($this->getText() ?? ""),
             $this->type,
-            $this->channel > 0 ? ',channel=' . $this->channel : '',
+            $this->channel > 0 ? ",channel=" . $this->channel : "",
             $this->line,
             $this->charPositionInLine
         );

@@ -79,8 +79,8 @@ trait DocblockTrait
                 $description = 2 == count($token) ? trim($token[1]) : null;
 
                 $tags[$tag][$name] = [
-                    'type' => $type,
-                    'description' => $description,
+                    "type" => $type,
+                    "description" => $description,
                 ];
             }
         }
@@ -89,22 +89,24 @@ trait DocblockTrait
     /**
      * The text contents of the phpdoc comment (excl. tags).
      */
-    public function extractContent(?string $docblock, ?array &$tags = null): string
-    {
+    public function extractContent(
+        ?string $docblock,
+        ?array &$tags = null
+    ): string {
         if (Generator::isDefault($docblock)) {
             return Generator::UNDEFINED;
         }
 
         $comment = preg_split('/(\n|\r\n)/', (string) $docblock);
-        $comment[0] = preg_replace('/[ \t]*\\/\*\*/', '', $comment[0]); // strip '/**'
+        $comment[0] = preg_replace('/[ \t]*\\/\*\*/', "", $comment[0]); // strip '/**'
         $i = count($comment) - 1;
-        $comment[$i] = preg_replace('/\*\/[ \t]*$/', '', $comment[$i]); // strip '*/'
+        $comment[$i] = preg_replace('/\*\/[ \t]*$/', "", $comment[$i]); // strip '*/'
         $lines = [];
         $append = false;
         $skip = false;
         foreach ($comment as $line) {
             $line = ltrim($line, "\t *");
-            if (substr($line, 0, 1) === '@') {
+            if (substr($line, 0, 1) === "@") {
                 $this->handleTag($line, $tags);
                 $skip = true;
             }
@@ -117,10 +119,10 @@ trait DocblockTrait
             } else {
                 $lines[] = $line;
             }
-            $append = (substr($line, -1) === '\\');
+            $append = substr($line, -1) === "\\";
         }
         $description = trim(implode("\n", $lines));
-        if ($description === '') {
+        if ($description === "") {
             return Generator::UNDEFINED;
         }
 
@@ -132,19 +134,19 @@ trait DocblockTrait
      */
     public function extractSummary(?string $docblock): string
     {
-        if (!$content = $this->extractContent($docblock)) {
+        if (!($content = $this->extractContent($docblock))) {
             return Generator::UNDEFINED;
         }
         $lines = preg_split('/(\n|\r\n)/', $content);
-        $summary = '';
+        $summary = "";
         foreach ($lines as $line) {
             $summary .= $line . "\n";
-            if ($line === '' || substr($line, -1) === '.') {
+            if ($line === "" || substr($line, -1) === ".") {
                 return trim($summary);
             }
         }
         $summary = trim($summary);
-        if ($summary === '') {
+        if ($summary === "") {
             return Generator::UNDEFINED;
         }
 
@@ -163,8 +165,14 @@ trait DocblockTrait
             return Generator::UNDEFINED;
         }
 
-        $description = '';
-        if (false !== ($substr = substr($this->extractContent($docblock), strlen($summary)))) {
+        $description = "";
+        if (
+            false !==
+            ($substr = substr(
+                $this->extractContent($docblock),
+                strlen($summary)
+            ))
+        ) {
             $description = trim($substr);
         }
 

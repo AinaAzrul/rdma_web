@@ -39,13 +39,13 @@ class Discriminator extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public static $_required = ['propertyName'];
+    public static $_required = ["propertyName"];
 
     /**
      * @inheritdoc
      */
     public static $_types = [
-        'propertyName' => 'string',
+        "propertyName" => "string",
     ];
 
     /**
@@ -64,6 +64,6 @@ class Discriminator extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_nested = [
-        Attachable::class => ['attachables'],
+        Attachable::class => ["attachables"],
     ];
 }

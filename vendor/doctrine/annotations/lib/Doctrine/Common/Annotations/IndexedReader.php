@@ -59,8 +59,10 @@ class IndexedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
-    {
+    public function getMethodAnnotation(
+        ReflectionMethod $method,
+        $annotationName
+    ) {
         return $this->delegate->getMethodAnnotation($method, $annotationName);
     }
 
@@ -80,9 +82,14 @@ class IndexedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
-    {
-        return $this->delegate->getPropertyAnnotation($property, $annotationName);
+    public function getPropertyAnnotation(
+        ReflectionProperty $property,
+        $annotationName
+    ) {
+        return $this->delegate->getPropertyAnnotation(
+            $property,
+            $annotationName
+        );
     }
 
     /**

@@ -13,8 +13,11 @@ use Antlr\Antlr4\Runtime\ParserRuleContext;
  */
 class InputMismatchException extends RecognitionException
 {
-    public function __construct(Parser $recognizer, ?int $state = null, ?ParserRuleContext $ctx = null)
-    {
+    public function __construct(
+        Parser $recognizer,
+        ?int $state = null,
+        ?ParserRuleContext $ctx = null
+    ) {
         parent::__construct(
             $recognizer,
             $recognizer->getInputStream(),

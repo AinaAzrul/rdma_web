@@ -45,11 +45,11 @@ class MercurialProcessor implements ProcessorInterface
     public function __invoke(array $record): array
     {
         // return if the level is not high enough
-        if ($record['level'] < $this->level) {
+        if ($record["level"] < $this->level) {
             return $record;
         }
 
-        $record['extra']['hg'] = self::getMercurialInfo();
+        $record["extra"]["hg"] = self::getMercurialInfo();
 
         return $record;
     }
@@ -63,12 +63,12 @@ class MercurialProcessor implements ProcessorInterface
             return self::$cache;
         }
 
-        $result = explode(' ', trim(`hg id -nb`));
+        $result = explode(" ", trim(`hg id -nb`));
 
         if (count($result) >= 3) {
             return self::$cache = [
-                'branch' => $result[1],
-                'revision' => $result[2],
+                "branch" => $result[1],
+                "revision" => $result[2],
             ];
         }
 

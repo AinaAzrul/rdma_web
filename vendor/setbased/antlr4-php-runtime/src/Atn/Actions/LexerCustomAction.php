@@ -47,7 +47,7 @@ final class LexerCustomAction implements LexerAction
      *
      * @return int The rule index for the custom action.
      */
-    public function getRuleIndex() : int
+    public function getRuleIndex(): int
     {
         return $this->ruleIndex;
     }
@@ -57,7 +57,7 @@ final class LexerCustomAction implements LexerAction
      *
      * @return int The action index for the custom action.
      */
-    public function getActionIndex() : int
+    public function getActionIndex(): int
     {
         return $this->actionIndex;
     }
@@ -67,7 +67,7 @@ final class LexerCustomAction implements LexerAction
      *
      * @return int This method returns {@see LexerActionType::CUSTOM()}.
      */
-    public function getActionType() : int
+    public function getActionType(): int
     {
         return LexerActionType::CUSTOM;
     }
@@ -83,7 +83,7 @@ final class LexerCustomAction implements LexerAction
      *
      * @return bool This method returns `true`.
      */
-    public function isPositionDependent() : bool
+    public function isPositionDependent(): bool
     {
         return true;
     }
@@ -94,17 +94,21 @@ final class LexerCustomAction implements LexerAction
      * Custom actions are implemented by calling {@see Lexer::action()} with the
      * appropriate rule and action indexes.
      */
-    public function execute(Lexer $lexer) : void
+    public function execute(Lexer $lexer): void
     {
         $lexer->action(null, $this->ruleIndex, $this->actionIndex);
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
-        return Hasher::hash($this->getActionType(), $this->ruleIndex, $this->actionIndex);
+        return Hasher::hash(
+            $this->getActionType(),
+            $this->ruleIndex,
+            $this->actionIndex
+        );
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
@@ -114,7 +118,7 @@ final class LexerCustomAction implements LexerAction
             return false;
         }
 
-        return $this->ruleIndex === $other->ruleIndex
-            && $this->actionIndex === $other->actionIndex;
+        return $this->ruleIndex === $other->ruleIndex &&
+            $this->actionIndex === $other->actionIndex;
     }
 }

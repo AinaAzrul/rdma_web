@@ -39,10 +39,16 @@ class StreamOutput extends Output
      *
      * @throws InvalidArgumentException When first argument is not a real stream
      */
-    public function __construct($stream, int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = null, OutputFormatterInterface $formatter = null)
-    {
-        if (!\is_resource($stream) || 'stream' !== get_resource_type($stream)) {
-            throw new InvalidArgumentException('The StreamOutput class needs a stream as its first argument.');
+    public function __construct(
+        $stream,
+        int $verbosity = self::VERBOSITY_NORMAL,
+        bool $decorated = null,
+        OutputFormatterInterface $formatter = null
+    ) {
+        if (!\is_resource($stream) || "stream" !== get_resource_type($stream)) {
+            throw new InvalidArgumentException(
+                "The StreamOutput class needs a stream as its first argument."
+            );
         }
 
         $this->stream = $stream;
@@ -94,20 +100,20 @@ class StreamOutput extends Output
     protected function hasColorSupport()
     {
         // Follow https://no-color.org/
-        if (isset($_SERVER['NO_COLOR']) || false !== getenv('NO_COLOR')) {
+        if (isset($_SERVER["NO_COLOR"]) || false !== getenv("NO_COLOR")) {
             return false;
         }
 
-        if ('Hyper' === getenv('TERM_PROGRAM')) {
+        if ("Hyper" === getenv("TERM_PROGRAM")) {
             return true;
         }
 
-        if (\DIRECTORY_SEPARATOR === '\\') {
-            return (\function_exists('sapi_windows_vt100_support')
-                && @sapi_windows_vt100_support($this->stream))
-                || false !== getenv('ANSICON')
-                || 'ON' === getenv('ConEmuANSI')
-                || 'xterm' === getenv('TERM');
+        if (\DIRECTORY_SEPARATOR === "\\") {
+            return (\function_exists("sapi_windows_vt100_support") &&
+                @sapi_windows_vt100_support($this->stream)) ||
+                false !== getenv("ANSICON") ||
+                "ON" === getenv("ConEmuANSI") ||
+                "xterm" === getenv("TERM");
         }
 
         return stream_isatty($this->stream);

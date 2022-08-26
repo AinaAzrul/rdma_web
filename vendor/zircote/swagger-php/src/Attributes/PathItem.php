@@ -27,11 +27,11 @@ class PathItem extends \OpenApi\Annotations\PathItem
         ?array $attachables = null
     ) {
         parent::__construct([
-                'path' => $path ?? Generator::UNDEFINED,
-                'summary' => $summary ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($servers, $parameters, $attachables),
-            ]);
+            "path" => $path ?? Generator::UNDEFINED,
+            "summary" => $summary ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($servers, $parameters, $attachables),
+        ]);
     }
 }
 

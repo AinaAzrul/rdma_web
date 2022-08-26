@@ -42,22 +42,20 @@ class Contact extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_types = [
-        'name' => 'string',
-        'url' => 'string',
-        'email' => 'string',
+        "name" => "string",
+        "url" => "string",
+        "email" => "string",
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        Info::class,
-    ];
+    public static $_parents = [Info::class];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Attachable::class => ['attachables'],
+        Attachable::class => ["attachables"],
     ];
 }

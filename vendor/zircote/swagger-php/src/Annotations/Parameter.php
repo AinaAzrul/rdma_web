@@ -225,26 +225,34 @@ class Parameter extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public static $_required = ['name', 'in'];
+    public static $_required = ["name", "in"];
 
     /**
      * @inheritdoc
      */
     public static $_types = [
-        'name' => 'string',
-        'in' => ['query', 'header', 'path', 'cookie'],
-        'description' => 'string',
-        'style' => ['matrix', 'label', 'form', 'simple', 'spaceDelimited', 'pipeDelimited', 'deepObject'],
-        'required' => 'boolean',
+        "name" => "string",
+        "in" => ["query", "header", "path", "cookie"],
+        "description" => "string",
+        "style" => [
+            "matrix",
+            "label",
+            "form",
+            "simple",
+            "spaceDelimited",
+            "pipeDelimited",
+            "deepObject",
+        ],
+        "required" => "boolean",
     ];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Schema::class => 'schema',
-        Examples::class => ['examples', 'example'],
-        Attachable::class => ['attachables'],
+        Schema::class => "schema",
+        Examples::class => ["examples", "example"],
+        Attachable::class => ["attachables"],
     ];
 
     /**
@@ -267,8 +275,12 @@ class Parameter extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public function validate(array $stack = [], array $skip = [], string $ref = '', $context = null): bool
-    {
+    public function validate(
+        array $stack = [],
+        array $skip = [],
+        string $ref = "",
+        $context = null
+    ): bool {
         if (in_array($this, $skip, true)) {
             return true;
         }
@@ -276,9 +288,16 @@ class Parameter extends AbstractAnnotation
         $valid = parent::validate($stack, $skip, $ref, $context);
 
         if (Generator::isDefault($this->ref)) {
-            if ($this->in === 'body') {
+            if ($this->in === "body") {
                 if (Generator::isDefault($this->schema)) {
-                    $this->_context->logger->warning('Field "schema" is required when ' . $this->identity() . ' is in "' . $this->in . '" in ' . $this->_context);
+                    $this->_context->logger->warning(
+                        'Field "schema" is required when ' .
+                            $this->identity() .
+                            ' is in "' .
+                            $this->in .
+                            '" in ' .
+                            $this->_context
+                    );
                     $valid = false;
                 }
             }
@@ -292,6 +311,6 @@ class Parameter extends AbstractAnnotation
      */
     public function identity(): string
     {
-        return parent::_identity(['name', 'in']);
+        return parent::_identity(["name", "in"]);
     }
 }

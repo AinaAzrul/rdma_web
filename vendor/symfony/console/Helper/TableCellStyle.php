@@ -18,36 +18,47 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
  */
 class TableCellStyle
 {
-    public const DEFAULT_ALIGN = 'left';
+    public const DEFAULT_ALIGN = "left";
 
     private $options = [
-        'fg' => 'default',
-        'bg' => 'default',
-        'options' => null,
-        'align' => self::DEFAULT_ALIGN,
-        'cellFormat' => null,
+        "fg" => "default",
+        "bg" => "default",
+        "options" => null,
+        "align" => self::DEFAULT_ALIGN,
+        "cellFormat" => null,
     ];
 
-    private $tagOptions = [
-        'fg',
-        'bg',
-        'options',
-    ];
+    private $tagOptions = ["fg", "bg", "options"];
 
     private $alignMap = [
-        'left' => \STR_PAD_RIGHT,
-        'center' => \STR_PAD_BOTH,
-        'right' => \STR_PAD_LEFT,
+        "left" => \STR_PAD_RIGHT,
+        "center" => \STR_PAD_BOTH,
+        "right" => \STR_PAD_LEFT,
     ];
 
     public function __construct(array $options = [])
     {
-        if ($diff = array_diff(array_keys($options), array_keys($this->options))) {
-            throw new InvalidArgumentException(sprintf('The TableCellStyle does not support the following options: \'%s\'.', implode('\', \'', $diff)));
+        if (
+            $diff = array_diff(array_keys($options), array_keys($this->options))
+        ) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The TableCellStyle does not support the following options: \'%s\'.',
+                    implode('\', \'', $diff)
+                )
+            );
         }
 
-        if (isset($options['align']) && !\array_key_exists($options['align'], $this->alignMap)) {
-            throw new InvalidArgumentException(sprintf('Wrong align value. Value must be following: \'%s\'.', implode('\', \'', array_keys($this->alignMap))));
+        if (
+            isset($options["align"]) &&
+            !\array_key_exists($options["align"], $this->alignMap)
+        ) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Wrong align value. Value must be following: \'%s\'.',
+                    implode('\', \'', array_keys($this->alignMap))
+                )
+            );
         }
 
         $this->options = array_merge($this->options, $options);
@@ -68,7 +79,8 @@ class TableCellStyle
         return array_filter(
             $this->getOptions(),
             function ($key) {
-                return \in_array($key, $this->tagOptions) && isset($this->options[$key]);
+                return \in_array($key, $this->tagOptions) &&
+                    isset($this->options[$key]);
             },
             \ARRAY_FILTER_USE_KEY
         );
@@ -76,11 +88,11 @@ class TableCellStyle
 
     public function getPadByAlign()
     {
-        return $this->alignMap[$this->getOptions()['align']];
+        return $this->alignMap[$this->getOptions()["align"]];
     }
 
     public function getCellFormat(): ?string
     {
-        return $this->getOptions()['cellFormat'];
+        return $this->getOptions()["cellFormat"];
     }
 }

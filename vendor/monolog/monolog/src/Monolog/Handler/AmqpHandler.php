@@ -37,14 +37,23 @@ class AmqpHandler extends AbstractProcessingHandler
      * @param AMQPExchange|AMQPChannel $exchange     AMQPExchange (php AMQP ext) or PHP AMQP lib channel, ready for use
      * @param string|null              $exchangeName Optional exchange name, for AMQPChannel (PhpAmqpLib) only
      */
-    public function __construct($exchange, ?string $exchangeName = null, $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        $exchange,
+        ?string $exchangeName = null,
+        $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
         if ($exchange instanceof AMQPChannel) {
             $this->exchangeName = (string) $exchangeName;
         } elseif (!$exchange instanceof AMQPExchange) {
-            throw new \InvalidArgumentException('PhpAmqpLib\Channel\AMQPChannel or AMQPExchange instance required');
+            throw new \InvalidArgumentException(
+                "PhpAmqpLib\Channel\AMQPChannel or AMQPExchange instance required"
+            );
         } elseif ($exchangeName) {
-            @trigger_error('The $exchangeName parameter can only be passed when using PhpAmqpLib, if using an AMQPExchange instance configure it beforehand', E_USER_DEPRECATED);
+            @trigger_error(
+                'The $exchangeName parameter can only be passed when using PhpAmqpLib, if using an AMQPExchange instance configure it beforehand',
+                E_USER_DEPRECATED
+            );
         }
         $this->exchange = $exchange;
 
@@ -60,15 +69,10 @@ class AmqpHandler extends AbstractProcessingHandler
         $routingKey = $this->getRoutingKey($record);
 
         if ($this->exchange instanceof AMQPExchange) {
-            $this->exchange->publish(
-                $data,
-                $routingKey,
-                0,
-                [
-                    'delivery_mode' => 2,
-                    'content_type' => 'application/json',
-                ]
-            );
+            $this->exchange->publish($data, $routingKey, 0, [
+                "delivery_mode" => 2,
+                "content_type" => "application/json",
+            ]);
         } else {
             $this->exchange->basic_publish(
                 $this->createAmqpMessage($data),
@@ -115,20 +119,21 @@ class AmqpHandler extends AbstractProcessingHandler
      */
     protected function getRoutingKey(array $record): string
     {
-        $routingKey = sprintf('%s.%s', $record['level_name'], $record['channel']);
+        $routingKey = sprintf(
+            "%s.%s",
+            $record["level_name"],
+            $record["channel"]
+        );
 
         return strtolower($routingKey);
     }
 
     private function createAmqpMessage(string $data): AMQPMessage
     {
-        return new AMQPMessage(
-            $data,
-            [
-                'delivery_mode' => 2,
-                'content_type' => 'application/json',
-            ]
-        );
+        return new AMQPMessage($data, [
+            "delivery_mode" => 2,
+            "content_type" => "application/json",
+        ]);
     }
 
     /**

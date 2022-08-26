@@ -85,11 +85,18 @@ trait ServiceLocatorTrait
 
             foreach ($this->factories as $name => $factory) {
                 if (!\is_callable($factory)) {
-                    $this->providedTypes[$name] = '?';
+                    $this->providedTypes[$name] = "?";
                 } else {
-                    $type = (new \ReflectionFunction($factory))->getReturnType();
+                    $type = (new \ReflectionFunction(
+                        $factory
+                    ))->getReturnType();
 
-                    $this->providedTypes[$name] = $type ? ($type->allowsNull() ? '?' : '').($type instanceof \ReflectionNamedType ? $type->getName() : $type) : '?';
+                    $this->providedTypes[$name] = $type
+                        ? ($type->allowsNull() ? "?" : "") .
+                            ($type instanceof \ReflectionNamedType
+                                ? $type->getName()
+                                : $type)
+                        : "?";
                 }
             }
         }
@@ -97,32 +104,55 @@ trait ServiceLocatorTrait
         return $this->providedTypes;
     }
 
-    private function createNotFoundException(string $id): NotFoundExceptionInterface
-    {
-        if (!$alternatives = array_keys($this->factories)) {
-            $message = 'is empty...';
+    private function createNotFoundException(
+        string $id
+    ): NotFoundExceptionInterface {
+        if (!($alternatives = array_keys($this->factories))) {
+            $message = "is empty...";
         } else {
             $last = array_pop($alternatives);
             if ($alternatives) {
-                $message = sprintf('only knows about the "%s" and "%s" services.', implode('", "', $alternatives), $last);
+                $message = sprintf(
+                    'only knows about the "%s" and "%s" services.',
+                    implode('", "', $alternatives),
+                    $last
+                );
             } else {
                 $message = sprintf('only knows about the "%s" service.', $last);
             }
         }
 
         if ($this->loading) {
-            $message = sprintf('The service "%s" has a dependency on a non-existent service "%s". This locator %s', end($this->loading), $id, $message);
+            $message = sprintf(
+                'The service "%s" has a dependency on a non-existent service "%s". This locator %s',
+                end($this->loading),
+                $id,
+                $message
+            );
         } else {
-            $message = sprintf('Service "%s" not found: the current service locator %s', $id, $message);
+            $message = sprintf(
+                'Service "%s" not found: the current service locator %s',
+                $id,
+                $message
+            );
         }
 
-        return new class($message) extends \InvalidArgumentException implements NotFoundExceptionInterface {
+        return new class ($message) extends \InvalidArgumentException implements
+            NotFoundExceptionInterface
+        {
         };
     }
 
-    private function createCircularReferenceException(string $id, array $path): ContainerExceptionInterface
-    {
-        return new class(sprintf('Circular reference detected for service "%s", path: "%s".', $id, implode(' -> ', $path))) extends \RuntimeException implements ContainerExceptionInterface {
-        };
+    private function createCircularReferenceException(
+        string $id,
+        array $path
+    ): ContainerExceptionInterface {
+        return new class (
+            sprintf(
+                'Circular reference detected for service "%s", path: "%s".',
+                $id,
+                implode(" -> ", $path)
+            )
+        ) extends \RuntimeException implements ContainerExceptionInterface {};
     }
 }

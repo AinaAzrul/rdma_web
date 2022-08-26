@@ -32,8 +32,10 @@ abstract class MemoryProcessor implements ProcessorInterface
      * @param bool $realUsage     Set this to true to get the real size of memory allocated from system.
      * @param bool $useFormatting If true, then format memory size to human readable string (MB, KB, B depending on size)
      */
-    public function __construct(bool $realUsage = true, bool $useFormatting = true)
-    {
+    public function __construct(
+        bool $realUsage = true,
+        bool $useFormatting = true
+    ) {
         $this->realUsage = $realUsage;
         $this->useFormatting = $useFormatting;
     }
@@ -51,11 +53,11 @@ abstract class MemoryProcessor implements ProcessorInterface
         }
 
         if ($bytes > 1024 * 1024) {
-            return round($bytes / 1024 / 1024, 2).' MB';
+            return round($bytes / 1024 / 1024, 2) . " MB";
         } elseif ($bytes > 1024) {
-            return round($bytes / 1024, 2).' KB';
+            return round($bytes / 1024, 2) . " KB";
         }
 
-        return $bytes . ' B';
+        return $bytes . " B";
     }
 }

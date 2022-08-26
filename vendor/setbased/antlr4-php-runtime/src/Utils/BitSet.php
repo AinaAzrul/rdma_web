@@ -11,22 +11,22 @@ final class BitSet
     /** @var array<mixed> */
     private $data = [];
 
-    public function add(int $value) : void
+    public function add(int $value): void
     {
         $this->data[$value] = true;
     }
 
-    public function or(BitSet $set) : void
+    public function or(BitSet $set): void
     {
         $this->data += $set->data;
     }
 
-    public function remove(int $value) : void
+    public function remove(int $value): void
     {
         unset($this->data[$value]);
     }
 
-    public function contains(int $value) : bool
+    public function contains(int $value): bool
     {
         return \array_key_exists($value, $this->data);
     }
@@ -34,7 +34,7 @@ final class BitSet
     /**
      * @return array<mixed>
      */
-    public function values() : array
+    public function values(): array
     {
         return \array_keys($this->data);
     }
@@ -47,28 +47,27 @@ final class BitSet
         return \min($this->values());
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
         return Hasher::hash(...$this->values());
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        return $other instanceof self
-            && $this->data === $other->data;
+        return $other instanceof self && $this->data === $other->data;
     }
 
-    public function length() : int
+    public function length(): int
     {
         return \count($this->data);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return \sprintf('{%s}', \implode(', ', $this->values()));
+        return \sprintf("{%s}", \implode(", ", $this->values()));
     }
 }

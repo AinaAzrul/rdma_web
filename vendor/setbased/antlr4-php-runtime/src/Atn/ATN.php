@@ -103,8 +103,10 @@ final class ATN
      * the rule surrounding `state`. In other words, the set will be
      * restricted to tokens reachable staying within `state`'s rule.
      */
-    public function nextTokensInContext(ATNState $state, ?RuleContext $context) : IntervalSet
-    {
+    public function nextTokensInContext(
+        ATNState $state,
+        ?RuleContext $context
+    ): IntervalSet {
         return (new LL1Analyzer($this))->look($state, null, $context);
     }
 
@@ -113,7 +115,7 @@ final class ATN
      * staying in same rule. {@see Token::EPSILON} is in set if we reach end of
      * rule.
      */
-    public function nextTokens(ATNState $state) : IntervalSet
+    public function nextTokens(ATNState $state): IntervalSet
     {
         if ($state->nextTokenWithinRule !== null) {
             return $state->nextTokenWithinRule;
@@ -125,7 +127,7 @@ final class ATN
         return $state->nextTokenWithinRule;
     }
 
-    public function addState(?ATNState $state) : void
+    public function addState(?ATNState $state): void
     {
         if ($state === null) {
             return;
@@ -137,13 +139,13 @@ final class ATN
         $this->states[] = $state;
     }
 
-    public function removeState(ATNState $state) : void
+    public function removeState(ATNState $state): void
     {
         // just free mem, don't shift states in list
         unset($this->states[$state->stateNumber]);
     }
 
-    public function defineDecisionState(DecisionState $s) : int
+    public function defineDecisionState(DecisionState $s): int
     {
         $this->decisionToState[] = $s;
 
@@ -152,7 +154,7 @@ final class ATN
         return $s->decision;
     }
 
-    public function getDecisionState(int $decision) : ?DecisionState
+    public function getDecisionState(int $decision): ?DecisionState
     {
         if (\count($this->decisionToState) === 0) {
             return null;
@@ -161,7 +163,7 @@ final class ATN
         return $this->decisionToState[$decision];
     }
 
-    public function getNumberOfDecisions() : int
+    public function getNumberOfDecisions(): int
     {
         return \count($this->decisionToState);
     }
@@ -185,10 +187,12 @@ final class ATN
      *
      * @throws \RuntimeException
      */
-    public function getExpectedTokens(int $stateNumber, ?RuleContext $context) : IntervalSet
-    {
+    public function getExpectedTokens(
+        int $stateNumber,
+        ?RuleContext $context
+    ): IntervalSet {
         if ($stateNumber < 0 || $stateNumber >= \count($this->states)) {
-            throw new \InvalidArgumentException('Invalid state number.');
+            throw new \InvalidArgumentException("Invalid state number.");
         }
 
         $s = $this->states[$stateNumber];
@@ -207,12 +211,16 @@ final class ATN
             $context = ParserRuleContext::emptyContext();
         }
 
-        while ($context !== null && $context->invokingState >= 0 && $following->contains(Token::EPSILON)) {
+        while (
+            $context !== null &&
+            $context->invokingState >= 0 &&
+            $following->contains(Token::EPSILON)
+        ) {
             $invokingState = $this->states[$context->invokingState];
             $transition = $invokingState->getTransition(0);
 
             if (!$transition instanceof RuleTransition) {
-                throw new \RuntimeException('Unexpected transition type.');
+                throw new \RuntimeException("Unexpected transition type.");
             }
 
             $following = $this->nextTokens($transition->followState);

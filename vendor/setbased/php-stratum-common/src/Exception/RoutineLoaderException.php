@@ -10,7 +10,7 @@ use SetBased\Exception\RuntimeException;
  */
 class RoutineLoaderException extends RuntimeException
 {
-  // Nothing to implement.
+    // Nothing to implement.
 }
 
 //----------------------------------------------------------------------------------------------------------------------

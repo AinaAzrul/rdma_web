@@ -8,7 +8,13 @@ namespace OpenApi\Attributes;
 
 use OpenApi\Generator;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::TARGET_PROPERTY)]
+#[
+    \Attribute(
+        \Attribute::TARGET_CLASS |
+            \Attribute::TARGET_METHOD |
+            \Attribute::TARGET_PROPERTY
+    )
+]
 class Examples extends \OpenApi\Annotations\Examples
 {
     /**
@@ -27,13 +33,13 @@ class Examples extends \OpenApi\Annotations\Examples
         ?array $attachables = null
     ) {
         parent::__construct([
-            'example' => $example ?? Generator::UNDEFINED,
-            'summary' => $summary ?? Generator::UNDEFINED,
-            'description' => $description ?? Generator::UNDEFINED,
-            'value' => $value ?? Generator::UNDEFINED,
-            'externalValue' => $externalValue ?? Generator::UNDEFINED,
-            'ref' => $ref ?? Generator::UNDEFINED,
-            'x' => $x ?? Generator::UNDEFINED,
+            "example" => $example ?? Generator::UNDEFINED,
+            "summary" => $summary ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "value" => $value ?? Generator::UNDEFINED,
+            "externalValue" => $externalValue ?? Generator::UNDEFINED,
+            "ref" => $ref ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
         ]);
         if ($attachables) {
             $this->merge($attachables);

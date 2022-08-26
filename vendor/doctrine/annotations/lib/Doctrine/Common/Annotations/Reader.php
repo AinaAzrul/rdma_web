@@ -54,7 +54,10 @@ interface Reader
      *
      * @template T
      */
-    public function getMethodAnnotation(ReflectionMethod $method, $annotationName);
+    public function getMethodAnnotation(
+        ReflectionMethod $method,
+        $annotationName
+    );
 
     /**
      * Gets the annotations applied to a property.
@@ -76,5 +79,8 @@ interface Reader
      *
      * @template T
      */
-    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName);
+    public function getPropertyAnnotation(
+        ReflectionProperty $property,
+        $annotationName
+    );
 }

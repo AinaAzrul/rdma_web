@@ -26,7 +26,6 @@ use OpenApi\Generator;
  */
 class Link extends AbstractAnnotation
 {
-
     /**
      * @see [Using refs](https://swagger.io/docs/specification/using-ref/)
      *
@@ -99,15 +98,12 @@ class Link extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_nested = [
-        Server::class => 'server',
-        Attachable::class => ['attachables'],
+        Server::class => "server",
+        Attachable::class => ["attachables"],
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        Components::class,
-        Response::class,
-    ];
+    public static $_parents = [Components::class, Response::class];
 }

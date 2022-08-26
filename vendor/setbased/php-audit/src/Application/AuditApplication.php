@@ -15,34 +15,34 @@ use Symfony\Component\Console\Command\Command;
  */
 class AuditApplication extends Application
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Object constructor.
-   */
-  public function __construct()
-  {
-    parent::__construct('audit', '1.7.1');
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Object constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct("audit", "1.7.1");
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Gets the default commands that should always be available.
-   *
-   * @return Command[]
-   */
-  protected function getDefaultCommands()
-  {
-    $commands = parent::getDefaultCommands();
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Gets the default commands that should always be available.
+     *
+     * @return Command[]
+     */
+    protected function getDefaultCommands()
+    {
+        $commands = parent::getDefaultCommands();
 
-    $commands[] = new AuditCommand();
-    $commands[] = new DiffCommand();
-    $commands[] = new DropTriggersCommand();
-    $commands[] = new AlterAuditTableCommand();
+        $commands[] = new AuditCommand();
+        $commands[] = new DiffCommand();
+        $commands[] = new DropTriggersCommand();
+        $commands[] = new AlterAuditTableCommand();
 
-    return $commands;
-  }
+        return $commands;
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -27,12 +27,12 @@ class Info extends \OpenApi\Annotations\Info
         ?array $attachables = null
     ) {
         parent::__construct([
-                'version' => $version ?? Generator::UNDEFINED,
-                'description' => $description ?? Generator::UNDEFINED,
-                'title' => $title ?? Generator::UNDEFINED,
-                'termsOfService' => $termsOfService ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($contact, $license, $attachables),
-            ]);
+            "version" => $version ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "title" => $title ?? Generator::UNDEFINED,
+            "termsOfService" => $termsOfService ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($contact, $license, $attachables),
+        ]);
     }
 }

@@ -27,27 +27,46 @@ class MergeXmlContent
 
         foreach ($annotations as $xmlContent) {
             $parent = $xmlContent->_context->nested;
-            if (!($parent instanceof Response) && !($parent instanceof RequestBody) && !($parent instanceof Parameter)) {
+            if (
+                !($parent instanceof Response) &&
+                !($parent instanceof RequestBody) &&
+                !($parent instanceof Parameter)
+            ) {
                 if ($parent) {
-                    $xmlContent->_context->logger->warning('Unexpected ' . $xmlContent->identity() . ' in ' . $parent->identity() . ' in ' . $parent->_context);
+                    $xmlContent->_context->logger->warning(
+                        "Unexpected " .
+                            $xmlContent->identity() .
+                            " in " .
+                            $parent->identity() .
+                            " in " .
+                            $parent->_context
+                    );
                 } else {
-                    $xmlContent->_context->logger->warning('Unexpected ' . $xmlContent->identity() . ' must be nested');
+                    $xmlContent->_context->logger->warning(
+                        "Unexpected " .
+                            $xmlContent->identity() .
+                            " must be nested"
+                    );
                 }
                 continue;
             }
             if (Generator::isDefault($parent->content)) {
                 $parent->content = [];
             }
-            $parent->content['application/xml'] = $mediaType = new MediaType([
-                'schema' => $xmlContent,
-                'example' => $xmlContent->example,
-                'examples' => $xmlContent->examples,
-                '_context' => new Context(['generated' => true], $xmlContent->_context),
-                '_aux' => true,
+            $parent->content["application/xml"] = $mediaType = new MediaType([
+                "schema" => $xmlContent,
+                "example" => $xmlContent->example,
+                "examples" => $xmlContent->examples,
+                "_context" => new Context(
+                    ["generated" => true],
+                    $xmlContent->_context
+                ),
+                "_aux" => true,
             ]);
             $analysis->addAnnotation($mediaType, $mediaType->_context);
             if (!$parent instanceof Parameter) {
-                $parent->content['application/xml']->mediaType = 'application/xml';
+                $parent->content["application/xml"]->mediaType =
+                    "application/xml";
             }
             $xmlContent->example = Generator::UNDEFINED;
             $xmlContent->examples = Generator::UNDEFINED;

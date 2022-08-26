@@ -61,27 +61,25 @@ class ServerVariable extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        Server::class,
-    ];
+    public static $_parents = [Server::class];
 
     /**
      * @inheritdoc
      */
-    public static $_required = ['default'];
+    public static $_required = ["default"];
 
     /**
      * @inheritdoc
      */
     public static $_types = [
-        'default' => 'string',
-        'description' => 'string',
+        "default" => "string",
+        "description" => "string",
     ];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Attachable::class => ['attachables'],
+        Attachable::class => ["attachables"],
     ];
 }

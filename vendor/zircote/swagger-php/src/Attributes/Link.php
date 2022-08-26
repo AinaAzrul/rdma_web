@@ -30,15 +30,15 @@ class Link extends \OpenApi\Annotations\Link
         ?array $attachables = null
     ) {
         parent::__construct([
-                'link' => $link ?? Generator::UNDEFINED,
-                'operationRef' => $operationRef ?? Generator::UNDEFINED,
-                'ref' => $ref ?? Generator::UNDEFINED,
-                'operationId' => $operationId ?? Generator::UNDEFINED,
-                'parameters' => $parameters ?? Generator::UNDEFINED,
-                'requestBody' => $requestBody ?? Generator::UNDEFINED,
-                'description' => $description ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($server, $attachables),
-            ]);
+            "link" => $link ?? Generator::UNDEFINED,
+            "operationRef" => $operationRef ?? Generator::UNDEFINED,
+            "ref" => $ref ?? Generator::UNDEFINED,
+            "operationId" => $operationId ?? Generator::UNDEFINED,
+            "parameters" => $parameters ?? Generator::UNDEFINED,
+            "requestBody" => $requestBody ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($server, $attachables),
+        ]);
     }
 }

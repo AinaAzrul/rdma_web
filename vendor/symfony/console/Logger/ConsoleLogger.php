@@ -17,8 +17,13 @@ use Psr\Log\LogLevel;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-if ((new \ReflectionMethod(AbstractLogger::class, 'log'))->hasReturnType()) {
-    throw new \RuntimeException(sprintf('The "%s" logger is not compatible with psr/log >= 3.0. Try running "composer require psr/log:^2.".', ConsoleLogger::class));
+if ((new \ReflectionMethod(AbstractLogger::class, "log"))->hasReturnType()) {
+    throw new \RuntimeException(
+        sprintf(
+            'The "%s" logger is not compatible with psr/log >= 3.0. Try running "composer require psr/log:^2.".',
+            ConsoleLogger::class
+        )
+    );
 }
 
 /**
@@ -30,8 +35,8 @@ if ((new \ReflectionMethod(AbstractLogger::class, 'log'))->hasReturnType()) {
  */
 class ConsoleLogger extends AbstractLogger
 {
-    public const INFO = 'info';
-    public const ERROR = 'error';
+    public const INFO = "info";
+    public const ERROR = "error";
 
     private $output;
     private $verbosityLevelMap = [
@@ -56,10 +61,14 @@ class ConsoleLogger extends AbstractLogger
     ];
     private $errored = false;
 
-    public function __construct(OutputInterface $output, array $verbosityLevelMap = [], array $formatLevelMap = [])
-    {
+    public function __construct(
+        OutputInterface $output,
+        array $verbosityLevelMap = [],
+        array $formatLevelMap = []
+    ) {
         $this->output = $output;
-        $this->verbosityLevelMap = $verbosityLevelMap + $this->verbosityLevelMap;
+        $this->verbosityLevelMap =
+            $verbosityLevelMap + $this->verbosityLevelMap;
         $this->formatLevelMap = $formatLevelMap + $this->formatLevelMap;
     }
 
@@ -71,7 +80,9 @@ class ConsoleLogger extends AbstractLogger
     public function log($level, $message, array $context = [])
     {
         if (!isset($this->verbosityLevelMap[$level])) {
-            throw new InvalidArgumentException(sprintf('The log level "%s" does not exist.', $level));
+            throw new InvalidArgumentException(
+                sprintf('The log level "%s" does not exist.', $level)
+            );
         }
 
         $output = $this->output;
@@ -87,7 +98,15 @@ class ConsoleLogger extends AbstractLogger
         // the if condition check isn't necessary -- it's the same one that $output will do internally anyway.
         // We only do it for efficiency here as the message formatting is relatively expensive.
         if ($output->getVerbosity() >= $this->verbosityLevelMap[$level]) {
-            $output->writeln(sprintf('<%1$s>[%2$s] %3$s</%1$s>', $this->formatLevelMap[$level], $level, $this->interpolate($message, $context)), $this->verbosityLevelMap[$level]);
+            $output->writeln(
+                sprintf(
+                    '<%1$s>[%2$s] %3$s</%1$s>',
+                    $this->formatLevelMap[$level],
+                    $level,
+                    $this->interpolate($message, $context)
+                ),
+                $this->verbosityLevelMap[$level]
+            );
         }
     }
 
@@ -108,20 +127,24 @@ class ConsoleLogger extends AbstractLogger
      */
     private function interpolate(string $message, array $context): string
     {
-        if (!str_contains($message, '{')) {
+        if (!str_contains($message, "{")) {
             return $message;
         }
 
         $replacements = [];
         foreach ($context as $key => $val) {
-            if (null === $val || is_scalar($val) || (\is_object($val) && method_exists($val, '__toString'))) {
+            if (
+                null === $val ||
+                is_scalar($val) ||
+                (\is_object($val) && method_exists($val, "__toString"))
+            ) {
                 $replacements["{{$key}}"] = $val;
             } elseif ($val instanceof \DateTimeInterface) {
                 $replacements["{{$key}}"] = $val->format(\DateTime::RFC3339);
             } elseif (\is_object($val)) {
-                $replacements["{{$key}}"] = '[object '.\get_class($val).']';
+                $replacements["{{$key}}"] = "[object " . \get_class($val) . "]";
             } else {
-                $replacements["{{$key}}"] = '['.\gettype($val).']';
+                $replacements["{{$key}}"] = "[" . \gettype($val) . "]";
             }
         }
 

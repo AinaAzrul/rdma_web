@@ -38,8 +38,12 @@ class PhpToken implements \Stringable
      */
     public $pos;
 
-    public function __construct(int $id, string $text, int $line = -1, int $position = -1)
-    {
+    public function __construct(
+        int $id,
+        string $text,
+        int $line = -1,
+        int $position = -1
+    ) {
         $this->id = $id;
         $this->text = $text;
         $this->line = $line;
@@ -48,8 +52,11 @@ class PhpToken implements \Stringable
 
     public function getTokenName(): ?string
     {
-        if ('UNKNOWN' === $name = token_name($this->id)) {
-            $name = \strlen($this->text) > 1 || \ord($this->text) < 32 ? null : $this->text;
+        if ("UNKNOWN" === ($name = token_name($this->id))) {
+            $name =
+                \strlen($this->text) > 1 || \ord($this->text) < 32
+                    ? null
+                    : $this->text;
         }
 
         return $name;
@@ -71,7 +78,11 @@ class PhpToken implements \Stringable
 
     public function isIgnorable(): bool
     {
-        return \in_array($this->id, [\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT, \T_OPEN_TAG], true);
+        return \in_array(
+            $this->id,
+            [\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT, \T_OPEN_TAG],
+            true
+        );
     }
 
     public function __toString(): string

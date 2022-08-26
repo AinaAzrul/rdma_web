@@ -69,11 +69,22 @@ class DeduplicationHandler extends BufferHandler
      *
      * @phpstan-param Level|LevelName|LogLevel::* $deduplicationLevel
      */
-    public function __construct(HandlerInterface $handler, ?string $deduplicationStore = null, $deduplicationLevel = Logger::ERROR, int $time = 60, bool $bubble = true)
-    {
+    public function __construct(
+        HandlerInterface $handler,
+        ?string $deduplicationStore = null,
+        $deduplicationLevel = Logger::ERROR,
+        int $time = 60,
+        bool $bubble = true
+    ) {
         parent::__construct($handler, 0, Logger::DEBUG, $bubble, false);
 
-        $this->deduplicationStore = $deduplicationStore === null ? sys_get_temp_dir() . '/monolog-dedup-' . substr(md5(__FILE__), 0, 20) .'.log' : $deduplicationStore;
+        $this->deduplicationStore =
+            $deduplicationStore === null
+                ? sys_get_temp_dir() .
+                    "/monolog-dedup-" .
+                    substr(md5(__FILE__), 0, 20) .
+                    ".log"
+                : $deduplicationStore;
         $this->deduplicationLevel = Logger::toMonologLevel($deduplicationLevel);
         $this->time = $time;
     }
@@ -87,7 +98,7 @@ class DeduplicationHandler extends BufferHandler
         $passthru = null;
 
         foreach ($this->buffer as $record) {
-            if ($record['level'] >= $this->deduplicationLevel) {
+            if ($record["level"] >= $this->deduplicationLevel) {
                 $passthru = $passthru || !$this->isDuplicate($record);
                 if ($passthru) {
                     $this->appendRecord($record);
@@ -116,19 +127,26 @@ class DeduplicationHandler extends BufferHandler
             return false;
         }
 
-        $store = file($this->deduplicationStore, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $store = file(
+            $this->deduplicationStore,
+            FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
+        );
         if (!is_array($store)) {
             return false;
         }
 
         $yesterday = time() - 86400;
-        $timestampValidity = $record['datetime']->getTimestamp() - $this->time;
-        $expectedMessage = preg_replace('{[\r\n].*}', '', $record['message']);
+        $timestampValidity = $record["datetime"]->getTimestamp() - $this->time;
+        $expectedMessage = preg_replace('{[\r\n].*}', "", $record["message"]);
 
         for ($i = count($store) - 1; $i >= 0; $i--) {
-            list($timestamp, $level, $message) = explode(':', $store[$i], 3);
+            list($timestamp, $level, $message) = explode(":", $store[$i], 3);
 
-            if ($level === $record['level_name'] && $message === $expectedMessage && $timestamp > $timestampValidity) {
+            if (
+                $level === $record["level_name"] &&
+                $message === $expectedMessage &&
+                $timestamp > $timestampValidity
+            ) {
                 return true;
             }
 
@@ -146,10 +164,13 @@ class DeduplicationHandler extends BufferHandler
             return;
         }
 
-        $handle = fopen($this->deduplicationStore, 'rw+');
+        $handle = fopen($this->deduplicationStore, "rw+");
 
         if (!$handle) {
-            throw new \RuntimeException('Failed to open file for reading and writing: ' . $this->deduplicationStore);
+            throw new \RuntimeException(
+                "Failed to open file for reading and writing: " .
+                    $this->deduplicationStore
+            );
         }
 
         flock($handle, LOCK_EX);
@@ -181,6 +202,15 @@ class DeduplicationHandler extends BufferHandler
      */
     private function appendRecord(array $record): void
     {
-        file_put_contents($this->deduplicationStore, $record['datetime']->getTimestamp() . ':' . $record['level_name'] . ':' . preg_replace('{[\r\n].*}', '', $record['message']) . "\n", FILE_APPEND);
+        file_put_contents(
+            $this->deduplicationStore,
+            $record["datetime"]->getTimestamp() .
+                ":" .
+                $record["level_name"] .
+                ":" .
+                preg_replace('{[\r\n].*}', "", $record["message"]) .
+                "\n",
+            FILE_APPEND
+        );
     }
 }

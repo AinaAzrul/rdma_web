@@ -11,75 +11,83 @@ use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
  */
 class RowsWrapper extends Wrapper
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function getDocBlockReturnType(): string
-  {
-    return 'array[]';
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function getDocBlockReturnType(): string
+    {
+        return "array[]";
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function getReturnTypeDeclaration(): string
-  {
-    return ': array';
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function getReturnTypeDeclaration(): string
+    {
+        return ": array";
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function writeResultHandler(): void
-  {
-    $this->throws(MySqlQueryErrorException::class);
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function writeResultHandler(): void
+    {
+        $this->throws(MySqlQueryErrorException::class);
 
-    $routineArgs = $this->getRoutineArgs();
-    $this->codeStore->append('return $this->executeRows(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
-  }
+        $routineArgs = $this->getRoutineArgs();
+        $this->codeStore->append(
+            'return $this->executeRows(\'call ' .
+                $this->routine["routine_name"] .
+                "(" .
+                $routineArgs .
+                ')\');'
+        );
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function writeRoutineFunctionLobFetchData(): void
-  {
-    $this->throws(MySqlQueryErrorException::class);
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function writeRoutineFunctionLobFetchData(): void
+    {
+        $this->throws(MySqlQueryErrorException::class);
 
-    $this->codeStore->append('$row = [];');
-    $this->codeStore->append('$this->bindAssoc($stmt, $row);');
-    $this->codeStore->append('');
-    $this->codeStore->append('$tmp = [];');
-    $this->codeStore->append('while (($b = $stmt->fetch()))');
-    $this->codeStore->append('{');
-    $this->codeStore->append('$new = [];');
-    $this->codeStore->append('foreach($row as $key => $value)');
-    $this->codeStore->append('{');
-    $this->codeStore->append('$new[$key] = $value;');
-    $this->codeStore->append('}');
-    $this->codeStore->append(' $tmp[] = $new;');
-    $this->codeStore->append('}');
-    $this->codeStore->append('');
-  }
+        $this->codeStore->append('$row = [];');
+        $this->codeStore->append('$this->bindAssoc($stmt, $row);');
+        $this->codeStore->append("");
+        $this->codeStore->append('$tmp = [];');
+        $this->codeStore->append('while (($b = $stmt->fetch()))');
+        $this->codeStore->append("{");
+        $this->codeStore->append('$new = [];');
+        $this->codeStore->append('foreach($row as $key => $value)');
+        $this->codeStore->append("{");
+        $this->codeStore->append('$new[$key] = $value;');
+        $this->codeStore->append("}");
+        $this->codeStore->append(' $tmp[] = $new;');
+        $this->codeStore->append("}");
+        $this->codeStore->append("");
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function writeRoutineFunctionLobReturnData(): void
-  {
-    $this->throws(MySqlDataLayerException::class);
-    $this->throws(MySqlQueryErrorException::class);
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function writeRoutineFunctionLobReturnData(): void
+    {
+        $this->throws(MySqlDataLayerException::class);
+        $this->throws(MySqlQueryErrorException::class);
 
-    $this->codeStore->append('if ($b===false) throw $this->dataLayerError(\'mysqli_stmt::fetch\');');
-    $this->codeStore->append('');
-    $this->codeStore->append('return $tmp;');
-  }
+        $this->codeStore->append(
+            'if ($b===false) throw $this->dataLayerError(\'mysqli_stmt::fetch\');'
+        );
+        $this->codeStore->append("");
+        $this->codeStore->append('return $tmp;');
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

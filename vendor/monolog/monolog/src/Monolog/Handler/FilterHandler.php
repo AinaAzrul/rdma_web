@@ -28,7 +28,10 @@ use Psr\Log\LogLevel;
  * @phpstan-import-type Level from \Monolog\Logger
  * @phpstan-import-type LevelName from \Monolog\Logger
  */
-class FilterHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface, FormattableHandlerInterface
+class FilterHandler extends Handler implements
+    ProcessableHandlerInterface,
+    ResettableInterface,
+    FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
 
@@ -66,14 +69,25 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * @phpstan-param Level|LevelName|LogLevel::*|array<Level|LevelName|LogLevel::*> $minLevelOrList
      * @phpstan-param Level|LevelName|LogLevel::* $maxLevel
      */
-    public function __construct($handler, $minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, bool $bubble = true)
-    {
-        $this->handler  = $handler;
-        $this->bubble   = $bubble;
+    public function __construct(
+        $handler,
+        $minLevelOrList = Logger::DEBUG,
+        $maxLevel = Logger::EMERGENCY,
+        bool $bubble = true
+    ) {
+        $this->handler = $handler;
+        $this->bubble = $bubble;
         $this->setAcceptedLevels($minLevelOrList, $maxLevel);
 
-        if (!$this->handler instanceof HandlerInterface && !is_callable($this->handler)) {
-            throw new \RuntimeException("The given handler (".json_encode($this->handler).") is not a callable nor a Monolog\Handler\HandlerInterface object");
+        if (
+            !$this->handler instanceof HandlerInterface &&
+            !is_callable($this->handler)
+        ) {
+            throw new \RuntimeException(
+                "The given handler (" .
+                    json_encode($this->handler) .
+                    ") is not a callable nor a Monolog\Handler\HandlerInterface object"
+            );
         }
     }
 
@@ -92,16 +106,26 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * @phpstan-param Level|LevelName|LogLevel::*|array<Level|LevelName|LogLevel::*> $minLevelOrList
      * @phpstan-param Level|LevelName|LogLevel::*                                    $maxLevel
      */
-    public function setAcceptedLevels($minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY): self
-    {
+    public function setAcceptedLevels(
+        $minLevelOrList = Logger::DEBUG,
+        $maxLevel = Logger::EMERGENCY
+    ): self {
         if (is_array($minLevelOrList)) {
-            $acceptedLevels = array_map('Monolog\Logger::toMonologLevel', $minLevelOrList);
+            $acceptedLevels = array_map(
+                "Monolog\Logger::toMonologLevel",
+                $minLevelOrList
+            );
         } else {
             $minLevelOrList = Logger::toMonologLevel($minLevelOrList);
             $maxLevel = Logger::toMonologLevel($maxLevel);
-            $acceptedLevels = array_values(array_filter(Logger::getLevels(), function ($level) use ($minLevelOrList, $maxLevel) {
-                return $level >= $minLevelOrList && $level <= $maxLevel;
-            }));
+            $acceptedLevels = array_values(
+                array_filter(Logger::getLevels(), function ($level) use (
+                    $minLevelOrList,
+                    $maxLevel
+                ) {
+                    return $level >= $minLevelOrList && $level <= $maxLevel;
+                })
+            );
         }
         $this->acceptedLevels = array_flip($acceptedLevels);
 
@@ -113,7 +137,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      */
     public function isHandling(array $record): bool
     {
-        return isset($this->acceptedLevels[$record['level']]);
+        return isset($this->acceptedLevels[$record["level"]]);
     }
 
     /**
@@ -148,7 +172,9 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         }
 
         if (count($filtered) > 0) {
-            $this->getHandler($filtered[count($filtered) - 1])->handleBatch($filtered);
+            $this->getHandler($filtered[count($filtered) - 1])->handleBatch(
+                $filtered
+            );
         }
     }
 
@@ -166,7 +192,9 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         if (!$this->handler instanceof HandlerInterface) {
             $this->handler = ($this->handler)($record, $this);
             if (!$this->handler instanceof HandlerInterface) {
-                throw new \RuntimeException("The factory callable should return a HandlerInterface");
+                throw new \RuntimeException(
+                    "The factory callable should return a HandlerInterface"
+                );
             }
         }
 
@@ -176,8 +204,9 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         $handler = $this->getHandler();
         if ($handler instanceof FormattableHandlerInterface) {
             $handler->setFormatter($formatter);
@@ -185,7 +214,11 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException(
+            "The nested handler of type " .
+                get_class($handler) .
+                " does not support formatters."
+        );
     }
 
     /**
@@ -198,7 +231,11 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             return $handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException(
+            "The nested handler of type " .
+                get_class($handler) .
+                " does not support formatters."
+        );
     }
 
     public function reset()

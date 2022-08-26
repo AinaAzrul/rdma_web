@@ -361,38 +361,38 @@ class Schema extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_types = [
-        'title' => 'string',
-        'description' => 'string',
-        'required' => '[string]',
-        'format' => 'string',
-        'collectionFormat' => ['csv', 'ssv', 'tsv', 'pipes', 'multi'],
-        'maximum' => 'number',
-        'exclusiveMaximum' => 'boolean',
-        'minimum' => 'number',
-        'exclusiveMinimum' => 'boolean',
-        'maxLength' => 'integer',
-        'minLength' => 'integer',
-        'pattern' => 'string',
-        'maxItems' => 'integer',
-        'minItems' => 'integer',
-        'uniqueItems' => 'boolean',
-        'multipleOf' => 'integer',
-        'allOf' => '[' . Schema::class . ']',
-        'oneOf' => '[' . Schema::class . ']',
-        'anyOf' => '[' . Schema::class . ']',
+        "title" => "string",
+        "description" => "string",
+        "required" => "[string]",
+        "format" => "string",
+        "collectionFormat" => ["csv", "ssv", "tsv", "pipes", "multi"],
+        "maximum" => "number",
+        "exclusiveMaximum" => "boolean",
+        "minimum" => "number",
+        "exclusiveMinimum" => "boolean",
+        "maxLength" => "integer",
+        "minLength" => "integer",
+        "pattern" => "string",
+        "maxItems" => "integer",
+        "minItems" => "integer",
+        "uniqueItems" => "boolean",
+        "multipleOf" => "integer",
+        "allOf" => "[" . Schema::class . "]",
+        "oneOf" => "[" . Schema::class . "]",
+        "anyOf" => "[" . Schema::class . "]",
     ];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Discriminator::class => 'discriminator',
-        Items::class => 'items',
-        Property::class => ['properties', 'property'],
-        ExternalDocumentation::class => 'externalDocs',
-        Xml::class => 'xml',
-        AdditionalProperties::class => 'additionalProperties',
-        Attachable::class => ['attachables'],
+        Discriminator::class => "discriminator",
+        Items::class => "items",
+        Property::class => ["properties", "property"],
+        ExternalDocumentation::class => "externalDocs",
+        Xml::class => "xml",
+        AdditionalProperties::class => "additionalProperties",
+        Attachable::class => ["attachables"],
     ];
 
     /**
@@ -427,10 +427,19 @@ class Schema extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public function validate(array $stack = [], array $skip = [], string $ref = '', $context = null): bool
-    {
-        if ($this->type === 'array' && Generator::isDefault($this->items)) {
-            $this->_context->logger->warning('@OA\\Items() is required when ' . $this->identity() . ' has type "array" in ' . $this->_context);
+    public function validate(
+        array $stack = [],
+        array $skip = [],
+        string $ref = "",
+        $context = null
+    ): bool {
+        if ($this->type === "array" && Generator::isDefault($this->items)) {
+            $this->_context->logger->warning(
+                "@OA\\Items() is required when " .
+                    $this->identity() .
+                    ' has type "array" in ' .
+                    $this->_context
+            );
 
             return false;
         }

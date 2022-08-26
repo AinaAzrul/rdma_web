@@ -8,15 +8,15 @@ namespace SetBased\Stratum\Backend;
  */
 interface ConstantWorker
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Does the actual execution of the constant command for the backend. Returns 0 on success. Otherwise returns nonzero.
-   *
-   * @return int
-   */
-  public function execute(): int;
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Does the actual execution of the constant command for the backend. Returns 0 on success. Otherwise returns nonzero.
+     *
+     * @return int
+     */
+    public function execute(): int;
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

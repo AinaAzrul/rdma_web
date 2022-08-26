@@ -18,93 +18,118 @@ use SetBased\Stratum\MySql\Helper\Crud\UpdateRoutine;
  */
 class MySqlCrudWorker extends MySqlWorker implements CrudWorker
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generates the code for a stored routine.
-   *
-   * @param string $tableName   The name of the table.
-   * @param string $operation   The operation {insert|update|delete|select}.
-   * @param string $routineName The name of the generated routine.
-   *
-   * @return string
-   *
-   * @throws MySqlConnectFailedException
-   * @throws MySqlDataLayerException
-   */
-  public function generateRoutine(string $tableName, string $operation, string $routineName): string
-  {
-    $schemaName = $this->settings->manString('database.database');
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Generates the code for a stored routine.
+     *
+     * @param string $tableName   The name of the table.
+     * @param string $operation   The operation {insert|update|delete|select}.
+     * @param string $routineName The name of the generated routine.
+     *
+     * @return string
+     *
+     * @throws MySqlConnectFailedException
+     * @throws MySqlDataLayerException
+     */
+    public function generateRoutine(
+        string $tableName,
+        string $operation,
+        string $routineName
+    ): string {
+        $schemaName = $this->settings->manString("database.database");
 
-    $this->connect();
+        $this->connect();
 
-    $tableColumns  = $this->dl->tableColumns($schemaName, $tableName);
-    $primaryKey    = $this->dl->tablePrimaryKey($schemaName, $tableName);
-    $uniqueIndexes = $this->dl->tableUniqueIndexes($schemaName, $tableName);
+        $tableColumns = $this->dl->tableColumns($schemaName, $tableName);
+        $primaryKey = $this->dl->tablePrimaryKey($schemaName, $tableName);
+        $uniqueIndexes = $this->dl->tableUniqueIndexes($schemaName, $tableName);
 
-    switch ($operation)
-    {
-      case 'update':
-        $routine = new UpdateRoutine($tableName, $routineName, $tableColumns, $primaryKey, $uniqueIndexes);
-        break;
+        switch ($operation) {
+            case "update":
+                $routine = new UpdateRoutine(
+                    $tableName,
+                    $routineName,
+                    $tableColumns,
+                    $primaryKey,
+                    $uniqueIndexes
+                );
+                break;
 
-      case 'delete':
-        $routine = new DeleteRoutine($tableName, $routineName, $tableColumns, $primaryKey, $uniqueIndexes);
-        break;
+            case "delete":
+                $routine = new DeleteRoutine(
+                    $tableName,
+                    $routineName,
+                    $tableColumns,
+                    $primaryKey,
+                    $uniqueIndexes
+                );
+                break;
 
-      case 'select':
-        $routine = new SelectRoutine($tableName, $routineName, $tableColumns, $primaryKey, $uniqueIndexes);
-        break;
+            case "select":
+                $routine = new SelectRoutine(
+                    $tableName,
+                    $routineName,
+                    $tableColumns,
+                    $primaryKey,
+                    $uniqueIndexes
+                );
+                break;
 
-      case 'insert':
-        $routine = new InsertRoutine($tableName, $routineName, $tableColumns, $primaryKey, $uniqueIndexes);
-        break;
+            case "insert":
+                $routine = new InsertRoutine(
+                    $tableName,
+                    $routineName,
+                    $tableColumns,
+                    $primaryKey,
+                    $uniqueIndexes
+                );
+                break;
 
-      default:
-        throw new FallenException('operation', $operation);
-    }
-    $this->disconnect();
+            default:
+                throw new FallenException("operation", $operation);
+        }
+        $this->disconnect();
 
-    return $routine->getCode();
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a list of all supported operations by the worker.
-   *
-   * @return string[]
-   */
-  public function operations(): array
-  {
-    return ['insert', 'update', 'delete', 'select'];
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a list of all tables in de database of the backend.
-   *
-   * @return array
-   *
-   * @throws MySqlConnectFailedException
-   * @throws MySqlDataLayerException
-   * @throws MySqlQueryErrorException
-   */
-  public function tables(): array
-  {
-    $this->connect();
-    $schema = $this->settings->manString('database.database');
-    $rows   = $this->dl->allTablesNames($schema);
-    $this->disconnect();
-
-    $tables = [];
-    foreach ($rows as $row)
-    {
-      $tables[] = $row['table_name'];
+        return $routine->getCode();
     }
 
-    return $tables;
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns a list of all supported operations by the worker.
+     *
+     * @return string[]
+     */
+    public function operations(): array
+    {
+        return ["insert", "update", "delete", "select"];
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns a list of all tables in de database of the backend.
+     *
+     * @return array
+     *
+     * @throws MySqlConnectFailedException
+     * @throws MySqlDataLayerException
+     * @throws MySqlQueryErrorException
+     */
+    public function tables(): array
+    {
+        $this->connect();
+        $schema = $this->settings->manString("database.database");
+        $rows = $this->dl->allTablesNames($schema);
+        $this->disconnect();
+
+        $tables = [];
+        foreach ($rows as $row) {
+            $tables[] = $row["table_name"];
+        }
+
+        return $tables;
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

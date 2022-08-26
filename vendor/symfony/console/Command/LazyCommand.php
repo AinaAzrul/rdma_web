@@ -25,8 +25,14 @@ final class LazyCommand extends Command
     private $command;
     private $isEnabled;
 
-    public function __construct(string $name, array $aliases, string $description, bool $isHidden, \Closure $commandFactory, ?bool $isEnabled = true)
-    {
+    public function __construct(
+        string $name,
+        array $aliases,
+        string $description,
+        bool $isHidden,
+        \Closure $commandFactory,
+        ?bool $isEnabled = true
+    ) {
         $this->setName($name)
             ->setAliases($aliases)
             ->setHidden($isHidden)
@@ -110,8 +116,12 @@ final class LazyCommand extends Command
     /**
      * @return $this
      */
-    public function addArgument(string $name, int $mode = null, string $description = '', $default = null): self
-    {
+    public function addArgument(
+        string $name,
+        int $mode = null,
+        string $description = "",
+        $default = null
+    ): self {
         $this->getCommand()->addArgument($name, $mode, $description, $default);
 
         return $this;
@@ -120,9 +130,20 @@ final class LazyCommand extends Command
     /**
      * @return $this
      */
-    public function addOption(string $name, $shortcut = null, int $mode = null, string $description = '', $default = null): self
-    {
-        $this->getCommand()->addOption($name, $shortcut, $mode, $description, $default);
+    public function addOption(
+        string $name,
+        $shortcut = null,
+        int $mode = null,
+        string $description = "",
+        $default = null
+    ): self {
+        $this->getCommand()->addOption(
+            $name,
+            $shortcut,
+            $mode,
+            $description,
+            $default
+        );
 
         return $this;
     }
@@ -198,7 +219,8 @@ final class LazyCommand extends Command
             $command->setHelperSet($this->getHelperSet());
         }
 
-        $command->setName($this->getName())
+        $command
+            ->setName($this->getName())
             ->setAliases($this->getAliases())
             ->setHidden($this->isHidden())
             ->setDescription($this->getDescription());

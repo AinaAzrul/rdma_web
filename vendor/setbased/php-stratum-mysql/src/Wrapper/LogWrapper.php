@@ -10,55 +10,61 @@ use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
  */
 class LogWrapper extends Wrapper
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function getDocBlockReturnType(): string
-  {
-    return 'int';
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function getDocBlockReturnType(): string
+    {
+        return "int";
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function getReturnTypeDeclaration(): string
-  {
-    return ': int';
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function getReturnTypeDeclaration(): string
+    {
+        return ": int";
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function writeResultHandler(): void
-  {
-    $this->throws(MySqlDataLayerException::class);
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function writeResultHandler(): void
+    {
+        $this->throws(MySqlDataLayerException::class);
 
-    $routineArgs = $this->getRoutineArgs();
-    $this->codeStore->append('return $this->executeLog(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
-  }
+        $routineArgs = $this->getRoutineArgs();
+        $this->codeStore->append(
+            'return $this->executeLog(\'call ' .
+                $this->routine["routine_name"] .
+                "(" .
+                $routineArgs .
+                ')\');'
+        );
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function writeRoutineFunctionLobFetchData(): void
-  {
-    // Nothing to do.
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function writeRoutineFunctionLobFetchData(): void
+    {
+        // Nothing to do.
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function writeRoutineFunctionLobReturnData(): void
-  {
-    // Nothing to do.
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function writeRoutineFunctionLobReturnData(): void
+    {
+        // Nothing to do.
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

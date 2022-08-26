@@ -136,14 +136,17 @@ class TestHandler extends AbstractProcessingHandler
     public function hasRecord($record, $level): bool
     {
         if (is_string($record)) {
-            $record = array('message' => $record);
+            $record = ["message" => $record];
         }
 
         return $this->hasRecordThatPasses(function ($rec) use ($record) {
-            if ($rec['message'] !== $record['message']) {
+            if ($rec["message"] !== $record["message"]) {
                 return false;
             }
-            if (isset($record['context']) && $rec['context'] !== $record['context']) {
+            if (
+                isset($record["context"]) &&
+                $rec["context"] !== $record["context"]
+            ) {
                 return false;
             }
 
@@ -159,7 +162,7 @@ class TestHandler extends AbstractProcessingHandler
     public function hasRecordThatContains(string $message, $level): bool
     {
         return $this->hasRecordThatPasses(function ($rec) use ($message) {
-            return strpos($rec['message'], $message) !== false;
+            return strpos($rec["message"], $message) !== false;
         }, $level);
     }
 
@@ -170,9 +173,12 @@ class TestHandler extends AbstractProcessingHandler
      */
     public function hasRecordThatMatches(string $regex, $level): bool
     {
-        return $this->hasRecordThatPasses(function (array $rec) use ($regex): bool {
-            return preg_match($regex, $rec['message']) > 0;
-        }, $level);
+        return $this->hasRecordThatPasses(function (array $rec) use (
+            $regex
+        ): bool {
+            return preg_match($regex, $rec["message"]) > 0;
+        },
+        $level);
     }
 
     /**
@@ -204,7 +210,7 @@ class TestHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        $this->recordsByLevel[$record['level']][] = $record;
+        $this->recordsByLevel[$record["level"]][] = $record;
         $this->records[] = $record;
     }
 
@@ -215,9 +221,18 @@ class TestHandler extends AbstractProcessingHandler
      */
     public function __call($method, $args)
     {
-        if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {
-            $genericMethod = $matches[1] . ('Records' !== $matches[3] ? 'Record' : '') . $matches[3];
-            $level = constant('Monolog\Logger::' . strtoupper($matches[2]));
+        if (
+            preg_match(
+                "/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/",
+                $method,
+                $matches
+            ) > 0
+        ) {
+            $genericMethod =
+                $matches[1] .
+                ("Records" !== $matches[3] ? "Record" : "") .
+                $matches[3];
+            $level = constant("Monolog\Logger::" . strtoupper($matches[2]));
             $callback = [$this, $genericMethod];
             if (is_callable($callback)) {
                 $args[] = $level;
@@ -226,6 +241,12 @@ class TestHandler extends AbstractProcessingHandler
             }
         }
 
-        throw new \BadMethodCallException('Call to undefined method ' . get_class($this) . '::' . $method . '()');
+        throw new \BadMethodCallException(
+            "Call to undefined method " .
+                get_class($this) .
+                "::" .
+                $method .
+                "()"
+        );
     }
 }

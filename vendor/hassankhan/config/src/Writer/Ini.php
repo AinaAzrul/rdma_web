@@ -28,7 +28,7 @@ class Ini extends AbstractWriter
      */
     public static function getSupportedExtensions()
     {
-        return ['ini'];
+        return ["ini"];
     }
 
     /**
@@ -42,15 +42,15 @@ class Ini extends AbstractWriter
      */
     protected function toINI(array $arr, array $parent = [])
     {
-        $converted = '';
+        $converted = "";
 
         foreach ($arr as $k => $v) {
             if (is_array($v)) {
                 $sec = array_merge((array) $parent, (array) $k);
-                $converted .= '['.implode('.', $sec).']'.PHP_EOL;
+                $converted .= "[" . implode(".", $sec) . "]" . PHP_EOL;
                 $converted .= $this->toINI($v, $sec);
             } else {
-                $converted .= $k.'='.$v.PHP_EOL;
+                $converted .= $k . "=" . $v . PHP_EOL;
             }
         }
 

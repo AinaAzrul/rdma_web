@@ -71,29 +71,26 @@ class Header extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public static $_required = ['header', 'schema'];
+    public static $_required = ["header", "schema"];
 
     /**
      * @inheritdoc
      */
     public static $_types = [
-        'header' => 'string',
-        'description' => 'string',
+        "header" => "string",
+        "description" => "string",
     ];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Schema::class => 'schema',
-        Attachable::class => ['attachables'],
+        Schema::class => "schema",
+        Attachable::class => ["attachables"],
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        Components::class,
-        Response::class,
-    ];
+    public static $_parents = [Components::class, Response::class];
 }

@@ -71,7 +71,7 @@ final class DFA
      *
      * @see Parser::getPrecedence()
      */
-    public function isPrecedenceDfa() : bool
+    public function isPrecedenceDfa(): bool
     {
         return $this->precedenceDfa;
     }
@@ -87,14 +87,18 @@ final class DFA
      *
      * @throws \InvalidArgumentException If this is not a precedence DFA.
      */
-    public function getPrecedenceStartState(int $precedence) : ?DFAState
+    public function getPrecedenceStartState(int $precedence): ?DFAState
     {
         if (!$this->precedenceDfa || $this->s0 === null) {
-            throw new \InvalidArgumentException('Only precedence DFAs may contain a precedence start state.');
+            throw new \InvalidArgumentException(
+                "Only precedence DFAs may contain a precedence start state."
+            );
         }
 
         if ($this->s0->edges === null) {
-            throw new \RuntimeException('s0.edges cannot be null for a precedence DFA.');
+            throw new \RuntimeException(
+                "s0.edges cannot be null for a precedence DFA."
+            );
         }
 
         if ($precedence < 0 || $precedence >= \count($this->s0->edges)) {
@@ -113,10 +117,14 @@ final class DFA
      *
      * @throws \InvalidArgumentException If this is not a precedence DFA.
      */
-    public function setPrecedenceStartState(int $precedence, DFAState $startState) : void
-    {
+    public function setPrecedenceStartState(
+        int $precedence,
+        DFAState $startState
+    ): void {
         if (!$this->precedenceDfa || $this->s0 === null) {
-            throw new \InvalidArgumentException('Only precedence DFAs may contain a precedence start state.');
+            throw new \InvalidArgumentException(
+                "Only precedence DFAs may contain a precedence start state."
+            );
         }
 
         if ($precedence < 0) {
@@ -124,7 +132,7 @@ final class DFA
         }
 
         if ($this->s0->edges === null) {
-            throw new \RuntimeException('Unexpected null edges.');
+            throw new \RuntimeException("Unexpected null edges.");
         }
 
         if ($precedence >= $this->s0->edges->count()) {
@@ -142,7 +150,7 @@ final class DFA
      *
      * @return array<DFAState>
      */
-    public function getStates() : array
+    public function getStates(): array
     {
         $list = $this->states->getValues();
 
@@ -153,15 +161,15 @@ final class DFA
         return $list;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->toString(VocabularyImpl::emptyVocabulary());
     }
 
-    public function toString(Vocabulary $vocabulary) : string
+    public function toString(Vocabulary $vocabulary): string
     {
         if ($this->s0 === null) {
-            return '';
+            return "";
         }
 
         $serializer = new DFASerializer($this, $vocabulary);
@@ -169,10 +177,10 @@ final class DFA
         return (string) $serializer;
     }
 
-    public function toLexerString() : string
+    public function toLexerString(): string
     {
         if ($this->s0 === null) {
-            return '';
+            return "";
         }
 
         return (new LexerDFASerializer($this))->toString();

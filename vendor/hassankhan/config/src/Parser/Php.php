@@ -31,16 +31,14 @@ class Php implements ParserInterface
         try {
             $data = require $filename;
         } catch (Exception $exception) {
-            throw new ParseException(
-                [
-                    'message'   => 'PHP file threw an exception',
-                    'exception' => $exception,
-                ]
-            );
+            throw new ParseException([
+                "message" => "PHP file threw an exception",
+                "exception" => $exception,
+            ]);
         }
 
         // Complete parsing
-        return (array)$this->parse($data, $filename);
+        return (array) $this->parse($data, $filename);
     }
 
     /**
@@ -54,24 +52,22 @@ class Php implements ParserInterface
     {
         // Handle PHP start tag
         $config = trim($config);
-        if (substr($config, 0, 2) === '<?') {
-            $config = '?>' . $config;
+        if (substr($config, 0, 2) === "<?") {
+            $config = "?>" . $config;
         }
 
         // Eval the string, if it throws an exception, rethrow it
         try {
             $data = $this->isolate($config);
         } catch (Exception $exception) {
-            throw new ParseException(
-                [
-                    'message'   => 'PHP string threw an exception',
-                    'exception' => $exception,
-                ]
-            );
+            throw new ParseException([
+                "message" => "PHP string threw an exception",
+                "exception" => $exception,
+            ]);
         }
 
         // Complete parsing
-        return (array)$this->parse($data);
+        return (array) $this->parse($data);
     }
 
     /**
@@ -92,7 +88,9 @@ class Php implements ParserInterface
 
         // Check for array, if its anything else, throw an exception
         if (!is_array($data)) {
-            throw new UnsupportedFormatException('PHP data does not return an array');
+            throw new UnsupportedFormatException(
+                "PHP data does not return an array"
+            );
         }
 
         return $data;
@@ -115,6 +113,6 @@ class Php implements ParserInterface
      */
     public static function getSupportedExtensions()
     {
-        return ['php'];
+        return ["php"];
     }
 }

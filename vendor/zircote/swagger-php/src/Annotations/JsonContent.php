@@ -31,12 +31,12 @@ class JsonContent extends Schema
      * @inheritdoc
      */
     public static $_nested = [
-        Discriminator::class => 'discriminator',
-        Items::class => 'items',
-        Property::class => ['properties', 'property'],
-        ExternalDocumentation::class => 'externalDocs',
-        AdditionalProperties::class => 'additionalProperties',
-        Examples::class => ['examples', 'example'],
-        Attachable::class => ['attachables'],
+        Discriminator::class => "discriminator",
+        Items::class => "items",
+        Property::class => ["properties", "property"],
+        ExternalDocumentation::class => "externalDocs",
+        AdditionalProperties::class => "additionalProperties",
+        Examples::class => ["examples", "example"],
+        Attachable::class => ["attachables"],
     ];
 }

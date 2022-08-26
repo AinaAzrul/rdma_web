@@ -66,9 +66,9 @@ class RequestBody extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_types = [
-        'description' => 'string',
-        'required' => 'boolean',
-        'request' => 'string',
+        "description" => "string",
+        "required" => "boolean",
+        "request" => "string",
     ];
 
     public static $_parents = [
@@ -88,7 +88,7 @@ class RequestBody extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_nested = [
-        MediaType::class => ['content', 'mediaType'],
-        Attachable::class => ['attachables'],
+        MediaType::class => ["content", "mediaType"],
+        Attachable::class => ["attachables"],
     ];
 }

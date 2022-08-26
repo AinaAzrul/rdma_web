@@ -162,31 +162,31 @@ abstract class Operation extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public static $_required = ['responses'];
+    public static $_required = ["responses"];
 
     /**
      * @inheritdoc
      */
     public static $_types = [
-        'path' => 'string',
-        'method' => 'string',
-        'tags' => '[string]',
-        'summary' => 'string',
-        'description' => 'string',
-        'deprecated' => 'boolean',
+        "path" => "string",
+        "method" => "string",
+        "tags" => "[string]",
+        "summary" => "string",
+        "description" => "string",
+        "deprecated" => "boolean",
     ];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Parameter::class => ['parameters'],
-        PathParameter::class => ['parameters'],
-        Response::class => ['responses', 'response'],
-        ExternalDocumentation::class => 'externalDocs',
-        Server::class => ['servers'],
-        RequestBody::class => 'requestBody',
-        Attachable::class => ['attachables'],
+        Parameter::class => ["parameters"],
+        PathParameter::class => ["parameters"],
+        Response::class => ["responses", "response"],
+        ExternalDocumentation::class => "externalDocs",
+        Server::class => ["servers"],
+        RequestBody::class => "requestBody",
+        Attachable::class => ["attachables"],
     ];
 
     /**
@@ -213,8 +213,12 @@ abstract class Operation extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public function validate(array $stack = [], array $skip = [], string $ref = '', $context = null): bool
-    {
+    public function validate(
+        array $stack = [],
+        array $skip = [],
+        string $ref = "",
+        $context = null
+    ): bool {
         if (in_array($this, $skip, true)) {
             return true;
         }
@@ -223,20 +227,38 @@ abstract class Operation extends AbstractAnnotation
 
         if (!Generator::isDefault($this->responses)) {
             foreach ($this->responses as $response) {
-                if (!Generator::isDefault($response->response) && $response->response !== 'default' && preg_match('/^([12345]{1}[0-9]{2})|([12345]{1}XX)$/', (string) $response->response) === 0) {
-                    $this->_context->logger->warning('Invalid value "' . $response->response . '" for ' . $response->_identity([]) . '->response, expecting "default", a HTTP Status Code or HTTP Status Code range definition in ' . $response->_context);
+                if (
+                    !Generator::isDefault($response->response) &&
+                    $response->response !== "default" &&
+                    preg_match(
+                        '/^([12345]{1}[0-9]{2})|([12345]{1}XX)$/',
+                        (string) $response->response
+                    ) === 0
+                ) {
+                    $this->_context->logger->warning(
+                        'Invalid value "' .
+                            $response->response .
+                            '" for ' .
+                            $response->_identity([]) .
+                            '->response, expecting "default", a HTTP Status Code or HTTP Status Code range definition in ' .
+                            $response->_context
+                    );
                     $valid = false;
                 }
             }
         }
 
         if (is_object($context) && !Generator::isDefault($this->operationId)) {
-            if (!property_exists($context, 'operationIds')) {
+            if (!property_exists($context, "operationIds")) {
                 $context->operationIds = [];
             }
 
             if (in_array($this->operationId, $context->operationIds)) {
-                $this->_context->logger->warning('operationId must be unique. Duplicate value found: "' . $this->operationId . '"');
+                $this->_context->logger->warning(
+                    'operationId must be unique. Duplicate value found: "' .
+                        $this->operationId .
+                        '"'
+                );
                 $valid = false;
             }
 

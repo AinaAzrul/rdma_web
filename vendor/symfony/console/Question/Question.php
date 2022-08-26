@@ -102,7 +102,9 @@ class Question
     public function setHidden(bool $hidden)
     {
         if ($this->autocompleterCallback) {
-            throw new LogicException('A hidden question cannot use the autocompleter.');
+            throw new LogicException(
+                "A hidden question cannot use the autocompleter."
+            );
         }
 
         $this->hidden = $hidden;
@@ -141,7 +143,7 @@ class Question
     {
         $callback = $this->getAutocompleterCallback();
 
-        return $callback ? $callback('') : null;
+        return $callback ? $callback("") : null;
     }
 
     /**
@@ -154,7 +156,9 @@ class Question
     public function setAutocompleterValues(?iterable $values)
     {
         if (\is_array($values)) {
-            $values = $this->isAssoc($values) ? array_merge(array_keys($values), array_values($values)) : array_values($values);
+            $values = $this->isAssoc($values)
+                ? array_merge(array_keys($values), array_values($values))
+                : array_values($values);
 
             $callback = static function () use ($values) {
                 return $values;
@@ -162,7 +166,8 @@ class Question
         } elseif ($values instanceof \Traversable) {
             $valueCache = null;
             $callback = static function () use ($values, &$valueCache) {
-                return $valueCache ?? $valueCache = iterator_to_array($values, false);
+                return $valueCache ??
+                    ($valueCache = iterator_to_array($values, false));
             };
         } else {
             $callback = null;
@@ -189,7 +194,9 @@ class Question
     public function setAutocompleterCallback(callable $callback = null): self
     {
         if ($this->hidden && null !== $callback) {
-            throw new LogicException('A hidden question cannot use the autocompleter.');
+            throw new LogicException(
+                "A hidden question cannot use the autocompleter."
+            );
         }
 
         $this->autocompleterCallback = $callback;
@@ -231,7 +238,9 @@ class Question
     public function setMaxAttempts(?int $attempts)
     {
         if (null !== $attempts && $attempts < 1) {
-            throw new InvalidArgumentException('Maximum number of attempts must be a positive value.');
+            throw new InvalidArgumentException(
+                "Maximum number of attempts must be a positive value."
+            );
         }
 
         $this->attempts = $attempts;
@@ -279,7 +288,7 @@ class Question
 
     protected function isAssoc(array $array)
     {
-        return (bool) \count(array_filter(array_keys($array), 'is_string'));
+        return (bool) \count(array_filter(array_keys($array), "is_string"));
     }
 
     public function isTrimmable(): bool

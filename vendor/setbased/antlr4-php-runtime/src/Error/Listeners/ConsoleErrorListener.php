@@ -16,7 +16,10 @@ final class ConsoleErrorListener extends BaseErrorListener
         int $charPositionInLine,
         string $msg,
         ?RecognitionException $e
-    ) : void {
-        \fwrite(\STDERR, \sprintf("line %d:%d %s\n", $line, $charPositionInLine, $msg));
+    ): void {
+        \fwrite(
+            \STDERR,
+            \sprintf("line %d:%d %s\n", $line, $charPositionInLine, $msg)
+        );
     }
 }

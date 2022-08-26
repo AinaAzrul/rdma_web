@@ -33,7 +33,10 @@ interface OutputFormatterInterface
     /**
      * Sets a new style.
      */
-    public function setStyle(string $name, OutputFormatterStyleInterface $style);
+    public function setStyle(
+        string $name,
+        OutputFormatterStyleInterface $style
+    );
 
     /**
      * Checks if output formatter has style with specified name.

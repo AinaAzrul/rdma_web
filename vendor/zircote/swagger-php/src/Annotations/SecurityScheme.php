@@ -92,33 +92,31 @@ class SecurityScheme extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public static $_required = ['securityScheme', 'type'];
+    public static $_required = ["securityScheme", "type"];
 
     /**
      * @inheritdoc
      */
     public static $_types = [
-        'type' => ['http', 'apiKey', 'oauth2', 'openIdConnect'],
-        'description' => 'string',
-        'name' => 'string',
-        'bearerFormat' => 'string',
-        'in' => ['query', 'header', 'cookie'],
+        "type" => ["http", "apiKey", "oauth2", "openIdConnect"],
+        "description" => "string",
+        "name" => "string",
+        "bearerFormat" => "string",
+        "in" => ["query", "header", "cookie"],
     ];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Flow::class => ['flows', 'flow'],
-        Attachable::class => ['attachables'],
+        Flow::class => ["flows", "flow"],
+        Attachable::class => ["attachables"],
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        Components::class,
-    ];
+    public static $_parents = [Components::class];
 
     /**
      * @inheritdoc
@@ -127,7 +125,7 @@ class SecurityScheme extends AbstractAnnotation
     {
         $unmerged = parent::merge($annotations, $ignore);
 
-        if ($this->type === 'oauth2') {
+        if ($this->type === "oauth2") {
             $this->name = Generator::UNDEFINED;
         }
 

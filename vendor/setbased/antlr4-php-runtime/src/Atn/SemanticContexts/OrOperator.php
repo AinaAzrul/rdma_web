@@ -43,7 +43,10 @@ final class OrOperator extends Operator
 
         if (\count($precedencePredicates) !== 0) {
             // interested in the transition with the highest precedence
-            \usort($precedencePredicates, static function (PrecedencePredicate $a, PrecedencePredicate $b) {
+            \usort($precedencePredicates, static function (
+                PrecedencePredicate $a,
+                PrecedencePredicate $b
+            ) {
                 return $a->precedence - $b->precedence;
             });
             $reduced = $precedencePredicates[\count($precedencePredicates) - 1];
@@ -56,7 +59,7 @@ final class OrOperator extends Operator
     /**
      * @return array<SemanticContext>
      */
-    public function getOperands() : array
+    public function getOperands(): array
     {
         return $this->operand;
     }
@@ -67,7 +70,7 @@ final class OrOperator extends Operator
      * The evaluation of predicates by this context is short-circuiting, but
      * unordered.
      */
-    public function eval(Recognizer $parser, RuleContext $parserCallStack) : bool
+    public function eval(Recognizer $parser, RuleContext $parserCallStack): bool
     {
         foreach ($this->operand as $operand) {
             if ($operand->eval($parser, $parserCallStack)) {
@@ -78,14 +81,16 @@ final class OrOperator extends Operator
         return false;
     }
 
-    public function evalPrecedence(Recognizer $parser, RuleContext $parserCallStack) : ?SemanticContext
-    {
+    public function evalPrecedence(
+        Recognizer $parser,
+        RuleContext $parserCallStack
+    ): ?SemanticContext {
         $differs = false;
 
         $operands = [];
         foreach ($this->operand as $context) {
             $evaluated = $context->evalPrecedence($parser, $parserCallStack);
-            $differs |= ($evaluated !== $context);
+            $differs |= $evaluated !== $context;
 
             if ($evaluated === SemanticContext::none()) {
                 // The OR context is true if any element is true
@@ -109,13 +114,16 @@ final class OrOperator extends Operator
 
         $result = null;
         foreach ($operands as $operand) {
-            $result = $result === null ? $operand : SemanticContext::orContext($result, $operand);
+            $result =
+                $result === null
+                    ? $operand
+                    : SemanticContext::orContext($result, $operand);
         }
 
         return $result;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
@@ -128,17 +136,16 @@ final class OrOperator extends Operator
         return Equality::equals($this->operand, $other->operand);
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
         return Hasher::hash(37, $this->operand);
     }
 
-
-    public function __toString() : string
+    public function __toString(): string
     {
-        $s = '';
+        $s = "";
         foreach ($this->operand as $o) {
-            $s .= '|| ' . $o;
+            $s .= "|| " . $o;
         }
 
         return \strlen($s) > 3 ? (string) \substr($s, 3) : $s;

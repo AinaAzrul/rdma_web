@@ -57,15 +57,19 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      * @param Client  $client  Elasticsearch Client object
      * @param mixed[] $options Handler configuration
      */
-    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        Client $client,
+        array $options = [],
+        $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
         parent::__construct($level, $bubble);
         $this->client = $client;
         $this->options = array_merge(
             [
-                'index'        => 'monolog', // Elastic index name
-                'type'         => '_doc',    // Elastic document type
-                'ignore_error' => false,     // Suppress Elasticsearch exceptions
+                "index" => "monolog", // Elastic index name
+                "type" => "_doc", // Elastic document type
+                "ignore_error" => false, // Suppress Elasticsearch exceptions
             ],
             $options
         );
@@ -76,19 +80,22 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        $this->bulkSend([$record['formatted']]);
+        $this->bulkSend([$record["formatted"]]);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         if ($formatter instanceof ElasticsearchFormatter) {
             return parent::setFormatter($formatter);
         }
 
-        throw new InvalidArgumentException('ElasticsearchHandler is only compatible with ElasticsearchFormatter');
+        throw new InvalidArgumentException(
+            "ElasticsearchHandler is only compatible with ElasticsearchFormatter"
+        );
     }
 
     /**
@@ -106,7 +113,10 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
-        return new ElasticsearchFormatter($this->options['index'], $this->options['type']);
+        return new ElasticsearchFormatter(
+            $this->options["index"],
+            $this->options["type"]
+        );
     }
 
     /**
@@ -128,29 +138,33 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     {
         try {
             $params = [
-                'body' => [],
+                "body" => [],
             ];
 
             foreach ($records as $record) {
-                $params['body'][] = [
-                    'index' => [
-                        '_index' => $record['_index'],
-                        '_type'  => $record['_type'],
+                $params["body"][] = [
+                    "index" => [
+                        "_index" => $record["_index"],
+                        "_type" => $record["_type"],
                     ],
                 ];
-                unset($record['_index'], $record['_type']);
+                unset($record["_index"], $record["_type"]);
 
-                $params['body'][] = $record;
+                $params["body"][] = $record;
             }
 
             $responses = $this->client->bulk($params);
 
-            if ($responses['errors'] === true) {
+            if ($responses["errors"] === true) {
                 throw $this->createExceptionFromResponses($responses);
             }
         } catch (Throwable $e) {
-            if (! $this->options['ignore_error']) {
-                throw new RuntimeException('Error sending messages to Elasticsearch', 0, $e);
+            if (!$this->options["ignore_error"]) {
+                throw new RuntimeException(
+                    "Error sending messages to Elasticsearch",
+                    0,
+                    $e
+                );
             }
         }
     }
@@ -162,15 +176,18 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      *
      * @param mixed[] $responses returned by $this->client->bulk()
      */
-    protected function createExceptionFromResponses(array $responses): ElasticsearchRuntimeException
-    {
-        foreach ($responses['items'] ?? [] as $item) {
-            if (isset($item['index']['error'])) {
-                return $this->createExceptionFromError($item['index']['error']);
+    protected function createExceptionFromResponses(
+        array $responses
+    ): ElasticsearchRuntimeException {
+        foreach ($responses["items"] ?? [] as $item) {
+            if (isset($item["index"]["error"])) {
+                return $this->createExceptionFromError($item["index"]["error"]);
             }
         }
 
-        return new ElasticsearchRuntimeException('Elasticsearch failed to index one or more records.');
+        return new ElasticsearchRuntimeException(
+            "Elasticsearch failed to index one or more records."
+        );
     }
 
     /**
@@ -178,10 +195,17 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      *
      * @param mixed[] $error
      */
-    protected function createExceptionFromError(array $error): ElasticsearchRuntimeException
-    {
-        $previous = isset($error['caused_by']) ? $this->createExceptionFromError($error['caused_by']) : null;
+    protected function createExceptionFromError(
+        array $error
+    ): ElasticsearchRuntimeException {
+        $previous = isset($error["caused_by"])
+            ? $this->createExceptionFromError($error["caused_by"])
+            : null;
 
-        return new ElasticsearchRuntimeException($error['type'] . ': ' . $error['reason'], 0, $previous);
+        return new ElasticsearchRuntimeException(
+            $error["type"] . ": " . $error["reason"],
+            0,
+            $previous
+        );
     }
 }

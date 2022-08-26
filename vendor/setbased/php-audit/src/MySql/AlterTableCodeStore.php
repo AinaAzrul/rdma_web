@@ -10,30 +10,31 @@ use SetBased\Helper\CodeStore\CodeStore;
  */
 class AlterTableCodeStore extends CodeStore
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function indentationMode(string $line): int
-  {
-    $mode = 0;
-
-    $line = trim($line);
-
-    if (substr($line, 0, 11)==='alter table' && substr($line, -1)<>';')
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function indentationMode(string $line): int
     {
-      $mode |= self::C_INDENT_INCREMENT_AFTER;
+        $mode = 0;
+
+        $line = trim($line);
+
+        if (
+            substr($line, 0, 11) === "alter table" &&
+            substr($line, -1) != ";"
+        ) {
+            $mode |= self::C_INDENT_INCREMENT_AFTER;
+        }
+
+        if (substr($line, 0, 1) === ";") {
+            $mode |= self::C_INDENT_DECREMENT_BEFORE;
+        }
+
+        return $mode;
     }
 
-    if (substr($line, 0, 1)===';')
-    {
-      $mode |= self::C_INDENT_DECREMENT_BEFORE;
-    }
-
-    return $mode;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

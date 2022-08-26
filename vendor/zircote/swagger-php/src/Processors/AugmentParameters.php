@@ -31,8 +31,9 @@ class AugmentParameters
         return $this->augmentOperationParameters;
     }
 
-    public function setAugmentOperationParameters(bool $augmentOperationParameters): void
-    {
+    public function setAugmentOperationParameters(
+        bool $augmentOperationParameters
+    ): void {
         $this->augmentOperationParameters = $augmentOperationParameters;
     }
 
@@ -50,7 +51,10 @@ class AugmentParameters
      */
     protected function augmentSharedParameters(Analysis $analysis)
     {
-        if (!Generator::isDefault($analysis->openapi->components) && !Generator::isDefault($analysis->openapi->components->parameters)) {
+        if (
+            !Generator::isDefault($analysis->openapi->components) &&
+            !Generator::isDefault($analysis->openapi->components->parameters)
+        ) {
             $keys = [];
             $parametersWithoutKey = [];
             foreach ($analysis->openapi->components->parameters as $parameter) {
@@ -61,7 +65,10 @@ class AugmentParameters
                 }
             }
             foreach ($parametersWithoutKey as $parameter) {
-                if (!Generator::isDefault($parameter->name) && empty($keys[$parameter->name])) {
+                if (
+                    !Generator::isDefault($parameter->name) &&
+                    empty($keys[$parameter->name])
+                ) {
                     $parameter->parameter = $parameter->name;
                     $keys[$parameter->parameter] = $parameter;
                 }
@@ -78,12 +85,18 @@ class AugmentParameters
             if (!Generator::isDefault($operation->parameters)) {
                 $tags = [];
                 $this->extractContent($operation->_context->comment, $tags);
-                if (array_key_exists('param', $tags)) {
-                    foreach ($tags['param'] as $name => $details) {
+                if (array_key_exists("param", $tags)) {
+                    foreach ($tags["param"] as $name => $details) {
                         foreach ($operation->parameters as $parameter) {
                             if ($parameter->name == $name) {
-                                if (Generator::isDefault($parameter->description) && $details['description']) {
-                                    $parameter->description = $details['description'];
+                                if (
+                                    Generator::isDefault(
+                                        $parameter->description
+                                    ) &&
+                                    $details["description"]
+                                ) {
+                                    $parameter->description =
+                                        $details["description"];
                                 }
                             }
                         }

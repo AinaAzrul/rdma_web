@@ -35,14 +35,14 @@ class ExternalDocumentation extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_types = [
-        'description' => 'string',
-        'url' => 'string',
+        "description" => "string",
+        "url" => "string",
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_required = ['url'];
+    public static $_required = ["url"];
 
     /**
      * @inheritdoc
@@ -71,6 +71,6 @@ class ExternalDocumentation extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_nested = [
-        Attachable::class => ['attachables'],
+        Attachable::class => ["attachables"],
     ];
 }

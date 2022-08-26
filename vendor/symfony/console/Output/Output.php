@@ -37,9 +37,13 @@ abstract class Output implements OutputInterface
      * @param bool                          $decorated Whether to decorate messages
      * @param OutputFormatterInterface|null $formatter Output formatter instance (null to use default OutputFormatter)
      */
-    public function __construct(?int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = false, OutputFormatterInterface $formatter = null)
-    {
-        $this->verbosity = null === $verbosity ? self::VERBOSITY_NORMAL : $verbosity;
+    public function __construct(
+        ?int $verbosity = self::VERBOSITY_NORMAL,
+        bool $decorated = false,
+        OutputFormatterInterface $formatter = null
+    ) {
+        $this->verbosity =
+            null === $verbosity ? self::VERBOSITY_NORMAL : $verbosity;
         $this->formatter = $formatter ?? new OutputFormatter();
         $this->formatter->setDecorated($decorated);
     }
@@ -135,8 +139,11 @@ abstract class Output implements OutputInterface
     /**
      * {@inheritdoc}
      */
-    public function write($messages, bool $newline = false, int $options = self::OUTPUT_NORMAL)
-    {
+    public function write(
+        $messages,
+        bool $newline = false,
+        int $options = self::OUTPUT_NORMAL
+    ) {
         if (!is_iterable($messages)) {
             $messages = [$messages];
         }
@@ -144,7 +151,12 @@ abstract class Output implements OutputInterface
         $types = self::OUTPUT_NORMAL | self::OUTPUT_RAW | self::OUTPUT_PLAIN;
         $type = $types & $options ?: self::OUTPUT_NORMAL;
 
-        $verbosities = self::VERBOSITY_QUIET | self::VERBOSITY_NORMAL | self::VERBOSITY_VERBOSE | self::VERBOSITY_VERY_VERBOSE | self::VERBOSITY_DEBUG;
+        $verbosities =
+            self::VERBOSITY_QUIET |
+            self::VERBOSITY_NORMAL |
+            self::VERBOSITY_VERBOSE |
+            self::VERBOSITY_VERY_VERBOSE |
+            self::VERBOSITY_DEBUG;
         $verbosity = $verbosities & $options ?: self::VERBOSITY_NORMAL;
 
         if ($verbosity > $this->getVerbosity()) {
@@ -163,7 +175,7 @@ abstract class Output implements OutputInterface
                     break;
             }
 
-            $this->doWrite($message ?? '', $newline);
+            $this->doWrite($message ?? "", $newline);
         }
     }
 

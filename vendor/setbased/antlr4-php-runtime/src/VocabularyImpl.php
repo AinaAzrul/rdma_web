@@ -41,18 +41,22 @@ final class VocabularyImpl implements Vocabulary
      *                                          of display names, as described
      *                                          in {@see VocabularyImpl::getDisplayName()}.
      */
-    public function __construct(array $literalNames = [], array $symbolicNames = [], array $displayNames = [])
-    {
+    public function __construct(
+        array $literalNames = [],
+        array $symbolicNames = [],
+        array $displayNames = []
+    ) {
         $this->literalNames = $literalNames;
         $this->symbolicNames = $symbolicNames;
         $this->displayNames = $displayNames;
 
         // See note here on -1 part: https://github.com/antlr/antlr4/pull/1146
-        $this->maxTokenType = \max(
-            \count($this->displayNames),
-            \count($this->literalNames),
-            \count($this->symbolicNames)
-        ) - 1;
+        $this->maxTokenType =
+            \max(
+                \count($this->displayNames),
+                \count($this->literalNames),
+                \count($this->symbolicNames)
+            ) - 1;
     }
 
     /**
@@ -62,7 +66,7 @@ final class VocabularyImpl implements Vocabulary
      * {@see Vocabulary::getDisplayName()} returns the numeric value for
      * all tokens except {@see Token::EOF}.
      */
-    public static function emptyVocabulary() : self
+    public static function emptyVocabulary(): self
     {
         static $empty;
 
@@ -84,7 +88,7 @@ final class VocabularyImpl implements Vocabulary
      * @return Vocabulary A {@see Vocabulary} instance which uses `tokenNames`
      *                    for the display names of tokens.
      */
-    public static function fromTokenNames(array $tokenNames = []) : Vocabulary
+    public static function fromTokenNames(array $tokenNames = []): Vocabulary
     {
         if (\count($tokenNames) === 0) {
             return self::emptyVocabulary();
@@ -98,7 +102,7 @@ final class VocabularyImpl implements Vocabulary
                 continue;
             }
 
-            if ($tokenName !== '') {
+            if ($tokenName !== "") {
                 $firstChar = $tokenName[0];
 
                 if ($firstChar === '\'') {
@@ -122,12 +126,12 @@ final class VocabularyImpl implements Vocabulary
         return new VocabularyImpl($literalNames, $symbolicNames, $tokenNames);
     }
 
-    public function getMaxTokenType() : int
+    public function getMaxTokenType(): int
     {
         return $this->maxTokenType;
     }
 
-    public function getLiteralName(int $tokenType) : ?string
+    public function getLiteralName(int $tokenType): ?string
     {
         if ($tokenType >= 0 && $tokenType < \count($this->literalNames)) {
             return $this->literalNames[$tokenType];
@@ -136,20 +140,20 @@ final class VocabularyImpl implements Vocabulary
         return null;
     }
 
-    public function getSymbolicName(int $tokenType) : ?string
+    public function getSymbolicName(int $tokenType): ?string
     {
         if ($tokenType >= 0 && $tokenType < \count($this->symbolicNames)) {
             return $this->symbolicNames[$tokenType];
         }
 
         if ($tokenType === Token::EOF) {
-            return 'EOF';
+            return "EOF";
         }
 
         return null;
     }
 
-    public function getDisplayName(int $tokenType) : string
+    public function getDisplayName(int $tokenType): string
     {
         if ($tokenType >= 0 && $tokenType < \count($this->displayNames)) {
             $displayName = $this->displayNames[$tokenType];

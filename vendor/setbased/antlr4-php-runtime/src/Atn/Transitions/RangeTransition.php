@@ -24,34 +24,37 @@ final class RangeTransition extends Transition
         $this->to = $to;
     }
 
-    public function label() : ?IntervalSet
+    public function label(): ?IntervalSet
     {
         return IntervalSet::fromRange($this->from, $this->to);
     }
 
-    public function matches(int $symbol, int $minVocabSymbol, int $maxVocabSymbol) : bool
-    {
+    public function matches(
+        int $symbol,
+        int $minVocabSymbol,
+        int $maxVocabSymbol
+    ): bool {
         return $symbol >= $this->from && $symbol <= $this->to;
     }
 
-    public function getSerializationType() : int
+    public function getSerializationType(): int
     {
         return self::RANGE;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        return $other instanceof self
-            && $this->from === $other->from
-            && $this->to === $other->to
-            && $this->target->equals($other->target);
+        return $other instanceof self &&
+            $this->from === $other->from &&
+            $this->to === $other->to &&
+            $this->target->equals($other->target);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return \sprintf(
             '\'%s\'..\'%s\'',

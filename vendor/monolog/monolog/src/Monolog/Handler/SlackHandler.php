@@ -59,19 +59,21 @@ class SlackHandler extends SocketHandler
         bool $bubble = true,
         bool $useShortAttachment = false,
         bool $includeContextAndExtra = false,
-        array $excludeFields = array(),
+        array $excludeFields = [],
         bool $persistent = false,
         float $timeout = 0.0,
         float $writingTimeout = 10.0,
         ?float $connectionTimeout = null,
         ?int $chunkSize = null
     ) {
-        if (!extension_loaded('openssl')) {
-            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');
+        if (!extension_loaded("openssl")) {
+            throw new MissingExtensionException(
+                "The OpenSSL PHP extension is required to use the SlackHandler"
+            );
         }
 
         parent::__construct(
-            'ssl://slack.com:443',
+            "ssl://slack.com:443",
             $level,
             $bubble,
             $persistent,
@@ -133,10 +135,12 @@ class SlackHandler extends SocketHandler
     protected function prepareContentData(array $record): array
     {
         $dataArray = $this->slackRecord->getSlackData($record);
-        $dataArray['token'] = $this->token;
+        $dataArray["token"] = $this->token;
 
-        if (!empty($dataArray['attachments'])) {
-            $dataArray['attachments'] = Utils::jsonEncode($dataArray['attachments']);
+        if (!empty($dataArray["attachments"])) {
+            $dataArray["attachments"] = Utils::jsonEncode(
+                $dataArray["attachments"]
+            );
         }
 
         return $dataArray;
@@ -180,8 +184,9 @@ class SlackHandler extends SocketHandler
         $this->closeSocket();
     }
 
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         parent::setFormatter($formatter);
         $this->slackRecord->setFormatter($formatter);
 

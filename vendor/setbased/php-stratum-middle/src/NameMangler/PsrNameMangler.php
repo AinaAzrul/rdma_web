@@ -9,39 +9,43 @@ namespace SetBased\Stratum\Middle\NameMangler;
  */
 class PsrNameMangler implements NameMangler
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the routine name after the first underscore in camelCase. I.e. abc_foo_bar => fooBar.
-   *
-   * @param string $routineName The name of the stored routine.
-   *
-   * @return string
-   *
-   * @since 4.0.0
-   * @api
-   */
-  public static function getMethodName(string $routineName): string
-  {
-    return lcfirst(str_replace(' ', '', ucwords(strtr($routineName, '_', ' '))));
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the routine name after the first underscore in camelCase. I.e. abc_foo_bar => fooBar.
+     *
+     * @param string $routineName The name of the stored routine.
+     *
+     * @return string
+     *
+     * @since 4.0.0
+     * @api
+     */
+    public static function getMethodName(string $routineName): string
+    {
+        return lcfirst(
+            str_replace(" ", "", ucwords(strtr($routineName, "_", " ")))
+        );
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the parameter name into camelCase.
-   *
-   * @param string $parameterName The name of the parameter in the stored routine.
-   *
-   * @return string
-   *
-   * @since 4.0.0
-   * @api
-   */
-  public static function getParameterName(string $parameterName): string
-  {
-    return lcfirst(str_replace(' ', '', ucwords(strtr($parameterName, '_', ' '))));
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the parameter name into camelCase.
+     *
+     * @param string $parameterName The name of the parameter in the stored routine.
+     *
+     * @return string
+     *
+     * @since 4.0.0
+     * @api
+     */
+    public static function getParameterName(string $parameterName): string
+    {
+        return lcfirst(
+            str_replace(" ", "", ucwords(strtr($parameterName, "_", " ")))
+        );
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

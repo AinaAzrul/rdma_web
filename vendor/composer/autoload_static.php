@@ -6,222 +6,222 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit32c9370f0a66913a456c47abad5fbb15
 {
-    public static $files = array (
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
-        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
-        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
-    );
+    public static $files = [
+        "6e3fae29631ef280660b3cdad06f25a8" =>
+            __DIR__ . "/.." . "/symfony/deprecation-contracts/function.php",
+        "0e6d7bf4a5811bfa5cf40c5ccd6fae6a" =>
+            __DIR__ . "/.." . "/symfony/polyfill-mbstring/bootstrap.php",
+        "a4a119a56e50fbb293281d9a48007e0e" =>
+            __DIR__ . "/.." . "/symfony/polyfill-php80/bootstrap.php",
+        "320cde22f66dd4f5d3fd621d3e88b98f" =>
+            __DIR__ . "/.." . "/symfony/polyfill-ctype/bootstrap.php",
+        "8825ede83f2f289127722d4e842cf7e8" =>
+            __DIR__ . "/.." . "/symfony/polyfill-intl-grapheme/bootstrap.php",
+        "e69f7f6ee287b969198c3c9d6777bd38" =>
+            __DIR__ . "/.." . "/symfony/polyfill-intl-normalizer/bootstrap.php",
+        "0d59ee240a4cd96ddbb4ff164fccea4d" =>
+            __DIR__ . "/.." . "/symfony/polyfill-php73/bootstrap.php",
+        "b6b991a57620e2fb6b2f66f03fe9ddc2" =>
+            __DIR__ . "/.." . "/symfony/string/Resources/functions.php",
+    ];
 
-    public static $prefixLengthsPsr4 = array (
-        'S' => 
-        array (
-            'Symfony\\Polyfill\\Php80\\' => 23,
-            'Symfony\\Polyfill\\Php73\\' => 23,
-            'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
-            'Symfony\\Polyfill\\Intl\\Grapheme\\' => 31,
-            'Symfony\\Polyfill\\Ctype\\' => 23,
-            'Symfony\\Contracts\\Service\\' => 26,
-            'Symfony\\Component\\Yaml\\' => 23,
-            'Symfony\\Component\\String\\' => 25,
-            'Symfony\\Component\\Finder\\' => 25,
-            'Symfony\\Component\\Console\\' => 26,
-            'SetBased\\Stratum\\MySql\\' => 23,
-            'SetBased\\Stratum\\Middle\\' => 24,
-            'SetBased\\Stratum\\Common\\' => 24,
-            'SetBased\\Stratum\\Backend\\' => 25,
-            'SetBased\\Helper\\CodeStore\\' => 26,
-            'SetBased\\Helper\\' => 16,
-            'SetBased\\Exception\\' => 19,
-            'SetBased\\ErrorHandler\\' => 22,
-            'SetBased\\Config\\' => 16,
-            'SetBased\\Audit\\' => 15,
-        ),
-        'P' => 
-        array (
-            'Psr\\Log\\' => 8,
-            'Psr\\Container\\' => 14,
-            'Psr\\Cache\\' => 10,
-        ),
-        'O' => 
-        array (
-            'OpenApi\\' => 8,
-        ),
-        'N' => 
-        array (
-            'Noodlehaus\\' => 11,
-        ),
-        'M' => 
-        array (
-            'Monolog\\' => 8,
-        ),
-        'F' => 
-        array (
-            'Firebase\\JWT\\' => 13,
-        ),
-        'D' => 
-        array (
-            'Doctrine\\Common\\Lexer\\' => 22,
-            'Doctrine\\Common\\Annotations\\' => 28,
-        ),
-        'A' => 
-        array (
-            'Antlr\\Antlr4\\Runtime\\' => 21,
-        ),
-    );
+    public static $prefixLengthsPsr4 = [
+        "S" => [
+            "Symfony\\Polyfill\\Php80\\" => 23,
+            "Symfony\\Polyfill\\Php73\\" => 23,
+            "Symfony\\Polyfill\\Mbstring\\" => 26,
+            "Symfony\\Polyfill\\Intl\\Normalizer\\" => 33,
+            "Symfony\\Polyfill\\Intl\\Grapheme\\" => 31,
+            "Symfony\\Polyfill\\Ctype\\" => 23,
+            "Symfony\\Contracts\\Service\\" => 26,
+            "Symfony\\Component\\Yaml\\" => 23,
+            "Symfony\\Component\\String\\" => 25,
+            "Symfony\\Component\\Finder\\" => 25,
+            "Symfony\\Component\\Console\\" => 26,
+            "SetBased\\Stratum\\MySql\\" => 23,
+            "SetBased\\Stratum\\Middle\\" => 24,
+            "SetBased\\Stratum\\Common\\" => 24,
+            "SetBased\\Stratum\\Backend\\" => 25,
+            "SetBased\\Helper\\CodeStore\\" => 26,
+            "SetBased\\Helper\\" => 16,
+            "SetBased\\Exception\\" => 19,
+            "SetBased\\ErrorHandler\\" => 22,
+            "SetBased\\Config\\" => 16,
+            "SetBased\\Audit\\" => 15,
+        ],
+        "P" => [
+            "Psr\\Log\\" => 8,
+            "Psr\\Container\\" => 14,
+            "Psr\\Cache\\" => 10,
+        ],
+        "O" => [
+            "OpenApi\\" => 8,
+        ],
+        "N" => [
+            "Noodlehaus\\" => 11,
+        ],
+        "M" => [
+            "Monolog\\" => 8,
+        ],
+        "F" => [
+            "Firebase\\JWT\\" => 13,
+        ],
+        "D" => [
+            "Doctrine\\Common\\Lexer\\" => 22,
+            "Doctrine\\Common\\Annotations\\" => 28,
+        ],
+        "A" => [
+            "Antlr\\Antlr4\\Runtime\\" => 21,
+        ],
+    ];
 
-    public static $prefixDirsPsr4 = array (
-        'Symfony\\Polyfill\\Php80\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
-        ),
-        'Symfony\\Polyfill\\Php73\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php73',
-        ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
-        ),
-        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
-        ),
-        'Symfony\\Polyfill\\Intl\\Grapheme\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme',
-        ),
-        'Symfony\\Polyfill\\Ctype\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
-        ),
-        'Symfony\\Contracts\\Service\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/service-contracts',
-        ),
-        'Symfony\\Component\\Yaml\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/yaml',
-        ),
-        'Symfony\\Component\\String\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/string',
-        ),
-        'Symfony\\Component\\Finder\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/finder',
-        ),
-        'Symfony\\Component\\Console\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/console',
-        ),
-        'SetBased\\Stratum\\MySql\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/php-stratum-mysql/src',
-        ),
-        'SetBased\\Stratum\\Middle\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/php-stratum-middle/src',
-        ),
-        'SetBased\\Stratum\\Common\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/php-stratum-common/src',
-        ),
-        'SetBased\\Stratum\\Backend\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/php-stratum-backend/src',
-        ),
-        'SetBased\\Helper\\CodeStore\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/helper-code-store/src',
-            1 => __DIR__ . '/..' . '/setbased/helper-code-store-mysql/src',
-            2 => __DIR__ . '/..' . '/setbased/helper-code-store-php/src',
-        ),
-        'SetBased\\Helper\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/helper-cast/src',
-        ),
-        'SetBased\\Exception\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/exception/src',
-        ),
-        'SetBased\\ErrorHandler\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/error-handler/src',
-        ),
-        'SetBased\\Config\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/typed-config/src',
-        ),
-        'SetBased\\Audit\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/php-audit/src',
-        ),
-        'Psr\\Log\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/log/src',
-        ),
-        'Psr\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/container/src',
-        ),
-        'Psr\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/cache/src',
-        ),
-        'OpenApi\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/zircote/swagger-php/src',
-        ),
-        'Noodlehaus\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/hassankhan/config/src',
-        ),
-        'Monolog\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
-        ),
-        'Firebase\\JWT\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
-        ),
-        'Doctrine\\Common\\Lexer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
-        ),
-        'Doctrine\\Common\\Annotations\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
-        ),
-        'Antlr\\Antlr4\\Runtime\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/setbased/antlr4-php-runtime/src',
-        ),
-    );
+    public static $prefixDirsPsr4 = [
+        "Symfony\\Polyfill\\Php80\\" => [
+            0 => __DIR__ . "/.." . "/symfony/polyfill-php80",
+        ],
+        "Symfony\\Polyfill\\Php73\\" => [
+            0 => __DIR__ . "/.." . "/symfony/polyfill-php73",
+        ],
+        "Symfony\\Polyfill\\Mbstring\\" => [
+            0 => __DIR__ . "/.." . "/symfony/polyfill-mbstring",
+        ],
+        "Symfony\\Polyfill\\Intl\\Normalizer\\" => [
+            0 => __DIR__ . "/.." . "/symfony/polyfill-intl-normalizer",
+        ],
+        "Symfony\\Polyfill\\Intl\\Grapheme\\" => [
+            0 => __DIR__ . "/.." . "/symfony/polyfill-intl-grapheme",
+        ],
+        "Symfony\\Polyfill\\Ctype\\" => [
+            0 => __DIR__ . "/.." . "/symfony/polyfill-ctype",
+        ],
+        "Symfony\\Contracts\\Service\\" => [
+            0 => __DIR__ . "/.." . "/symfony/service-contracts",
+        ],
+        "Symfony\\Component\\Yaml\\" => [
+            0 => __DIR__ . "/.." . "/symfony/yaml",
+        ],
+        "Symfony\\Component\\String\\" => [
+            0 => __DIR__ . "/.." . "/symfony/string",
+        ],
+        "Symfony\\Component\\Finder\\" => [
+            0 => __DIR__ . "/.." . "/symfony/finder",
+        ],
+        "Symfony\\Component\\Console\\" => [
+            0 => __DIR__ . "/.." . "/symfony/console",
+        ],
+        "SetBased\\Stratum\\MySql\\" => [
+            0 => __DIR__ . "/.." . "/setbased/php-stratum-mysql/src",
+        ],
+        "SetBased\\Stratum\\Middle\\" => [
+            0 => __DIR__ . "/.." . "/setbased/php-stratum-middle/src",
+        ],
+        "SetBased\\Stratum\\Common\\" => [
+            0 => __DIR__ . "/.." . "/setbased/php-stratum-common/src",
+        ],
+        "SetBased\\Stratum\\Backend\\" => [
+            0 => __DIR__ . "/.." . "/setbased/php-stratum-backend/src",
+        ],
+        "SetBased\\Helper\\CodeStore\\" => [
+            0 => __DIR__ . "/.." . "/setbased/helper-code-store/src",
+            1 => __DIR__ . "/.." . "/setbased/helper-code-store-mysql/src",
+            2 => __DIR__ . "/.." . "/setbased/helper-code-store-php/src",
+        ],
+        "SetBased\\Helper\\" => [
+            0 => __DIR__ . "/.." . "/setbased/helper-cast/src",
+        ],
+        "SetBased\\Exception\\" => [
+            0 => __DIR__ . "/.." . "/setbased/exception/src",
+        ],
+        "SetBased\\ErrorHandler\\" => [
+            0 => __DIR__ . "/.." . "/setbased/error-handler/src",
+        ],
+        "SetBased\\Config\\" => [
+            0 => __DIR__ . "/.." . "/setbased/typed-config/src",
+        ],
+        "SetBased\\Audit\\" => [
+            0 => __DIR__ . "/.." . "/setbased/php-audit/src",
+        ],
+        "Psr\\Log\\" => [
+            0 => __DIR__ . "/.." . "/psr/log/src",
+        ],
+        "Psr\\Container\\" => [
+            0 => __DIR__ . "/.." . "/psr/container/src",
+        ],
+        "Psr\\Cache\\" => [
+            0 => __DIR__ . "/.." . "/psr/cache/src",
+        ],
+        "OpenApi\\" => [
+            0 => __DIR__ . "/.." . "/zircote/swagger-php/src",
+        ],
+        "Noodlehaus\\" => [
+            0 => __DIR__ . "/.." . "/hassankhan/config/src",
+        ],
+        "Monolog\\" => [
+            0 => __DIR__ . "/.." . "/monolog/monolog/src/Monolog",
+        ],
+        "Firebase\\JWT\\" => [
+            0 => __DIR__ . "/.." . "/firebase/php-jwt/src",
+        ],
+        "Doctrine\\Common\\Lexer\\" => [
+            0 => __DIR__ . "/.." . "/doctrine/lexer/lib/Doctrine/Common/Lexer",
+        ],
+        "Doctrine\\Common\\Annotations\\" => [
+            0 =>
+                __DIR__ .
+                "/.." .
+                "/doctrine/annotations/lib/Doctrine/Common/Annotations",
+        ],
+        "Antlr\\Antlr4\\Runtime\\" => [
+            0 => __DIR__ . "/.." . "/setbased/antlr4-php-runtime/src",
+        ],
+    ];
 
-    public static $classMap = array (
-        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
-        'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
-        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
-        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
-        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
-        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
-    );
+    public static $classMap = [
+        "Attribute" =>
+            __DIR__ .
+            "/.." .
+            "/symfony/polyfill-php80/Resources/stubs/Attribute.php",
+        "Composer\\InstalledVersions" =>
+            __DIR__ . "/.." . "/composer/InstalledVersions.php",
+        "JsonException" =>
+            __DIR__ .
+            "/.." .
+            "/symfony/polyfill-php73/Resources/stubs/JsonException.php",
+        "Normalizer" =>
+            __DIR__ .
+            "/.." .
+            "/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php",
+        "PhpToken" =>
+            __DIR__ .
+            "/.." .
+            "/symfony/polyfill-php80/Resources/stubs/PhpToken.php",
+        "Stringable" =>
+            __DIR__ .
+            "/.." .
+            "/symfony/polyfill-php80/Resources/stubs/Stringable.php",
+        "UnhandledMatchError" =>
+            __DIR__ .
+            "/.." .
+            "/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php",
+        "ValueError" =>
+            __DIR__ .
+            "/.." .
+            "/symfony/polyfill-php80/Resources/stubs/ValueError.php",
+    ];
 
     public static function getInitializer(ClassLoader $loader)
     {
-        return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::$classMap;
-
-        }, null, ClassLoader::class);
+        return \Closure::bind(
+            function () use ($loader) {
+                $loader->prefixLengthsPsr4 =
+                    ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::$prefixLengthsPsr4;
+                $loader->prefixDirsPsr4 =
+                    ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::$prefixDirsPsr4;
+                $loader->classMap =
+                    ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::$classMap;
+            },
+            null,
+            ClassLoader::class
+        );
     }
 }

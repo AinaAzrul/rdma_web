@@ -9,7 +9,6 @@ namespace Noodlehaus\Writer;
  */
 class Serialize extends AbstractWriter
 {
-
     /**
      * {@inheritdoc}
      */
@@ -23,6 +22,6 @@ class Serialize extends AbstractWriter
      */
     public static function getSupportedExtensions()
     {
-        return ['txt'];
+        return ["txt"];
     }
 }

@@ -16,44 +16,51 @@ use SetBased\Stratum\Backend\StratumStyle;
  */
 class MySqlBackend extends Backend
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritDoc
-   */
-  public function createConstantWorker(Config $settings, StratumStyle $io): ?ConstantWorker
-  {
-    return new MySqlConstantWorker($settings, $io);
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritDoc
+     */
+    public function createConstantWorker(
+        Config $settings,
+        StratumStyle $io
+    ): ?ConstantWorker {
+        return new MySqlConstantWorker($settings, $io);
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritDoc
-   */
-  public function createCrudWorker(Config $settings, StratumStyle $io): ?CrudWorker
-  {
-    return new MySqlCrudWorker($settings, $io);
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritDoc
+     */
+    public function createCrudWorker(
+        Config $settings,
+        StratumStyle $io
+    ): ?CrudWorker {
+        return new MySqlCrudWorker($settings, $io);
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritDoc
-   */
-  public function createRoutineLoaderWorker(Config $settings, StratumStyle $io): ?RoutineLoaderWorker
-  {
-    return new MySqlRoutineLoaderWorker($settings, $io);
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritDoc
+     */
+    public function createRoutineLoaderWorker(
+        Config $settings,
+        StratumStyle $io
+    ): ?RoutineLoaderWorker {
+        return new MySqlRoutineLoaderWorker($settings, $io);
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritDoc
-   */
-  public function createRoutineWrapperGeneratorWorker(Config $settings,
-                                                      StratumStyle $io): ?RoutineWrapperGeneratorWorker
-  {
-    return new MySqlRoutineWrapperGeneratorWorker($settings, $io);
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritDoc
+     */
+    public function createRoutineWrapperGeneratorWorker(
+        Config $settings,
+        StratumStyle $io
+    ): ?RoutineWrapperGeneratorWorker {
+        return new MySqlRoutineWrapperGeneratorWorker($settings, $io);
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

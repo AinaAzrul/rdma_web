@@ -31,6 +31,6 @@ class Yaml extends AbstractWriter
      */
     public static function getSupportedExtensions()
     {
-        return ['yaml'];
+        return ["yaml"];
     }
 }

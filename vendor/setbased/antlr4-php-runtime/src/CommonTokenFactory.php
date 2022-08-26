@@ -50,7 +50,7 @@ final class CommonTokenFactory implements TokenFactory
      * This token factory does not explicitly copy token text when constructing
      * tokens.
      */
-    public static function default() : self
+    public static function default(): self
     {
         static $default;
 
@@ -66,7 +66,7 @@ final class CommonTokenFactory implements TokenFactory
         int $stop,
         int $line,
         int $column
-    ) : Token {
+    ): Token {
         $token = new CommonToken($type, $source, $channel, $start, $stop);
 
         $token->setLine($line);
@@ -76,7 +76,7 @@ final class CommonTokenFactory implements TokenFactory
             $token->setText($text);
         } elseif ($this->copyText && $source->b !== null) {
             if (!$source->b instanceof CharStream) {
-                throw new \RuntimeException('Unexpected stream type.');
+                throw new \RuntimeException("Unexpected stream type.");
             }
 
             $token->setText($source->b->getText($start, $stop));
@@ -85,7 +85,7 @@ final class CommonTokenFactory implements TokenFactory
         return $token;
     }
 
-    public function create(int $type, string $text) : Token
+    public function create(int $type, string $text): Token
     {
         $token = new CommonToken($type);
 

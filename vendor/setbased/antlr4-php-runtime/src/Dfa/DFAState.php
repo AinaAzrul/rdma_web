@@ -93,8 +93,10 @@ final class DFAState implements Hashable
      */
     public $predicates;
 
-    public function __construct(?ATNConfigSet $configs = null, int $stateNumber = -1)
-    {
+    public function __construct(
+        ?ATNConfigSet $configs = null,
+        int $stateNumber = -1
+    ) {
         $this->configs = $configs ?? new ATNConfigSet();
         $this->stateNumber = $stateNumber;
     }
@@ -112,7 +114,7 @@ final class DFAState implements Hashable
      * exists that has this exact set of ATN configurations. The
      * {@see DFAState::$stateNumber} is irrelevant.
      */
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
@@ -126,15 +128,15 @@ final class DFAState implements Hashable
         return Equality::equals($this->configs, $other->configs);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        $s = \sprintf('%d:%s', $this->stateNumber, (string) $this->configs);
+        $s = \sprintf("%d:%s", $this->stateNumber, (string) $this->configs);
 
         if ($this->isAcceptState) {
-            $s .= '=>';
+            $s .= "=>";
 
             if ($this->predicates !== null) {
-                $s .= \sprintf('[%s]', \implode(', ', $this->predicates));
+                $s .= \sprintf("[%s]", \implode(", ", $this->predicates));
             } else {
                 $s .= $this->prediction;
             }
@@ -143,7 +145,7 @@ final class DFAState implements Hashable
         return $s;
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
         return Hasher::hash($this->configs);
     }

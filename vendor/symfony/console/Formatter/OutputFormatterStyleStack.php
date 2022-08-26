@@ -26,8 +26,9 @@ class OutputFormatterStyleStack implements ResetInterface
 
     private $emptyStyle;
 
-    public function __construct(OutputFormatterStyleInterface $emptyStyle = null)
-    {
+    public function __construct(
+        OutputFormatterStyleInterface $emptyStyle = null
+    ) {
         $this->emptyStyle = $emptyStyle ?? new OutputFormatterStyle();
         $this->reset();
     }
@@ -65,15 +66,20 @@ class OutputFormatterStyleStack implements ResetInterface
             return array_pop($this->styles);
         }
 
-        foreach (array_reverse($this->styles, true) as $index => $stackedStyle) {
-            if ($style->apply('') === $stackedStyle->apply('')) {
+        foreach (
+            array_reverse($this->styles, true)
+            as $index => $stackedStyle
+        ) {
+            if ($style->apply("") === $stackedStyle->apply("")) {
                 $this->styles = \array_slice($this->styles, 0, $index);
 
                 return $stackedStyle;
             }
         }
 
-        throw new InvalidArgumentException('Incorrectly nested style tag found.');
+        throw new InvalidArgumentException(
+            "Incorrectly nested style tag found."
+        );
     }
 
     /**

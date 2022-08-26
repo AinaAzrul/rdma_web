@@ -19,12 +19,15 @@ class PrecedencePredicateTransition extends AbstractPredicateTransition
         $this->precedence = $precedence;
     }
 
-    public function matches(int $symbol, int $minVocabSymbol, int $maxVocabSymbol) : bool
-    {
+    public function matches(
+        int $symbol,
+        int $minVocabSymbol,
+        int $maxVocabSymbol
+    ): bool {
         return false;
     }
 
-    public function getPredicate() : PrecedencePredicate
+    public function getPredicate(): PrecedencePredicate
     {
         return new PrecedencePredicate($this->precedence);
     }
@@ -32,29 +35,29 @@ class PrecedencePredicateTransition extends AbstractPredicateTransition
     /**
      * {@inheritdoc}
      */
-    public function isEpsilon() : bool
+    public function isEpsilon(): bool
     {
         return true;
     }
 
-    public function getSerializationType() : int
+    public function getSerializationType(): int
     {
         return self::PRECEDENCE;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        return $other instanceof self
-            && $this->precedence === $other->precedence
-            && $this->target->equals($other->target);
+        return $other instanceof self &&
+            $this->precedence === $other->precedence &&
+            $this->target->equals($other->target);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return $this->precedence . ' >= _p';
+        return $this->precedence . " >= _p";
     }
 }

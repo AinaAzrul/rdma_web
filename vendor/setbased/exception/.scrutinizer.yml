@@ -2,12 +2,12 @@ filter:
   dependency_paths:
     - "vendor/"
   excluded_paths:
-    - 'test/'
+    - "test/"
 
 build:
   environment:
     php:
-      version: '7.4'
+      version: "7.4"
 
   nodes:
     analysis:
@@ -18,7 +18,7 @@ build:
     coverage:
       tests:
         override:
-          - command: './bin/phing unit'
+          - command: "./bin/phing unit"
             coverage:
-              file:   'test/coverage.xml'
-              format: 'php-clover'
+              file: "test/coverage.xml"
+              format: "php-clover"

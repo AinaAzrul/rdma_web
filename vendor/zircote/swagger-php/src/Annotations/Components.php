@@ -21,14 +21,14 @@ use OpenApi\Util;
  */
 class Components extends AbstractAnnotation
 {
-    public const COMPONENTS_PREFIX = '#/components/';
+    public const COMPONENTS_PREFIX = "#/components/";
 
     /**
      * Schema reference.
      *
      * @var string
      */
-    public const SCHEMA_REF = '#/components/schemas/';
+    public const SCHEMA_REF = "#/components/schemas/";
 
     /**
      * Reusable Schemas.
@@ -96,24 +96,22 @@ class Components extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        OpenApi::class,
-    ];
+    public static $_parents = [OpenApi::class];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Response::class => ['responses', 'response'],
-        Parameter::class => ['parameters', 'parameter'],
-        PathParameter::class => ['parameters', 'parameter'],
-        RequestBody::class => ['requestBodies', 'request'],
-        Examples::class => ['examples', 'example'],
-        Header::class => ['headers', 'header'],
-        SecurityScheme::class => ['securitySchemes', 'securityScheme'],
-        Link::class => ['links', 'link'],
-        Schema::class => ['schemas', 'schema'],
-        Attachable::class => ['attachables'],
+        Response::class => ["responses", "response"],
+        Parameter::class => ["parameters", "parameter"],
+        PathParameter::class => ["parameters", "parameter"],
+        RequestBody::class => ["requestBodies", "request"],
+        Examples::class => ["examples", "example"],
+        Header::class => ["headers", "header"],
+        SecurityScheme::class => ["securitySchemes", "securityScheme"],
+        Link::class => ["links", "link"],
+        Schema::class => ["schemas", "schema"],
+        Attachable::class => ["attachables"],
     ];
 
     /**
@@ -137,10 +135,13 @@ class Components extends AbstractAnnotation
                 }
             }
         } else {
-            $type = 'schemas';
+            $type = "schemas";
             $name = $component;
         }
 
-        return self::COMPONENTS_PREFIX . $type . '/' . ($encode ? Util::refEncode((string) $name) : $name);
+        return self::COMPONENTS_PREFIX .
+            $type .
+            "/" .
+            ($encode ? Util::refEncode((string) $name) : $name);
     }
 }

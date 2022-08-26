@@ -18,13 +18,15 @@ final class PrecedencePredicate extends SemanticContext
         $this->precedence = $precedence;
     }
 
-    public function eval(Recognizer $parser, RuleContext $parserCallStack) : bool
+    public function eval(Recognizer $parser, RuleContext $parserCallStack): bool
     {
         return $parser->precpred($parserCallStack, $this->precedence);
     }
 
-    public function evalPrecedence(Recognizer $parser, RuleContext $parserCallStack) : ?SemanticContext
-    {
+    public function evalPrecedence(
+        Recognizer $parser,
+        RuleContext $parserCallStack
+    ): ?SemanticContext {
         if ($parser->precpred($parserCallStack, $this->precedence)) {
             return SemanticContext::none();
         }
@@ -32,12 +34,12 @@ final class PrecedencePredicate extends SemanticContext
         return null;
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
         return Hasher::hash(31, $this->precedence);
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
@@ -50,8 +52,8 @@ final class PrecedencePredicate extends SemanticContext
         return $this->precedence === $other->precedence;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return \sprintf('{%d>=prec}?', $this->precedence);
+        return \sprintf("{%d>=prec}?", $this->precedence);
     }
 }

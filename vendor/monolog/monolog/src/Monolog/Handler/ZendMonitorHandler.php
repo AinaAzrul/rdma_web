@@ -37,20 +37,20 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      */
     public function __construct($level = Logger::DEBUG, bool $bubble = true)
     {
-        if (!function_exists('zend_monitor_custom_event')) {
+        if (!function_exists("zend_monitor_custom_event")) {
             throw new MissingExtensionException(
-                'You must have Zend Server installed with Zend Monitor enabled in order to use this handler'
+                "You must have Zend Server installed with Zend Monitor enabled in order to use this handler"
             );
         }
         //zend monitor constants are not defined if zend monitor is not enabled.
         $this->levelMap = [
-            Logger::DEBUG     => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
-            Logger::INFO      => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
-            Logger::NOTICE    => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
-            Logger::WARNING   => \ZEND_MONITOR_EVENT_SEVERITY_WARNING,
-            Logger::ERROR     => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
-            Logger::CRITICAL  => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
-            Logger::ALERT     => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+            Logger::DEBUG => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
+            Logger::INFO => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
+            Logger::NOTICE => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
+            Logger::WARNING => \ZEND_MONITOR_EVENT_SEVERITY_WARNING,
+            Logger::ERROR => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+            Logger::CRITICAL => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+            Logger::ALERT => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
             Logger::EMERGENCY => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
         ];
         parent::__construct($level, $bubble);
@@ -62,10 +62,10 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     protected function write(array $record): void
     {
         $this->writeZendMonitorCustomEvent(
-            Logger::getLevelName($record['level']),
-            $record['message'],
-            $record['formatted'],
-            $this->levelMap[$record['level']]
+            Logger::getLevelName($record["level"]),
+            $record["message"],
+            $record["formatted"],
+            $this->levelMap[$record["level"]]
         );
     }
 
@@ -78,8 +78,12 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      *
      * @phpstan-param FormattedRecord $formatted
      */
-    protected function writeZendMonitorCustomEvent(string $type, string $message, array $formatted, int $severity): void
-    {
+    protected function writeZendMonitorCustomEvent(
+        string $type,
+        string $message,
+        array $formatted,
+        int $severity
+    ): void {
         zend_monitor_custom_event($type, $message, $formatted, $severity);
     }
 

@@ -27,17 +27,18 @@ class Yaml implements ParserInterface
     public function parseFile($filename)
     {
         try {
-            $data = YamlParser::parseFile($filename, YamlParser::PARSE_CONSTANT);
-        } catch (Exception $exception) {
-            throw new ParseException(
-                [
-                    'message'   => 'Error parsing YAML file',
-                    'exception' => $exception,
-                ]
+            $data = YamlParser::parseFile(
+                $filename,
+                YamlParser::PARSE_CONSTANT
             );
+        } catch (Exception $exception) {
+            throw new ParseException([
+                "message" => "Error parsing YAML file",
+                "exception" => $exception,
+            ]);
         }
 
-        return (array)$this->parse($data);
+        return (array) $this->parse($data);
     }
 
     /**
@@ -51,15 +52,13 @@ class Yaml implements ParserInterface
         try {
             $data = YamlParser::parse($config, YamlParser::PARSE_CONSTANT);
         } catch (Exception $exception) {
-            throw new ParseException(
-                [
-                    'message'   => 'Error parsing YAML string',
-                    'exception' => $exception,
-                ]
-            );
+            throw new ParseException([
+                "message" => "Error parsing YAML string",
+                "exception" => $exception,
+            ]);
         }
 
-        return (array)$this->parse($data);
+        return (array) $this->parse($data);
     }
 
     /**
@@ -79,6 +78,6 @@ class Yaml implements ParserInterface
      */
     public static function getSupportedExtensions()
     {
-        return ['yaml', 'yml'];
+        return ["yaml", "yml"];
     }
 }

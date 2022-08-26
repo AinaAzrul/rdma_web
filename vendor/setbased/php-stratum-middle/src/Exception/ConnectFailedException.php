@@ -10,7 +10,7 @@ use SetBased\Exception\NamedException;
  */
 interface ConnectFailedException extends NamedException
 {
-  // Nothing to implement.
+    // Nothing to implement.
 }
 
 //----------------------------------------------------------------------------------------------------------------------

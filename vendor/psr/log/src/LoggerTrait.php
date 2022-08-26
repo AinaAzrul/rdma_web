@@ -20,8 +20,10 @@ trait LoggerTrait
      *
      * @return void
      */
-    public function emergency(string|\Stringable $message, array $context = []): void
-    {
+    public function emergency(
+        string|\Stringable $message,
+        array $context = []
+    ): void {
         $this->log(LogLevel::EMERGENCY, $message, $context);
     }
 
@@ -36,8 +38,10 @@ trait LoggerTrait
      *
      * @return void
      */
-    public function alert(string|\Stringable $message, array $context = []): void
-    {
+    public function alert(
+        string|\Stringable $message,
+        array $context = []
+    ): void {
         $this->log(LogLevel::ALERT, $message, $context);
     }
 
@@ -51,8 +55,10 @@ trait LoggerTrait
      *
      * @return void
      */
-    public function critical(string|\Stringable $message, array $context = []): void
-    {
+    public function critical(
+        string|\Stringable $message,
+        array $context = []
+    ): void {
         $this->log(LogLevel::CRITICAL, $message, $context);
     }
 
@@ -65,8 +71,10 @@ trait LoggerTrait
      *
      * @return void
      */
-    public function error(string|\Stringable $message, array $context = []): void
-    {
+    public function error(
+        string|\Stringable $message,
+        array $context = []
+    ): void {
         $this->log(LogLevel::ERROR, $message, $context);
     }
 
@@ -81,8 +89,10 @@ trait LoggerTrait
      *
      * @return void
      */
-    public function warning(string|\Stringable $message, array $context = []): void
-    {
+    public function warning(
+        string|\Stringable $message,
+        array $context = []
+    ): void {
         $this->log(LogLevel::WARNING, $message, $context);
     }
 
@@ -94,8 +104,10 @@ trait LoggerTrait
      *
      * @return void
      */
-    public function notice(string|\Stringable $message, array $context = []): void
-    {
+    public function notice(
+        string|\Stringable $message,
+        array $context = []
+    ): void {
         $this->log(LogLevel::NOTICE, $message, $context);
     }
 
@@ -122,8 +134,10 @@ trait LoggerTrait
      *
      * @return void
      */
-    public function debug(string|\Stringable $message, array $context = []): void
-    {
+    public function debug(
+        string|\Stringable $message,
+        array $context = []
+    ): void {
         $this->log(LogLevel::DEBUG, $message, $context);
     }
 
@@ -138,5 +152,9 @@ trait LoggerTrait
      *
      * @throws \Psr\Log\InvalidArgumentException
      */
-    abstract public function log($level, string|\Stringable $message, array $context = []): void;
+    abstract public function log(
+        $level,
+        string|\Stringable $message,
+        array $context = []
+    ): void;
 }

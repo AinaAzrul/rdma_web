@@ -15,113 +15,110 @@ use SetBased\Stratum\Common\Helper\DocBlockHelper;
  */
 class DocBlockReflection
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * The visitor for parsing a DocBlock.
-   *
-   * @var DocBlockVisitor
-   */
-  private DocBlockVisitor $visitor;
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * The visitor for parsing a DocBlock.
+     *
+     * @var DocBlockVisitor
+     */
+    private DocBlockVisitor $visitor;
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Object constructor.
-   *
-   * @param string $docBlock
-   */
-  public function __construct(string $docBlock)
-  {
-    $this->visitor = new DocBlockVisitor();
-    $this->reflect($docBlock);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Sets the names of the parameters of a tag.
-   *
-   * @param string   $tagName The name of the tag.
-   * @param string[] $names   The names of the parameters.
-   */
-  public static function setTagParameters(string $tagName, array $names): void
-  {
-    DocBlockHelper::setTagParameters($tagName, $names);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the long description as an array of lines.
-   *
-   * @return array
-   */
-  public function getLongDescription(): array
-  {
-    return $this->visitor->getLongDescription();
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the short description as an array of lines.
-   *
-   * @return array
-   */
-  public function getShortDescription(): array
-  {
-    return $this->visitor->getShortDescription();
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the tags as an array.
-   *
-   * @param string|null $filter If not null only tags with name equal to this filter are returns.
-   *
-   * @return array
-   */
-  public function getTags(?string $filter=null): array
-  {
-    if ($filter===null)
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Object constructor.
+     *
+     * @param string $docBlock
+     */
+    public function __construct(string $docBlock)
     {
-      return $this->visitor->getTags();
+        $this->visitor = new DocBlockVisitor();
+        $this->reflect($docBlock);
     }
 
-    $ret = [];
-    foreach ($this->visitor->getTags() as $tag)
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Sets the names of the parameters of a tag.
+     *
+     * @param string   $tagName The name of the tag.
+     * @param string[] $names   The names of the parameters.
+     */
+    public static function setTagParameters(string $tagName, array $names): void
     {
-      if ($tag['tag']===$filter)
-      {
-        $ret[] = $tag;
-      }
+        DocBlockHelper::setTagParameters($tagName, $names);
     }
 
-    return $ret;
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the long description as an array of lines.
+     *
+     * @return array
+     */
+    public function getLongDescription(): array
+    {
+        return $this->visitor->getLongDescription();
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Reflect a DocBlock.
-   *
-   * @param string $docBlock The DocBlock.
-   */
-  private function reflect(string $docBlock): void
-  {
-    $docBlock = trim($docBlock);
-    $docBlock = preg_replace('|^/\*|', '', $docBlock);
-    $docBlock = preg_replace('|/$|', '', $docBlock);
-    $docBlock .= PHP_EOL;
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the short description as an array of lines.
+     *
+     * @return array
+     */
+    public function getShortDescription(): array
+    {
+        return $this->visitor->getShortDescription();
+    }
 
-    $input  = InputStream::fromString($docBlock);
-    $lexer  = new DocBlockLexer($input);
-    $tokens = new CommonTokenStream($lexer);
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the tags as an array.
+     *
+     * @param string|null $filter If not null only tags with name equal to this filter are returns.
+     *
+     * @return array
+     */
+    public function getTags(?string $filter = null): array
+    {
+        if ($filter === null) {
+            return $this->visitor->getTags();
+        }
 
-    $parser = new DocBlockParser($tokens);
-    $parser->addErrorListener(new DiagnosticErrorListener());
-    $parser->setBuildParseTree(true);
-    $tree = $parser->docblock();
+        $ret = [];
+        foreach ($this->visitor->getTags() as $tag) {
+            if ($tag["tag"] === $filter) {
+                $ret[] = $tag;
+            }
+        }
 
-    $this->visitor->visit($tree);
-  }
+        return $ret;
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Reflect a DocBlock.
+     *
+     * @param string $docBlock The DocBlock.
+     */
+    private function reflect(string $docBlock): void
+    {
+        $docBlock = trim($docBlock);
+        $docBlock = preg_replace("|^/\*|", "", $docBlock);
+        $docBlock = preg_replace('|/$|', "", $docBlock);
+        $docBlock .= PHP_EOL;
+
+        $input = InputStream::fromString($docBlock);
+        $lexer = new DocBlockLexer($input);
+        $tokens = new CommonTokenStream($lexer);
+
+        $parser = new DocBlockParser($tokens);
+        $parser->addErrorListener(new DiagnosticErrorListener());
+        $parser->setBuildParseTree(true);
+        $tree = $parser->docblock();
+
+        $this->visitor->visit($tree);
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

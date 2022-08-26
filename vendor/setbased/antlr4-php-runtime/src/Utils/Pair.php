@@ -22,24 +22,24 @@ final class Pair implements Equatable
         $this->b = $b;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($other === $this) {
             return true;
         }
 
-        return $other instanceof self
-            && Equality::equals($this->a, $other->a)
-            && Equality::equals($this->b, $other->b);
+        return $other instanceof self &&
+            Equality::equals($this->a, $other->a) &&
+            Equality::equals($this->b, $other->b);
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
         return Hasher::hash($this->a, $this->b);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return \sprintf('%s, %s', (string) $this->a, (string) $this->b);
+        return \sprintf("%s, %s", (string) $this->a, (string) $this->b);
     }
 }

@@ -24,7 +24,11 @@ class BuildPaths
         if (!Generator::isDefault($analysis->openapi->paths)) {
             foreach ($analysis->openapi->paths as $annotation) {
                 if (empty($annotation->path)) {
-                    $annotation->_context->logger->warning($annotation->identity() . ' is missing required property "path" in ' . $annotation->_context);
+                    $annotation->_context->logger->warning(
+                        $annotation->identity() .
+                            ' is missing required property "path" in ' .
+                            $annotation->_context
+                    );
                 } elseif (isset($paths[$annotation->path])) {
                     $paths[$annotation->path]->mergeProperties($annotation);
                     $analysis->annotations->detach($annotation);
@@ -35,23 +39,31 @@ class BuildPaths
         }
 
         /** @var Operation[] $operations */
-        $operations = $analysis->unmerged()->getAnnotationsOfType(Operation::class);
+        $operations = $analysis
+            ->unmerged()
+            ->getAnnotationsOfType(Operation::class);
 
         // Merge @OA\Operations into existing @OA\PathItems or create a new one.
         foreach ($operations as $operation) {
             if ($operation->path) {
                 if (empty($paths[$operation->path])) {
-                    $paths[$operation->path] = $pathItem = new PathItem(
-                        [
-                            'path' => $operation->path,
-                            '_context' => new Context(['generated' => true], $operation->_context),
-                            '_aux' => true,
-                        ]
-                    );
+                    $paths[$operation->path] = $pathItem = new PathItem([
+                        "path" => $operation->path,
+                        "_context" => new Context(
+                            ["generated" => true],
+                            $operation->_context
+                        ),
+                        "_aux" => true,
+                    ]);
                     $analysis->addAnnotation($pathItem, $pathItem->_context);
                 }
                 if ($paths[$operation->path]->merge([$operation])) {
-                    $operation->_context->logger->warning('Unable to merge ' . $operation->identity() . ' in ' . $operation->_context);
+                    $operation->_context->logger->warning(
+                        "Unable to merge " .
+                            $operation->identity() .
+                            " in " .
+                            $operation->_context
+                    );
                 }
             }
         }

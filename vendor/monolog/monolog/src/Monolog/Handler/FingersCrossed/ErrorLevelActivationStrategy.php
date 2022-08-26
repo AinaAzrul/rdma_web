@@ -41,6 +41,6 @@ class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 
     public function isHandlerActivated(array $record): bool
     {
-        return $record['level'] >= $this->actionLevel;
+        return $record["level"] >= $this->actionLevel;
     }
 }

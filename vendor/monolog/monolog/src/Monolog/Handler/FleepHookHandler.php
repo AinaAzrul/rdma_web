@@ -27,9 +27,9 @@ use Monolog\Logger;
  */
 class FleepHookHandler extends SocketHandler
 {
-    protected const FLEEP_HOST = 'fleep.io';
+    protected const FLEEP_HOST = "fleep.io";
 
-    protected const FLEEP_HOOK_URI = '/hook/';
+    protected const FLEEP_HOOK_URI = "/hook/";
 
     /**
      * @var string Webhook token (specifies the conversation where logs are sent)
@@ -55,13 +55,15 @@ class FleepHookHandler extends SocketHandler
         ?float $connectionTimeout = null,
         ?int $chunkSize = null
     ) {
-        if (!extension_loaded('openssl')) {
-            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FleepHookHandler');
+        if (!extension_loaded("openssl")) {
+            throw new MissingExtensionException(
+                "The OpenSSL PHP extension is required to use the FleepHookHandler"
+            );
         }
 
         $this->token = $token;
 
-        $connectionString = 'ssl://' . static::FLEEP_HOST . ':443';
+        $connectionString = "ssl://" . static::FLEEP_HOST . ":443";
         parent::__construct(
             $connectionString,
             $level,
@@ -110,7 +112,8 @@ class FleepHookHandler extends SocketHandler
      */
     private function buildHeader(string $content): string
     {
-        $header = "POST " . static::FLEEP_HOOK_URI . $this->token . " HTTP/1.1\r\n";
+        $header =
+            "POST " . static::FLEEP_HOOK_URI . $this->token . " HTTP/1.1\r\n";
         $header .= "Host: " . static::FLEEP_HOST . "\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
         $header .= "Content-Length: " . strlen($content) . "\r\n";
@@ -127,7 +130,7 @@ class FleepHookHandler extends SocketHandler
     private function buildContent(array $record): string
     {
         $dataArray = [
-            'message' => $record['formatted'],
+            "message" => $record["formatted"],
         ];
 
         return http_build_query($dataArray);

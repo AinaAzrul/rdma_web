@@ -59,20 +59,23 @@ abstract class ATNSimulator
      */
     protected $sharedContextCache;
 
-    public function __construct(ATN $atn, PredictionContextCache $sharedContextCache)
-    {
+    public function __construct(
+        ATN $atn,
+        PredictionContextCache $sharedContextCache
+    ) {
         $this->atn = $atn;
         $this->sharedContextCache = $sharedContextCache;
     }
 
-    public static function error() : DFAState
+    public static function error(): DFAState
     {
         static $error;
 
-        return $error ?? ($error = new DFAState(new ATNConfigSet(), 0x7FFFFFFF));
+        return $error ??
+            ($error = new DFAState(new ATNConfigSet(), 0x7fffffff));
     }
 
-    abstract public function reset() : void;
+    abstract public function reset(): void;
 
     /**
      * Clear the DFA cache used by the current instance. Since the DFA cache
@@ -83,18 +86,21 @@ abstract class ATNSimulator
      * @throws \InvalidArgumentException If the current instance does not
      *                                   support clearing the DFA.
      */
-    public function clearDFA() : void
+    public function clearDFA(): void
     {
-        throw new \InvalidArgumentException('This ATN simulator does not support clearing the DFA.');
+        throw new \InvalidArgumentException(
+            "This ATN simulator does not support clearing the DFA."
+        );
     }
 
-    public function getSharedContextCache() : PredictionContextCache
+    public function getSharedContextCache(): PredictionContextCache
     {
         return $this->sharedContextCache;
     }
 
-    public function getCachedContext(PredictionContext $context) : PredictionContext
-    {
+    public function getCachedContext(
+        PredictionContext $context
+    ): PredictionContext {
         if ($this->sharedContextCache === null) {
             return $context;
         }

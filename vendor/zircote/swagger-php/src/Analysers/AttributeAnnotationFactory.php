@@ -27,11 +27,18 @@ class AttributeAnnotationFactory implements AnnotationFactoryInterface
 
     public function build(\Reflector $reflector, Context $context): array
     {
-        if (\PHP_VERSION_ID < 80100 || !method_exists($reflector, 'getAttributes')) {
+        if (
+            \PHP_VERSION_ID < 80100 ||
+            !method_exists($reflector, "getAttributes")
+        ) {
             return [];
         }
 
-        if ($reflector instanceof \ReflectionProperty && method_exists($reflector, 'isPromoted') && $reflector->isPromoted()) {
+        if (
+            $reflector instanceof \ReflectionProperty &&
+            method_exists($reflector, "isPromoted") &&
+            $reflector->isPromoted()
+        ) {
             // handled via __construct() parameter
             return [];
         }
@@ -49,17 +56,34 @@ class AttributeAnnotationFactory implements AnnotationFactoryInterface
                         $annotations[] = $instance;
                     }
                 } catch (\Error $e) {
-                    $context->logger->debug('Could not instantiate attribute: ' . $e->getMessage(), ['exception' => $e]);
+                    $context->logger->debug(
+                        "Could not instantiate attribute: " . $e->getMessage(),
+                        ["exception" => $e]
+                    );
                 }
             }
 
             if ($reflector instanceof \ReflectionMethod) {
                 // also look at parameter attributes
                 foreach ($reflector->getParameters() as $rp) {
-                    foreach ([Property::class, Parameter::class, PathParameter::class] as $attributeName) {
-                        foreach ($rp->getAttributes($attributeName) as $attribute) {
+                    foreach (
+                        [
+                            Property::class,
+                            Parameter::class,
+                            PathParameter::class,
+                        ]
+                        as $attributeName
+                    ) {
+                        foreach (
+                            $rp->getAttributes($attributeName)
+                            as $attribute
+                        ) {
                             $instance = $attribute->newInstance();
-                            $type = (($rnt = $rp->getType()) && $rnt instanceof \ReflectionNamedType) ? $rnt->getName() : Generator::UNDEFINED;
+                            $type =
+                                ($rnt = $rp->getType()) &&
+                                $rnt instanceof \ReflectionNamedType
+                                    ? $rnt->getName()
+                                    : Generator::UNDEFINED;
                             $nullable = $rnt ? $rnt->allowsNull() : true;
 
                             if ($instance instanceof Property) {
@@ -71,18 +95,32 @@ class AttributeAnnotationFactory implements AnnotationFactoryInterface
                             } else {
                                 $instance->name = $rp->getName();
                                 $instance->required = !$nullable;
-                                $context = new Context(['nested' => $this], $context);
+                                $context = new Context(
+                                    ["nested" => $this],
+                                    $context
+                                );
                                 $context->comment = null;
-                                $instance->merge([new Schema(['type' => $type, '_context' => $context])]);
+                                $instance->merge([
+                                    new Schema([
+                                        "type" => $type,
+                                        "_context" => $context,
+                                    ]),
+                                ]);
                             }
                             $annotations[] = $instance;
                         }
                     }
                 }
 
-                if (($rrt = $reflector->getReturnType()) && $rrt instanceof \ReflectionNamedType) {
+                if (
+                    ($rrt = $reflector->getReturnType()) &&
+                    $rrt instanceof \ReflectionNamedType
+                ) {
                     foreach ($annotations as $annotation) {
-                        if ($annotation instanceof Property && Generator::isDefault($annotation->type)) {
+                        if (
+                            $annotation instanceof Property &&
+                            Generator::isDefault($annotation->type)
+                        ) {
                             // pick up simple return types
                             $annotation->type = $rrt->getName();
                         }
@@ -93,19 +131,27 @@ class AttributeAnnotationFactory implements AnnotationFactoryInterface
             Generator::$context = null;
         }
 
-        $annotations = array_values(array_filter($annotations, function ($a) {
-            return $a !== null && $a instanceof AbstractAnnotation;
-        }));
+        $annotations = array_values(
+            array_filter($annotations, function ($a) {
+                return $a !== null && $a instanceof AbstractAnnotation;
+            })
+        );
 
         // merge backwards into parents...
-        $isParent = function (AbstractAnnotation $annotation, AbstractAnnotation $possibleParent): bool {
+        $isParent = function (
+            AbstractAnnotation $annotation,
+            AbstractAnnotation $possibleParent
+        ): bool {
             // regular annotation hierarchy
-            $explicitParent = null !== $possibleParent::matchNested(get_class($annotation));
+            $explicitParent =
+                null !== $possibleParent::matchNested(get_class($annotation));
 
             $isParentAllowed = false;
             // support Attachable subclasses
             if ($isAttachable = $annotation instanceof Attachable) {
-                if (!$isParentAllowed = (null === $annotation->allowedParents())) {
+                if (
+                    !($isParentAllowed = null === $annotation->allowedParents())
+                ) {
                     // check for allowed parents
                     foreach ($annotation->allowedParents() as $allowedParent) {
                         if ($possibleParent instanceof $allowedParent) {
@@ -117,8 +163,8 @@ class AttributeAnnotationFactory implements AnnotationFactoryInterface
             }
 
             // Property can be nested...
-            return get_class($annotation) != get_class($possibleParent)
-                && ($explicitParent || ($isAttachable && $isParentAllowed));
+            return get_class($annotation) != get_class($possibleParent) &&
+                ($explicitParent || ($isAttachable && $isParentAllowed));
         };
 
         $annotationsWithoutParent = [];

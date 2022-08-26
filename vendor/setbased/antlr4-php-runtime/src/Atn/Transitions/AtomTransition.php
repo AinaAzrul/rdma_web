@@ -19,33 +19,36 @@ final class AtomTransition extends Transition
         $this->label = $label;
     }
 
-    public function label() : ?IntervalSet
+    public function label(): ?IntervalSet
     {
         return IntervalSet::fromInt($this->label);
     }
 
-    public function matches(int $symbol, int $minVocabSymbol, int $maxVocabSymbol) : bool
-    {
+    public function matches(
+        int $symbol,
+        int $minVocabSymbol,
+        int $maxVocabSymbol
+    ): bool {
         return $this->label === $symbol;
     }
 
-    public function getSerializationType() : int
+    public function getSerializationType(): int
     {
         return self::ATOM;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        return $other instanceof self
-            && $this->label === $other->label
-            && $this->target->equals($other->target);
+        return $other instanceof self &&
+            $this->label === $other->label &&
+            $this->target->equals($other->target);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return (string) $this->label;
     }

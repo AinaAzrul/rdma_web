@@ -51,14 +51,26 @@ class StreamHandler extends AbstractProcessingHandler
      *
      * @throws \InvalidArgumentException If stream is not a resource or string
      */
-    public function __construct($stream, $level = Logger::DEBUG, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
-    {
+    public function __construct(
+        $stream,
+        $level = Logger::DEBUG,
+        bool $bubble = true,
+        ?int $filePermission = null,
+        bool $useLocking = false
+    ) {
         parent::__construct($level, $bubble);
 
-        if (($phpMemoryLimit = Utils::expandIniShorthandBytes(ini_get('memory_limit'))) !== false) {
+        if (
+            ($phpMemoryLimit = Utils::expandIniShorthandBytes(
+                ini_get("memory_limit")
+            )) !== false
+        ) {
             if ($phpMemoryLimit > 0) {
                 // use max 10% of allowed memory for the chunk size, and at least 100KB
-                $this->streamChunkSize = min(static::MAX_CHUNK_SIZE, max((int) ($phpMemoryLimit / 10), 100 * 1024));
+                $this->streamChunkSize = min(
+                    static::MAX_CHUNK_SIZE,
+                    max((int) ($phpMemoryLimit / 10), 100 * 1024)
+                );
             } else {
                 // memory is unlimited, set to the default 10MB
                 $this->streamChunkSize = static::DEFAULT_CHUNK_SIZE;
@@ -75,7 +87,9 @@ class StreamHandler extends AbstractProcessingHandler
         } elseif (is_string($stream)) {
             $this->url = Utils::canonicalizePath($stream);
         } else {
-            throw new \InvalidArgumentException('A stream must either be a resource or a string.');
+            throw new \InvalidArgumentException(
+                "A stream must either be a resource or a string."
+            );
         }
 
         $this->filePermission = $filePermission;
@@ -129,13 +143,16 @@ class StreamHandler extends AbstractProcessingHandler
     {
         if (!is_resource($this->stream)) {
             $url = $this->url;
-            if (null === $url || '' === $url) {
-                throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().' . Utils::getRecordMessageForException($record));
+            if (null === $url || "" === $url) {
+                throw new \LogicException(
+                    "Missing stream url, the stream can not be opened. This may be caused by a premature call to close()." .
+                        Utils::getRecordMessageForException($record)
+                );
             }
             $this->createDir($url);
             $this->errorMessage = null;
-            set_error_handler([$this, 'customErrorHandler']);
-            $stream = fopen($url, 'a');
+            set_error_handler([$this, "customErrorHandler"]);
+            $stream = fopen($url, "a");
             if ($this->filePermission !== null) {
                 @chmod($url, $this->filePermission);
             }
@@ -143,7 +160,13 @@ class StreamHandler extends AbstractProcessingHandler
             if (!is_resource($stream)) {
                 $this->stream = null;
 
-                throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened in append mode: '.$this->errorMessage, $url) . Utils::getRecordMessageForException($record));
+                throw new \UnexpectedValueException(
+                    sprintf(
+                        'The stream or file "%s" could not be opened in append mode: ' .
+                            $this->errorMessage,
+                        $url
+                    ) . Utils::getRecordMessageForException($record)
+                );
             }
             stream_set_chunk_size($stream, $this->streamChunkSize);
             $this->stream = $stream;
@@ -151,7 +174,10 @@ class StreamHandler extends AbstractProcessingHandler
 
         $stream = $this->stream;
         if (!is_resource($stream)) {
-            throw new \LogicException('No stream was opened yet' . Utils::getRecordMessageForException($record));
+            throw new \LogicException(
+                "No stream was opened yet" .
+                    Utils::getRecordMessageForException($record)
+            );
         }
 
         if ($this->useLocking) {
@@ -175,24 +201,28 @@ class StreamHandler extends AbstractProcessingHandler
      */
     protected function streamWrite($stream, array $record): void
     {
-        fwrite($stream, (string) $record['formatted']);
+        fwrite($stream, (string) $record["formatted"]);
     }
 
     private function customErrorHandler(int $code, string $msg): bool
     {
-        $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
+        $this->errorMessage = preg_replace(
+            "{^(fopen|mkdir)\(.*?\): }",
+            "",
+            $msg
+        );
 
         return true;
     }
 
     private function getDirFromStream(string $stream): ?string
     {
-        $pos = strpos($stream, '://');
+        $pos = strpos($stream, "://");
         if ($pos === false) {
             return dirname($stream);
         }
 
-        if ('file://' === substr($stream, 0, 7)) {
+        if ("file://" === substr($stream, 0, 7)) {
             return dirname(substr($stream, 7));
         }
 
@@ -209,11 +239,17 @@ class StreamHandler extends AbstractProcessingHandler
         $dir = $this->getDirFromStream($url);
         if (null !== $dir && !is_dir($dir)) {
             $this->errorMessage = null;
-            set_error_handler([$this, 'customErrorHandler']);
+            set_error_handler([$this, "customErrorHandler"]);
             $status = mkdir($dir, 0777, true);
             restore_error_handler();
             if (false === $status && !is_dir($dir)) {
-                throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
+                throw new \UnexpectedValueException(
+                    sprintf(
+                        'There is no existing directory at "%s" and it could not be created: ' .
+                            $this->errorMessage,
+                        $dir
+                    )
+                );
             }
         }
         $this->dirCreated = true;

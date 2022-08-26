@@ -24,10 +24,10 @@ class Discriminator extends \OpenApi\Annotations\Discriminator
         ?array $attachables = null
     ) {
         parent::__construct([
-            'propertyName' => $propertyName ?? Generator::UNDEFINED,
-            'mapping' => $mapping ?? Generator::UNDEFINED,
-            'x' => $x ?? Generator::UNDEFINED,
-            'value' => $this->combine($attachables),
+            "propertyName" => $propertyName ?? Generator::UNDEFINED,
+            "mapping" => $mapping ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($attachables),
         ]);
     }
 }

@@ -28,11 +28,11 @@ class MediaType extends \OpenApi\Annotations\MediaType
         ?array $attachables = null
     ) {
         parent::__construct([
-                'mediaType' => $mediaType ?? Generator::UNDEFINED,
-                'example' => $example,
-                'encoding' => $encoding ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($schema, $examples, $attachables),
-            ]);
+            "mediaType" => $mediaType ?? Generator::UNDEFINED,
+            "example" => $example,
+            "encoding" => $encoding ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($schema, $examples, $attachables),
+        ]);
     }
 }

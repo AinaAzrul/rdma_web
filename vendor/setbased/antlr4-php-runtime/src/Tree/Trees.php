@@ -22,8 +22,10 @@ class Trees
      *
      * @param array<string>|null $ruleNames
      */
-    public static function toStringTree(Tree $tree, ?array $ruleNames = null) : string
-    {
+    public static function toStringTree(
+        Tree $tree,
+        ?array $ruleNames = null
+    ): string {
         $string = self::getNodeText($tree, $ruleNames);
         $string = StringUtils::escapeWhitespace($string, false);
 
@@ -33,23 +35,25 @@ class Trees
             return $string;
         }
 
-        $result = '(' . $string . ' ';
+        $result = "(" . $string . " ";
 
         for ($i = 0; $i < $childCount; $i++) {
             $child = $tree->getChild($i);
 
             if ($child !== null) {
-                $result .= ($i > 0 ? ' ' : '') . self::toStringTree($child, $ruleNames);
+                $result .=
+                    ($i > 0 ? " " : "") .
+                    self::toStringTree($child, $ruleNames);
             }
         }
 
-        return $result . ')';
+        return $result . ")";
     }
 
     /**
      * @param array<string>|null $ruleNames
      */
-    public static function getNodeText(Tree $tree, ?array $ruleNames) : string
+    public static function getNodeText(Tree $tree, ?array $ruleNames): string
     {
         if ($ruleNames !== null) {
             if ($tree instanceof RuleContext) {
@@ -58,7 +62,7 @@ class Trees
                 $altNumber = $tree->getAltNumber();
 
                 if ($altNumber !== ATN::INVALID_ALT_NUMBER) {
-                    return \sprintf('%s:%s', $ruleName, $altNumber);
+                    return \sprintf("%s:%s", $ruleName, $altNumber);
                 }
 
                 return $ruleName;
@@ -69,7 +73,7 @@ class Trees
             }
 
             if ($tree instanceof TerminalNode && $tree->getSymbol() !== null) {
-                return $tree->getSymbol()->getText() ?? '';
+                return $tree->getSymbol()->getText() ?? "";
             }
         }
 
@@ -77,7 +81,7 @@ class Trees
         $payload = $tree->getPayload();
 
         if ($payload instanceof Token) {
-            return $payload->getText() ?? '';
+            return $payload->getText() ?? "";
         }
 
         return (string) $tree->getPayload();
@@ -88,10 +92,10 @@ class Trees
      *
      * @return array<Tree|null>
      */
-    public static function getChildren(Tree $tree) : array
+    public static function getChildren(Tree $tree): array
     {
         $list = [];
-        for ($i=0; $i < $tree->getChildCount(); $i++) {
+        for ($i = 0; $i < $tree->getChildCount(); $i++) {
             $list[] = $tree->getChild($i);
         }
 
@@ -104,7 +108,7 @@ class Trees
      *
      * @return array<Tree>
      */
-    public static function getAncestors(Tree $tree) : array
+    public static function getAncestors(Tree $tree): array
     {
         $ancestors = [];
         $tree = $tree->getParent();
@@ -121,7 +125,7 @@ class Trees
     /**
      * @return array<ParseTree>
      */
-    public static function findAllTokenNodes(ParseTree $tree, int $ttype) : array
+    public static function findAllTokenNodes(ParseTree $tree, int $ttype): array
     {
         return self::findAllNodes($tree, $ttype, true);
     }
@@ -129,16 +133,21 @@ class Trees
     /**
      * @return array<ParseTree>
      */
-    public static function findAllRuleNodes(ParseTree $tree, int $ruleIndex) : array
-    {
+    public static function findAllRuleNodes(
+        ParseTree $tree,
+        int $ruleIndex
+    ): array {
         return self::findAllNodes($tree, $ruleIndex, false);
     }
 
     /**
      * @return array<ParseTree>
      */
-    public static function findAllNodes(ParseTree $tree, int $index, bool $findTokens) : array
-    {
+    public static function findAllNodes(
+        ParseTree $tree,
+        int $index,
+        bool $findTokens
+    ): array {
         return self::findNodesInTree($tree, $index, $findTokens, []);
     }
 
@@ -147,12 +156,24 @@ class Trees
      *
      * @return array<ParseTree>
      */
-    private static function findNodesInTree(ParseTree $tree, int $index, bool $findTokens, array $nodes) : array
-    {
+    private static function findNodesInTree(
+        ParseTree $tree,
+        int $index,
+        bool $findTokens,
+        array $nodes
+    ): array {
         // check this node (the root) first
-        if ($findTokens && $tree instanceof TerminalNode && $tree->getSymbol()->getType() === $index) {
+        if (
+            $findTokens &&
+            $tree instanceof TerminalNode &&
+            $tree->getSymbol()->getType() === $index
+        ) {
             $nodes[] = $tree;
-        } elseif (!$findTokens && $tree instanceof ParserRuleContext && $tree->getRuleIndex() === $index) {
+        } elseif (
+            !$findTokens &&
+            $tree instanceof ParserRuleContext &&
+            $tree->getRuleIndex() === $index
+        ) {
             $nodes[] = $tree;
         }
 
@@ -161,7 +182,12 @@ class Trees
             $child = $tree->getChild($i);
 
             if ($child !== null) {
-                $nodes = self::findNodesInTree($child, $index, $findTokens, $nodes);
+                $nodes = self::findNodesInTree(
+                    $child,
+                    $index,
+                    $findTokens,
+                    $nodes
+                );
             }
         }
 
@@ -171,7 +197,7 @@ class Trees
     /**
      * @return array<ParseTree>
      */
-    public static function descendants(ParseTree $tree) : array
+    public static function descendants(ParseTree $tree): array
     {
         $nodes = [$tree];
         for ($i = 0; $i < $tree->getChildCount(); $i++) {

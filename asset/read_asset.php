@@ -5,175 +5,159 @@ header("Content-Type: application/json; charset=UTF-8");
 
 // include database and object files
 /*include_once '../config/database.php';
-include_once 'asset.php';*/
-function read_asset(){
-$requestMethod = $_SERVER["REQUEST_METHOD"];
-$strErrorDesc = '';
-
-// instantiate database and asset object
-$database = new Database();
-$db = $database->getConnection();
-  
-// initialize object
-$asset = new Asset($db);
-  
-// query assets
-$stmt = $asset->read();
-$num = $stmt->rowCount();
-  
-// check if more than 0 record found
-if($num>0){
-  
-    // products array
-    $assets_arr=array();
-    $assets_arr["records"]=array();
-  
-    // retrieve our table contents
-    // fetch() is faster than fetchAll()
-    // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-        // extract row
-        // this will make $row['name'] to
-        // just $name only
-        extract($row);
-
-        //display the values
-        $asset_item=array(
-            "Asset_no" => $Asset_no,
-            "Asset_desc" => html_entity_decode($Asset_desc),
-            "Category" => $Category,
-            "Location" => $Location,
-            "Calib_no" => $Calib_no,
-            "Start_date" => $Start_date,
-            "End_date" => $End_date,
-            "Company_name" => $Company_name,
-            "id" => $id
-        );
-  
-        array_push($assets_arr["records"], $asset_item);
-
-    }
-
-  
-}
-else{
-     // set response code - 404 Not found
-     http_response_code(404);
-    $strErrorDesc = 'Method not supported';
-     // tell the user no assets found
-     echo json_encode(
-         array("message" => "No assets found."));
-    return false;
-}
-
-  
-// else{
-//    
-//     $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
-// }
-
-// send output
-if (!$strErrorDesc) {
-  
-    // show assets data in json format
-    echo json_encode(array(
-        "status" =>http_response_code(200),
-        "data"=>$assets_arr));
-
-} else {
-    // set response code - 422 unprocessable Entity 
-    http_response_code(422);
-  
-    // tell the user no assets found
-    echo json_encode(
-        array("error" => "Method not supported."));
-}
-}
-
-function read_asset_list(){
+ include_once 'asset.php';*/
+function read_asset()
+{
     $requestMethod = $_SERVER["REQUEST_METHOD"];
-    $strErrorDesc = '';
-    
+    $strErrorDesc = "";
+
     // instantiate database and asset object
     $database = new Database();
     $db = $database->getConnection();
-      
+
     // initialize object
     $asset = new Asset($db);
-      
+
     // query assets
-    $stmt = $asset->read_list();
+    $stmt = $asset->read();
     $num = $stmt->rowCount();
-      
+
     // check if more than 0 record found
-    if($num>0){
-      
+    if ($num > 0) {
         // products array
-        $assets_arr=array();
-        $assets_arr["records"]=array();
-      
+        $assets_arr = [];
+        $assets_arr["records"] = [];
+
         // retrieve our table contents
         // fetch() is faster than fetchAll()
         // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             // extract row
             // this will make $row['name'] to
             // just $name only
             extract($row);
-    
+
+            //display the values
+            $asset_item = [
+                "Asset_no" => $Asset_no,
+                "Asset_desc" => html_entity_decode($Asset_desc),
+                "Category" => $Category,
+                "Location" => $Location,
+                "Calib_no" => $Calib_no,
+                "Start_date" => $Start_date,
+                "End_date" => $End_date,
+                "Company_name" => $Company_name,
+                "id" => $id,
+            ];
+
+            array_push($assets_arr["records"], $asset_item);
+        }
+    } else {
+        // set response code - 404 Not found
+        http_response_code(404);
+        $strErrorDesc = "Method not supported";
+        // tell the user no assets found
+        echo json_encode(["message" => "No assets found."]);
+        return false;
+    }
+
+    // else{
+    //
+    //     $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+    // }
+
+    // send output
+    if (!$strErrorDesc) {
+        // show assets data in json format
+        echo json_encode([
+            "status" => http_response_code(200),
+            "data" => $assets_arr,
+        ]);
+    } else {
+        // set response code - 422 unprocessable Entity
+        http_response_code(422);
+
+        // tell the user no assets found
+        echo json_encode(["error" => "Method not supported."]);
+    }
+}
+
+function read_asset_list()
+{
+    $requestMethod = $_SERVER["REQUEST_METHOD"];
+    $strErrorDesc = "";
+
+    // instantiate database and asset object
+    $database = new Database();
+    $db = $database->getConnection();
+
+    // initialize object
+    $asset = new Asset($db);
+
+    // query assets
+    $stmt = $asset->read_list();
+    $num = $stmt->rowCount();
+
+    // check if more than 0 record found
+    if ($num > 0) {
+        // products array
+        $assets_arr = [];
+        $assets_arr["records"] = [];
+
+        // retrieve our table contents
+        // fetch() is faster than fetchAll()
+        // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            // extract row
+            // this will make $row['name'] to
+            // just $name only
+            extract($row);
+
             //explode the values in First_calib array into separate values
             // $message = $row['First_calib'];
             // $arr = explode(",", $message);
             // $CalibDate_start = $arr[0];
             // $CalibDate_end = $arr[1];
             // $Company_name = $arr[2];
-    
+
             //display the values
-            $asset_item=array(
+            $asset_item = [
                 "Asset_no" => $Asset_no,
                 "Asset_desc" => html_entity_decode($Asset_desc),
                 "Category" => $Category,
-                "Location" => $Location
-            );
-      
+                "Location" => $Location,
+            ];
+
             array_push($assets_arr["records"], $asset_item);
-    
         }
-    
-      
-    }
-    else{
-         // set response code - 404 Not found
-         http_response_code(404);
-        $strErrorDesc = 'Method not supported';
-         // tell the user no assets found
-         echo json_encode(
-             array("message" => "No assets found."));
+    } else {
+        // set response code - 404 Not found
+        http_response_code(404);
+        $strErrorDesc = "Method not supported";
+        // tell the user no assets found
+        echo json_encode(["message" => "No assets found."]);
         return false;
     }
-    
-      
+
     // else{
-    //    
+    //
     //     $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
     // }
-    
+
     // send output
     if (!$strErrorDesc) {
-      
         // show assets data in json format
-        echo json_encode(array(
-            "status" =>http_response_code(200),
-            "data"=>$assets_arr));
-    
+        echo json_encode([
+            "status" => http_response_code(200),
+            "data" => $assets_arr,
+        ]);
     } else {
-        // set response code - 422 unprocessable Entity 
+        // set response code - 422 unprocessable Entity
         http_response_code(422);
-      
+
         // tell the user no assets found
-        echo json_encode(
-            array("error" => "Method not supported."));
+        echo json_encode(["error" => "Method not supported."]);
     }
-    }
+}
 
 ?>

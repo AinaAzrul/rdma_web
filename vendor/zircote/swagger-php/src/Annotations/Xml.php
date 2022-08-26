@@ -67,11 +67,11 @@ class Xml extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_types = [
-        'name' => 'string',
-        'namespace' => 'string',
-        'prefix' => 'string',
-        'attribute' => 'boolean',
-        'wrapped' => 'boolean',
+        "name" => "string",
+        "namespace" => "string",
+        "prefix" => "string",
+        "attribute" => "boolean",
+        "wrapped" => "boolean",
     ];
 
     /**
@@ -90,6 +90,6 @@ class Xml extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_nested = [
-        Attachable::class => ['attachables'],
+        Attachable::class => ["attachables"],
     ];
 }

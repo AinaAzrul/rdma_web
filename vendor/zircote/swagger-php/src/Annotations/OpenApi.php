@@ -19,10 +19,13 @@ use OpenApi\Util;
  */
 class OpenApi extends AbstractAnnotation
 {
-    public const VERSION_3_0_0 = '3.0.0';
-    public const VERSION_3_1_0 = '3.1.0';
+    public const VERSION_3_0_0 = "3.0.0";
+    public const VERSION_3_1_0 = "3.1.0";
     public const DEFAULT_VERSION = self::VERSION_3_0_0;
-    public const SUPPORTED_VERSIONS = [self::VERSION_3_0_0, self::VERSION_3_1_0];
+    public const SUPPORTED_VERSIONS = [
+        self::VERSION_3_0_0,
+        self::VERSION_3_1_0,
+    ];
 
     /**
      * The semantic version number of the OpenAPI Specification version that the OpenAPI document uses.
@@ -111,19 +114,19 @@ class OpenApi extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public static $_required = ['openapi', 'info', 'paths'];
+    public static $_required = ["openapi", "info", "paths"];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Info::class => 'info',
-        Server::class => ['servers'],
-        PathItem::class => ['paths', 'path'],
-        Components::class => 'components',
-        Tag::class => ['tags'],
-        ExternalDocumentation::class => 'externalDocs',
-        Attachable::class => ['attachables'],
+        Info::class => "info",
+        Server::class => ["servers"],
+        PathItem::class => ["paths", "path"],
+        Components::class => "components",
+        Tag::class => ["tags"],
+        ExternalDocumentation::class => "externalDocs",
+        Attachable::class => ["attachables"],
     ];
 
     /**
@@ -134,40 +137,54 @@ class OpenApi extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public function validate(array $stack = null, array $skip = null, string $ref = '', $context = null): bool
-    {
-        if ($stack !== null || $skip !== null || $ref !== '') {
-            $this->_context->logger->warning('Nested validation for ' . $this->identity() . ' not allowed');
+    public function validate(
+        array $stack = null,
+        array $skip = null,
+        string $ref = "",
+        $context = null
+    ): bool {
+        if ($stack !== null || $skip !== null || $ref !== "") {
+            $this->_context->logger->warning(
+                "Nested validation for " . $this->identity() . " not allowed"
+            );
 
             return false;
         }
 
         if (!in_array($this->openapi, self::SUPPORTED_VERSIONS)) {
-            $this->_context->logger->warning('Unsupported OpenAPI version "' . $this->openapi . '". Allowed versions are: ' . implode(', ', self::SUPPORTED_VERSIONS));
+            $this->_context->logger->warning(
+                'Unsupported OpenAPI version "' .
+                    $this->openapi .
+                    '". Allowed versions are: ' .
+                    implode(", ", self::SUPPORTED_VERSIONS)
+            );
 
             return false;
         }
 
-        return parent::validate([], [], '#', new \stdClass());
+        return parent::validate([], [], "#", new \stdClass());
     }
 
     /**
      * Save the OpenAPI documentation to a file.
      */
-    public function saveAs(string $filename, string $format = 'auto'): void
+    public function saveAs(string $filename, string $format = "auto"): void
     {
-        if ($format === 'auto') {
-            $format = strtolower(substr($filename, -5)) === '.json' ? 'json' : 'yaml';
+        if ($format === "auto") {
+            $format =
+                strtolower(substr($filename, -5)) === ".json" ? "json" : "yaml";
         }
 
-        if (strtolower($format) === 'json') {
+        if (strtolower($format) === "json") {
             $content = $this->toJson();
         } else {
             $content = $this->toYaml();
         }
 
         if (file_put_contents($filename, $content) === false) {
-            throw new \Exception('Failed to saveAs("' . $filename . '", "' . $format . '")');
+            throw new \Exception(
+                'Failed to saveAs("' . $filename . '", "' . $format . '")'
+            );
         }
     }
 
@@ -178,28 +195,37 @@ class OpenApi extends AbstractAnnotation
      */
     public function ref(string $ref)
     {
-        if (substr($ref, 0, 2) !== '#/') {
+        if (substr($ref, 0, 2) !== "#/") {
             // @todo Add support for external (http) refs?
-            throw new \Exception('Unsupported $ref "' . $ref . '", it should start with "#/"');
+            throw new \Exception(
+                'Unsupported $ref "' . $ref . '", it should start with "#/"'
+            );
         }
 
-        return $this->resolveRef($ref, '#/', $this, []);
+        return $this->resolveRef($ref, "#/", $this, []);
     }
 
     /**
      * Recursive helper for ref().
      */
-    private static function resolveRef(string $ref, string $resolved, $container, array $mapping)
-    {
+    private static function resolveRef(
+        string $ref,
+        string $resolved,
+        $container,
+        array $mapping
+    ) {
         if ($ref === $resolved) {
             return $container;
         }
         $path = substr($ref, strlen($resolved));
-        $slash = strpos($path, '/');
+        $slash = strpos($path, "/");
 
         $subpath = $slash === false ? $path : substr($path, 0, $slash);
         $property = Util::refDecode($subpath);
-        $unresolved = $slash === false ? $resolved . $subpath : $resolved . $subpath . '/';
+        $unresolved =
+            $slash === false
+                ? $resolved . $subpath
+                : $resolved . $subpath . "/";
 
         if (is_object($container)) {
             if (property_exists($container, $property) === false) {
@@ -211,20 +237,39 @@ class OpenApi extends AbstractAnnotation
             $mapping = [];
             if ($container instanceof AbstractAnnotation) {
                 foreach ($container::$_nested as $nestedClass => $nested) {
-                    if (is_string($nested) === false && count($nested) === 2 && $nested[0] === $property) {
+                    if (
+                        is_string($nested) === false &&
+                        count($nested) === 2 &&
+                        $nested[0] === $property
+                    ) {
                         $mapping[$nestedClass] = $nested[1];
                     }
                 }
             }
 
-            return self::resolveRef($ref, $unresolved, $container->$property, $mapping);
+            return self::resolveRef(
+                $ref,
+                $unresolved,
+                $container->$property,
+                $mapping
+            );
         } elseif (is_array($container)) {
             if (array_key_exists($property, $container)) {
-                return self::resolveRef($ref, $unresolved, $container[$property], []);
+                return self::resolveRef(
+                    $ref,
+                    $unresolved,
+                    $container[$property],
+                    []
+                );
             }
             foreach ($mapping as $nestedClass => $keyField) {
                 foreach ($container as $key => $item) {
-                    if (is_numeric($key) && is_object($item) && $item instanceof $nestedClass && (string) $item->$keyField === $property) {
+                    if (
+                        is_numeric($key) &&
+                        is_object($item) &&
+                        $item instanceof $nestedClass &&
+                        (string) $item->$keyField === $property
+                    ) {
                         return self::resolveRef($ref, $unresolved, $item, []);
                     }
                 }

@@ -74,7 +74,7 @@ class ParserRuleContext extends RuleContext
      * to the generic XContext so this function must copy those nodes to
      * the YContext as well else they are lost!
      */
-    public function copyFrom(ParserRuleContext $ctx) : void
+    public function copyFrom(ParserRuleContext $ctx): void
     {
         // from RuleContext
         $this->parentCtx = $ctx->parentCtx;
@@ -96,22 +96,22 @@ class ParserRuleContext extends RuleContext
         }
     }
 
-    public function enterRule(ParseTreeListener $listener) : void
+    public function enterRule(ParseTreeListener $listener): void
     {
     }
 
-    public function exitRule(ParseTreeListener $listener) : void
+    public function exitRule(ParseTreeListener $listener): void
     {
     }
 
-    public function addTerminalNode(TerminalNode $t) : ParseTree
+    public function addTerminalNode(TerminalNode $t): ParseTree
     {
         $t->setParent($this);
 
         return $this->addChild($t);
     }
 
-    public function addErrorNode(ErrorNode $errorNode) : ParseTree
+    public function addErrorNode(ErrorNode $errorNode): ParseTree
     {
         $errorNode->setParent($this);
 
@@ -128,7 +128,7 @@ class ParserRuleContext extends RuleContext
      * because the existing interfaces do not have a `setParent()`
      * method and I don't want to break backward compatibility for this.
      */
-    public function addChild(ParseTree $child) : ParseTree
+    public function addChild(ParseTree $child): ParseTree
     {
         if ($this->children === null) {
             $this->children = [];
@@ -144,7 +144,7 @@ class ParserRuleContext extends RuleContext
      * we entered a rule. If we have # label, we will need to remove
      * generic `ruleContext` object.
      */
-    public function removeLastChild() : void
+    public function removeLastChild(): void
     {
         if ($this->children !== null) {
             \array_pop($this->children);
@@ -154,7 +154,7 @@ class ParserRuleContext extends RuleContext
     /**
      * @return RuleContext|null
      */
-    public function getParent() : ?Tree
+    public function getParent(): ?Tree
     {
         return $this->parentCtx;
     }
@@ -162,9 +162,13 @@ class ParserRuleContext extends RuleContext
     /**
      * @return ParseTree|null
      */
-    public function getChild(int $i, ?string $type = null) : ?Tree
+    public function getChild(int $i, ?string $type = null): ?Tree
     {
-        if ($this->children === null || $i < 0 || $i >= \count($this->children)) {
+        if (
+            $this->children === null ||
+            $i < 0 ||
+            $i >= \count($this->children)
+        ) {
             return null;
         }
 
@@ -185,14 +189,21 @@ class ParserRuleContext extends RuleContext
         return null;
     }
 
-    public function getToken(int $ttype, int $i) : ?TerminalNode
+    public function getToken(int $ttype, int $i): ?TerminalNode
     {
-        if ($this->children === null || $i < 0 || $i >= \count($this->children)) {
+        if (
+            $this->children === null ||
+            $i < 0 ||
+            $i >= \count($this->children)
+        ) {
             return null;
         }
 
         foreach ($this->children as $child) {
-            if ($child instanceof TerminalNode && $child->getSymbol()->getType() === $ttype) {
+            if (
+                $child instanceof TerminalNode &&
+                $child->getSymbol()->getType() === $ttype
+            ) {
                 if ($i === 0) {
                     return $child;
                 }
@@ -207,7 +218,7 @@ class ParserRuleContext extends RuleContext
     /**
      * @return array<TerminalNode>
      */
-    public function getTokens(int $ttype) : array
+    public function getTokens(int $ttype): array
     {
         if ($this->children === null) {
             return [];
@@ -215,7 +226,10 @@ class ParserRuleContext extends RuleContext
 
         $tokens = [];
         foreach ($this->children as $child) {
-            if ($child instanceof TerminalNode && $child->getSymbol()->getType() === $ttype) {
+            if (
+                $child instanceof TerminalNode &&
+                $child->getSymbol()->getType() === $ttype
+            ) {
                 $tokens[] = $child;
             }
         }
@@ -223,7 +237,7 @@ class ParserRuleContext extends RuleContext
         return $tokens;
     }
 
-    public function getTypedRuleContext(string $ctxType, int $i) : ?ParseTree
+    public function getTypedRuleContext(string $ctxType, int $i): ?ParseTree
     {
         return $this->getChild($i, $ctxType);
     }
@@ -231,9 +245,9 @@ class ParserRuleContext extends RuleContext
     /**
      * @return array<ParseTree>
      */
-    public function getTypedRuleContexts(string $ctxType) : array
+    public function getTypedRuleContexts(string $ctxType): array
     {
-        if ($this->children=== null) {
+        if ($this->children === null) {
             return [];
         }
 
@@ -247,18 +261,21 @@ class ParserRuleContext extends RuleContext
         return $contexts;
     }
 
-    public function getChildCount() : int
+    public function getChildCount(): int
     {
         return $this->children !== null ? \count($this->children) : 0;
     }
 
-    public function getSourceInterval() : Interval
+    public function getSourceInterval(): Interval
     {
         if ($this->start === null || $this->stop === null) {
             return Interval::invalid();
         }
 
-        return new Interval($this->start->getTokenIndex(), $this->stop->getTokenIndex());
+        return new Interval(
+            $this->start->getTokenIndex(),
+            $this->stop->getTokenIndex()
+        );
     }
 
     /**
@@ -268,7 +285,7 @@ class ParserRuleContext extends RuleContext
      * do not consume anything (for example, zero length or error productions)
      * this token may exceed stop.
      */
-    public function getStart() : ?Token
+    public function getStart(): ?Token
     {
         return $this->start;
     }
@@ -280,7 +297,7 @@ class ParserRuleContext extends RuleContext
      * do not consume anything (for example, zero length or error productions)
      * this token may precede start.
      */
-    public function getStop() : ?Token
+    public function getStop(): ?Token
     {
         return $this->stop;
     }

@@ -74,14 +74,14 @@ abstract class AbstractConfig implements ArrayAccess, ConfigInterface, Iterator
      */
     public function set($key, $value)
     {
-        $segs = explode('.', $key);
+        $segs = explode(".", $key);
         $root = &$this->data;
-        $cacheKey = '';
+        $cacheKey = "";
 
         // Look for the key, creating nested keys if needed
         while ($part = array_shift($segs)) {
-            if ($cacheKey != '') {
-                $cacheKey .= '.';
+            if ($cacheKey != "") {
+                $cacheKey .= ".";
             }
             $cacheKey .= $part;
             if (!isset($root[$part]) && count($segs)) {
@@ -97,7 +97,10 @@ abstract class AbstractConfig implements ArrayAccess, ConfigInterface, Iterator
             //Unset all old nested cache in case of array
             if (count($segs) == 0) {
                 foreach ($this->cache as $cacheLocalKey => $cacheValue) {
-                    if (substr($cacheLocalKey, 0, strlen($cacheKey)) === $cacheKey) {
+                    if (
+                        substr($cacheLocalKey, 0, strlen($cacheKey)) ===
+                        $cacheKey
+                    ) {
                         unset($this->cache[$cacheLocalKey]);
                     }
                 }
@@ -118,7 +121,7 @@ abstract class AbstractConfig implements ArrayAccess, ConfigInterface, Iterator
             return true;
         }
 
-        $segments = explode('.', $key);
+        $segments = explode(".", $key);
         $root = $this->data;
 
         // nested case
@@ -224,7 +227,7 @@ abstract class AbstractConfig implements ArrayAccess, ConfigInterface, Iterator
      */
     public function current()
     {
-        return (is_array($this->data) ? current($this->data) : null);
+        return is_array($this->data) ? current($this->data) : null;
     }
 
     /**
@@ -236,7 +239,7 @@ abstract class AbstractConfig implements ArrayAccess, ConfigInterface, Iterator
      */
     public function key()
     {
-        return (is_array($this->data) ? key($this->data) : null);
+        return is_array($this->data) ? key($this->data) : null;
     }
 
     /**
@@ -249,7 +252,7 @@ abstract class AbstractConfig implements ArrayAccess, ConfigInterface, Iterator
      */
     public function next()
     {
-        return (is_array($this->data) ? next($this->data) : null);
+        return is_array($this->data) ? next($this->data) : null;
     }
 
     /**
@@ -262,7 +265,7 @@ abstract class AbstractConfig implements ArrayAccess, ConfigInterface, Iterator
      */
     public function rewind()
     {
-        return (is_array($this->data) ? reset($this->data) : null);
+        return is_array($this->data) ? reset($this->data) : null;
     }
 
     /**
@@ -272,7 +275,7 @@ abstract class AbstractConfig implements ArrayAccess, ConfigInterface, Iterator
      */
     public function valid()
     {
-        return (is_array($this->data) ? key($this->data) !== null : false);
+        return is_array($this->data) ? key($this->data) !== null : false;
     }
 
     /**

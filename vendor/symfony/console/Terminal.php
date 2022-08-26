@@ -24,7 +24,7 @@ class Terminal
      */
     public function getWidth()
     {
-        $width = getenv('COLUMNS');
+        $width = getenv("COLUMNS");
         if (false !== $width) {
             return (int) trim($width);
         }
@@ -43,7 +43,7 @@ class Terminal
      */
     public function getHeight()
     {
-        $height = getenv('LINES');
+        $height = getenv("LINES");
         if (false !== $height) {
             return (int) trim($height);
         }
@@ -67,28 +67,36 @@ class Terminal
         }
 
         // skip check if exec function is disabled
-        if (!\function_exists('exec')) {
+        if (!\function_exists("exec")) {
             return false;
         }
 
-        exec('stty 2>&1', $output, $exitcode);
+        exec("stty 2>&1", $output, $exitcode);
 
         return self::$stty = 0 === $exitcode;
     }
 
     private static function initDimensions()
     {
-        if ('\\' === \DIRECTORY_SEPARATOR) {
-            if (preg_match('/^(\d+)x(\d+)(?: \((\d+)x(\d+)\))?$/', trim(getenv('ANSICON')), $matches)) {
+        if ("\\" === \DIRECTORY_SEPARATOR) {
+            if (
+                preg_match(
+                    '/^(\d+)x(\d+)(?: \((\d+)x(\d+)\))?$/',
+                    trim(getenv("ANSICON")),
+                    $matches
+                )
+            ) {
                 // extract [w, H] from "wxh (WxH)"
                 // or [w, h] from "wxh"
                 self::$width = (int) $matches[1];
-                self::$height = isset($matches[4]) ? (int) $matches[4] : (int) $matches[2];
+                self::$height = isset($matches[4])
+                    ? (int) $matches[4]
+                    : (int) $matches[2];
             } elseif (!self::hasVt100Support() && self::hasSttyAvailable()) {
                 // only use stty on Windows if the terminal does not support vt100 (e.g. Windows 7 + git-bash)
                 // testing for stty in a Windows 10 vt100-enabled console will implicitly disable vt100 support on STDOUT
                 self::initDimensionsUsingStty();
-            } elseif (null !== $dimensions = self::getConsoleMode()) {
+            } elseif (null !== ($dimensions = self::getConsoleMode())) {
                 // extract [w, h] from "wxh"
                 self::$width = (int) $dimensions[0];
                 self::$height = (int) $dimensions[1];
@@ -103,7 +111,8 @@ class Terminal
      */
     private static function hasVt100Support(): bool
     {
-        return \function_exists('sapi_windows_vt100_support') && sapi_windows_vt100_support(fopen('php://stdout', 'w'));
+        return \function_exists("sapi_windows_vt100_support") &&
+            sapi_windows_vt100_support(fopen("php://stdout", "w"));
     }
 
     /**
@@ -112,11 +121,23 @@ class Terminal
     private static function initDimensionsUsingStty()
     {
         if ($sttyString = self::getSttyColumns()) {
-            if (preg_match('/rows.(\d+);.columns.(\d+);/i', $sttyString, $matches)) {
+            if (
+                preg_match(
+                    "/rows.(\d+);.columns.(\d+);/i",
+                    $sttyString,
+                    $matches
+                )
+            ) {
                 // extract [w, h] from "rows h; columns w;"
                 self::$width = (int) $matches[2];
                 self::$height = (int) $matches[1];
-            } elseif (preg_match('/;.(\d+).rows;.(\d+).columns/i', $sttyString, $matches)) {
+            } elseif (
+                preg_match(
+                    "/;.(\d+).rows;.(\d+).columns/i",
+                    $sttyString,
+                    $matches
+                )
+            ) {
                 // extract [w, h] from "; h rows; w columns"
                 self::$width = (int) $matches[2];
                 self::$height = (int) $matches[1];
@@ -131,9 +152,16 @@ class Terminal
      */
     private static function getConsoleMode(): ?array
     {
-        $info = self::readFromProcess('mode CON');
+        $info = self::readFromProcess("mode CON");
 
-        if (null === $info || !preg_match('/--------+\r?\n.+?(\d+)\r?\n.+?(\d+)\r?\n/', $info, $matches)) {
+        if (
+            null === $info ||
+            !preg_match(
+                '/--------+\r?\n.+?(\d+)\r?\n.+?(\d+)\r?\n/',
+                $info,
+                $matches
+            )
+        ) {
             return null;
         }
 
@@ -145,21 +173,23 @@ class Terminal
      */
     private static function getSttyColumns(): ?string
     {
-        return self::readFromProcess('stty -a | grep columns');
+        return self::readFromProcess("stty -a | grep columns");
     }
 
     private static function readFromProcess(string $command): ?string
     {
-        if (!\function_exists('proc_open')) {
+        if (!\function_exists("proc_open")) {
             return null;
         }
 
         $descriptorspec = [
-            1 => ['pipe', 'w'],
-            2 => ['pipe', 'w'],
+            1 => ["pipe", "w"],
+            2 => ["pipe", "w"],
         ];
 
-        $process = proc_open($command, $descriptorspec, $pipes, null, null, ['suppress_errors' => true]);
+        $process = proc_open($command, $descriptorspec, $pipes, null, null, [
+            "suppress_errors" => true,
+        ]);
         if (!\is_resource($process)) {
             return null;
         }

@@ -30,7 +30,7 @@ final class IntervalSet implements Equatable
     /**
      * Create a set with a single element, el.
      */
-    public static function fromInt(int $number) : self
+    public static function fromInt(int $number): self
     {
         $set = new self();
 
@@ -42,7 +42,7 @@ final class IntervalSet implements Equatable
     /**
      * Create a set with all ints within range [start..end] (inclusive).
      */
-    public static function fromRange(int $start, int $end) : self
+    public static function fromRange(int $start, int $end): self
     {
         $set = new self();
 
@@ -51,7 +51,7 @@ final class IntervalSet implements Equatable
         return $set;
     }
 
-    public function complement(IntervalSet $set) : ?self
+    public function complement(IntervalSet $set): ?self
     {
         if ($set->isNull()) {
             return null;
@@ -60,7 +60,7 @@ final class IntervalSet implements Equatable
         return $set->subtract($this);
     }
 
-    public function subtract(IntervalSet $set) : self
+    public function subtract(IntervalSet $set): self
     {
         if ($set->isNull()) {
             return $this;
@@ -69,7 +69,7 @@ final class IntervalSet implements Equatable
         return self::subtractSets($this, $set);
     }
 
-    public function orSet(IntervalSet $other) : self
+    public function orSet(IntervalSet $other): self
     {
         $result = new self();
 
@@ -84,8 +84,10 @@ final class IntervalSet implements Equatable
      * operation is `left - right`. If either of the input sets is `null`,
      * it is treated as though it was an empty set.
      */
-    public static function subtractSets(IntervalSet $left, IntervalSet $right) : self
-    {
+    public static function subtractSets(
+        IntervalSet $left,
+        IntervalSet $right
+    ): self {
         if ($left->isNull()) {
             return new self();
         }
@@ -98,7 +100,10 @@ final class IntervalSet implements Equatable
         $result = $left;
         $resultI = 0;
         $rightI = 0;
-        while ($resultI < \count($result->intervals) && $rightI < \count($right->intervals)) {
+        while (
+            $resultI < \count($result->intervals) &&
+            $rightI < \count($right->intervals)
+        ) {
             $resultInterval = $result->intervals[$resultI];
             $rightInterval = $right->intervals[$rightI];
 
@@ -119,11 +124,17 @@ final class IntervalSet implements Equatable
             $beforeCurrent = null;
             $afterCurrent = null;
             if ($rightInterval->start > $resultInterval->start) {
-                $beforeCurrent = new Interval($resultInterval->start, $rightInterval->start - 1);
+                $beforeCurrent = new Interval(
+                    $resultInterval->start,
+                    $rightInterval->start - 1
+                );
             }
 
             if ($rightInterval->stop < $resultInterval->stop) {
-                $afterCurrent = new Interval($rightInterval->stop + 1, $resultInterval->stop);
+                $afterCurrent = new Interval(
+                    $rightInterval->stop + 1,
+                    $resultInterval->stop
+                );
             }
 
             if ($beforeCurrent !== null) {
@@ -163,17 +174,17 @@ final class IntervalSet implements Equatable
         return $result;
     }
 
-    public function isReadOnly() : bool
+    public function isReadOnly(): bool
     {
         return $this->readOnly;
     }
 
-    public function setReadOnly(bool $readOnly) : void
+    public function setReadOnly(bool $readOnly): void
     {
         $this->readOnly = $readOnly;
     }
 
-    public function first() : int
+    public function first(): int
     {
         if ($this->intervals === null || \count($this->intervals) === 0) {
             return Token::INVALID_TYPE;
@@ -182,20 +193,22 @@ final class IntervalSet implements Equatable
         return $this->intervals[0]->start;
     }
 
-    public function addOne(int $value) : void
+    public function addOne(int $value): void
     {
         $this->addInterval(new Interval($value, $value));
     }
 
-    public function addRange(int $left, int $right) : void
+    public function addRange(int $left, int $right): void
     {
         $this->addInterval(new Interval($left, $right));
     }
 
-    protected function addInterval(Interval $addition) : void
+    protected function addInterval(Interval $addition): void
     {
         if ($this->readOnly) {
-            throw new \InvalidArgumentException('Can\'t alter readonly IntervalSet.');
+            throw new \InvalidArgumentException(
+                'Can\'t alter readonly IntervalSet.'
+            );
         }
 
         if ($addition->stop < $addition->start) {
@@ -254,7 +267,7 @@ final class IntervalSet implements Equatable
         $this->intervals[] = $addition;
     }
 
-    public function addSet(IntervalSet $other) : self
+    public function addSet(IntervalSet $other): self
     {
         if ($other->intervals !== null) {
             foreach ($other->intervals as $i) {
@@ -265,7 +278,7 @@ final class IntervalSet implements Equatable
         return $this;
     }
 
-    public function contains(int $item) : bool
+    public function contains(int $item): bool
     {
         $count = \count($this->intervals);
         $left = 0;
@@ -283,7 +296,8 @@ final class IntervalSet implements Equatable
                 $left = $m + 1;
             } elseif ($start > $item) {
                 $right = $m - 1;
-            } else { // item >= start && item <= stop
+            } else {
+                // item >= start && item <= stop
                 return true;
             }
         }
@@ -291,7 +305,7 @@ final class IntervalSet implements Equatable
         return false;
     }
 
-    public function length() : int
+    public function length(): int
     {
         $length = 0;
 
@@ -302,7 +316,7 @@ final class IntervalSet implements Equatable
         return $length;
     }
 
-    public function removeOne(int $v) : void
+    public function removeOne(int $v): void
     {
         foreach ($this->intervals as $k => $i) {
             // intervals is ordered
@@ -344,7 +358,7 @@ final class IntervalSet implements Equatable
         }
     }
 
-    public function isNull() : bool
+    public function isNull(): bool
     {
         return \count($this->intervals) === 0;
     }
@@ -356,13 +370,13 @@ final class IntervalSet implements Equatable
      *
      * @throws \RuntimeException If set is empty.
      */
-    public function getMaxElement() : int
+    public function getMaxElement(): int
     {
         if ($this->isNull()) {
-            throw new \RuntimeException('The set is empty.');
+            throw new \RuntimeException("The set is empty.");
         }
 
-        return $this->intervals[\count($this->intervals)-1]->stop;
+        return $this->intervals[\count($this->intervals) - 1]->stop;
     }
 
     /**
@@ -372,25 +386,25 @@ final class IntervalSet implements Equatable
      *
      * @throws \RuntimeException If set is empty.
      */
-    public function getMinElement() : int
+    public function getMinElement(): int
     {
         if ($this->isNull()) {
-            throw new \RuntimeException('The set is empty.');
+            throw new \RuntimeException("The set is empty.");
         }
 
         return $this->intervals[0]->start;
     }
 
-    public function toStringChars(bool $elemAreChar) : string
+    public function toStringChars(bool $elemAreChar): string
     {
         if (!$this->intervals) {
-            return '{}';
+            return "{}";
         }
 
-        $buf = '';
+        $buf = "";
 
         if ($this->length() > 1) {
-            $buf .= '{';
+            $buf .= "{";
         }
 
         $iter = new \ArrayIterator($this->intervals);
@@ -403,7 +417,7 @@ final class IntervalSet implements Equatable
 
             if ($start === $stop) {
                 if ($start === Token::EOF) {
-                    $buf .= '<EOF>';
+                    $buf .= "<EOF>";
                 } elseif ($elemAreChar) {
                     $buf .= '\'' . StringUtils::char($start) . '\'';
                 } else {
@@ -417,31 +431,31 @@ final class IntervalSet implements Equatable
                         StringUtils::char($stop)
                     );
                 } else {
-                    $buf .= \sprintf('%s..%s', $start, $stop);
+                    $buf .= \sprintf("%s..%s", $start, $stop);
                 }
             }
 
             if ($iter->valid()) {
-                $buf .= ', ';
+                $buf .= ", ";
             }
         }
 
         if ($this->length() > 1) {
-            $buf .= '}';
+            $buf .= "}";
         }
 
         return $buf;
     }
 
-    public function toStringVocabulary(Vocabulary $vocabulary) : string
+    public function toStringVocabulary(Vocabulary $vocabulary): string
     {
         if (!$this->intervals) {
-            return '{}';
+            return "{}";
         }
 
-        $buf = '';
+        $buf = "";
         if ($this->length() > 1) {
-            $buf .= '{';
+            $buf .= "{";
         }
 
         $iterator = new \ArrayIterator($this->intervals);
@@ -457,7 +471,7 @@ final class IntervalSet implements Equatable
             } else {
                 for ($i = $start; $i <= $stop; $i++) {
                     if ($i > $start) {
-                        $buf .= ', ';
+                        $buf .= ", ";
                     }
 
                     $buf .= $this->elementName($vocabulary, $i);
@@ -465,31 +479,31 @@ final class IntervalSet implements Equatable
             }
 
             if ($iterator->valid()) {
-                $buf .= ', ';
+                $buf .= ", ";
             }
         }
 
         if ($this->length() > 1) {
-            $buf .= '}';
+            $buf .= "}";
         }
 
         return $buf;
     }
 
-    protected function elementName(Vocabulary $vocabulary, int $a) : string
+    protected function elementName(Vocabulary $vocabulary, int $a): string
     {
         if ($a === Token::EOF) {
-            return '<EOF>';
+            return "<EOF>";
         }
 
         if ($a === Token::EPSILON) {
-            return '<EPSILON>';
+            return "<EPSILON>";
         }
 
         return $vocabulary->getDisplayName($a);
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
@@ -499,14 +513,14 @@ final class IntervalSet implements Equatable
             return false;
         }
 
-        return $this->readOnly === $other->readOnly
-            && Equality::equals($this->intervals, $other->intervals);
+        return $this->readOnly === $other->readOnly &&
+            Equality::equals($this->intervals, $other->intervals);
     }
 
     /**
      * @return array<int>
      */
-    public function toArray() : array
+    public function toArray(): array
     {
         $values = [];
         foreach ($this->intervals as $interval) {
@@ -521,7 +535,7 @@ final class IntervalSet implements Equatable
         return $values;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->toStringChars(false);
     }

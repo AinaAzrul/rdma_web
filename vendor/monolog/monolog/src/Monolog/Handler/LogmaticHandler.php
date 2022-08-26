@@ -45,8 +45,8 @@ class LogmaticHandler extends SocketHandler
      */
     public function __construct(
         string $token,
-        string $hostname = '',
-        string $appname = '',
+        string $hostname = "",
+        string $appname = "",
         bool $useSSL = true,
         $level = Logger::DEBUG,
         bool $bubble = true,
@@ -56,12 +56,16 @@ class LogmaticHandler extends SocketHandler
         ?float $connectionTimeout = null,
         ?int $chunkSize = null
     ) {
-        if ($useSSL && !extension_loaded('openssl')) {
-            throw new MissingExtensionException('The OpenSSL PHP extension is required to use SSL encrypted connection for LogmaticHandler');
+        if ($useSSL && !extension_loaded("openssl")) {
+            throw new MissingExtensionException(
+                "The OpenSSL PHP extension is required to use SSL encrypted connection for LogmaticHandler"
+            );
         }
 
-        $endpoint = $useSSL ? 'ssl://api.logmatic.io:10515' : 'api.logmatic.io:10514';
-        $endpoint .= '/v1/';
+        $endpoint = $useSSL
+            ? "ssl://api.logmatic.io:10515"
+            : "api.logmatic.io:10514";
+        $endpoint .= "/v1/";
 
         parent::__construct(
             $endpoint,
@@ -76,7 +80,7 @@ class LogmaticHandler extends SocketHandler
 
         $this->logToken = $token;
         $this->hostname = $hostname;
-        $this->appname  = $appname;
+        $this->appname = $appname;
     }
 
     /**
@@ -84,7 +88,7 @@ class LogmaticHandler extends SocketHandler
      */
     protected function generateDataStream(array $record): string
     {
-        return $this->logToken . ' ' . $record['formatted'];
+        return $this->logToken . " " . $record["formatted"];
     }
 
     /**

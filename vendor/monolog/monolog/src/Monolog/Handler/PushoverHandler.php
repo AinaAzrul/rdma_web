@@ -53,19 +53,19 @@ class PushoverHandler extends SocketHandler
      * @var array<string, bool>
      */
     private $parameterNames = [
-        'token' => true,
-        'user' => true,
-        'message' => true,
-        'device' => true,
-        'title' => true,
-        'url' => true,
-        'url_title' => true,
-        'priority' => true,
-        'timestamp' => true,
-        'sound' => true,
-        'retry' => true,
-        'expire' => true,
-        'callback' => true,
+        "token" => true,
+        "user" => true,
+        "message" => true,
+        "device" => true,
+        "title" => true,
+        "url" => true,
+        "url_title" => true,
+        "priority" => true,
+        "timestamp" => true,
+        "sound" => true,
+        "retry" => true,
+        "expire" => true,
+        "callback" => true,
     ];
 
     /**
@@ -74,9 +74,28 @@ class PushoverHandler extends SocketHandler
      * @var string[]
      */
     private $sounds = [
-        'pushover', 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming',
-        'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb',
-        'persistent', 'echo', 'updown', 'none',
+        "pushover",
+        "bike",
+        "bugle",
+        "cashregister",
+        "classical",
+        "cosmic",
+        "falling",
+        "gamelan",
+        "incoming",
+        "intermission",
+        "magic",
+        "mechanical",
+        "pianobar",
+        "siren",
+        "spacealarm",
+        "tugboat",
+        "alien",
+        "climb",
+        "persistent",
+        "echo",
+        "updown",
+        "none",
     ];
 
     /**
@@ -115,7 +134,9 @@ class PushoverHandler extends SocketHandler
         ?float $connectionTimeout = null,
         ?int $chunkSize = null
     ) {
-        $connectionString = $useSSL ? 'ssl://api.pushover.net:443' : 'api.pushover.net:80';
+        $connectionString = $useSSL
+            ? "ssl://api.pushover.net:443"
+            : "api.pushover.net:80";
         parent::__construct(
             $connectionString,
             $level,
@@ -151,37 +172,51 @@ class PushoverHandler extends SocketHandler
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - strlen($this->title);
 
-        $message = ($this->useFormattedMessage) ? $record['formatted'] : $record['message'];
+        $message = $this->useFormattedMessage
+            ? $record["formatted"]
+            : $record["message"];
         $message = Utils::substr($message, 0, $maxMessageLength);
 
-        $timestamp = $record['datetime']->getTimestamp();
+        $timestamp = $record["datetime"]->getTimestamp();
 
         $dataArray = [
-            'token' => $this->token,
-            'user' => $this->user,
-            'message' => $message,
-            'title' => $this->title,
-            'timestamp' => $timestamp,
+            "token" => $this->token,
+            "user" => $this->user,
+            "message" => $message,
+            "title" => $this->title,
+            "timestamp" => $timestamp,
         ];
 
-        if (isset($record['level']) && $record['level'] >= $this->emergencyLevel) {
-            $dataArray['priority'] = 2;
-            $dataArray['retry'] = $this->retry;
-            $dataArray['expire'] = $this->expire;
-        } elseif (isset($record['level']) && $record['level'] >= $this->highPriorityLevel) {
-            $dataArray['priority'] = 1;
+        if (
+            isset($record["level"]) &&
+            $record["level"] >= $this->emergencyLevel
+        ) {
+            $dataArray["priority"] = 2;
+            $dataArray["retry"] = $this->retry;
+            $dataArray["expire"] = $this->expire;
+        } elseif (
+            isset($record["level"]) &&
+            $record["level"] >= $this->highPriorityLevel
+        ) {
+            $dataArray["priority"] = 1;
         }
 
         // First determine the available parameters
-        $context = array_intersect_key($record['context'], $this->parameterNames);
-        $extra = array_intersect_key($record['extra'], $this->parameterNames);
+        $context = array_intersect_key(
+            $record["context"],
+            $this->parameterNames
+        );
+        $extra = array_intersect_key($record["extra"], $this->parameterNames);
 
         // Least important info should be merged with subsequent info
         $dataArray = array_merge($extra, $context, $dataArray);
 
         // Only pass sounds that are supported by the API
-        if (isset($dataArray['sound']) && !in_array($dataArray['sound'], $this->sounds)) {
-            unset($dataArray['sound']);
+        if (
+            isset($dataArray["sound"]) &&
+            !in_array($dataArray["sound"], $this->sounds)
+        ) {
+            unset($dataArray["sound"]);
         }
 
         return http_build_query($dataArray);

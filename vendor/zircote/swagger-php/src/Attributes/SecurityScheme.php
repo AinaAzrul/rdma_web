@@ -8,7 +8,14 @@ namespace OpenApi\Attributes;
 
 use OpenApi\Generator;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
+#[
+    \Attribute(
+        \Attribute::TARGET_CLASS |
+            \Attribute::TARGET_METHOD |
+            \Attribute::TARGET_PROPERTY |
+            \Attribute::IS_REPEATABLE
+    )
+]
 class SecurityScheme extends \OpenApi\Annotations\SecurityScheme
 {
     /**
@@ -32,17 +39,17 @@ class SecurityScheme extends \OpenApi\Annotations\SecurityScheme
         ?array $attachables = null
     ) {
         parent::__construct([
-                'ref' => $ref ?? Generator::UNDEFINED,
-                'securityScheme' => $securityScheme ?? Generator::UNDEFINED,
-                'type' => $type ?? Generator::UNDEFINED,
-                'description' => $description ?? Generator::UNDEFINED,
-                'name' => $name ?? Generator::UNDEFINED,
-                'in' => $in ?? Generator::UNDEFINED,
-                'bearerFormat' => $bearerFormat ?? Generator::UNDEFINED,
-                'scheme' => $scheme ?? Generator::UNDEFINED,
-                'openIdConnectUrl' => $openIdConnectUrl ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($flows, $attachables),
-            ]);
+            "ref" => $ref ?? Generator::UNDEFINED,
+            "securityScheme" => $securityScheme ?? Generator::UNDEFINED,
+            "type" => $type ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "name" => $name ?? Generator::UNDEFINED,
+            "in" => $in ?? Generator::UNDEFINED,
+            "bearerFormat" => $bearerFormat ?? Generator::UNDEFINED,
+            "scheme" => $scheme ?? Generator::UNDEFINED,
+            "openIdConnectUrl" => $openIdConnectUrl ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($flows, $attachables),
+        ]);
     }
 }

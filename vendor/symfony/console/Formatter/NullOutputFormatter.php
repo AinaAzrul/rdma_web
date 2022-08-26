@@ -65,8 +65,10 @@ final class NullOutputFormatter implements OutputFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function setStyle(string $name, OutputFormatterStyleInterface $style): void
-    {
+    public function setStyle(
+        string $name,
+        OutputFormatterStyleInterface $style
+    ): void {
         // do nothing
     }
 }

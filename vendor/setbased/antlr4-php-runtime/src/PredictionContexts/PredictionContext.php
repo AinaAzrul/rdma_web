@@ -24,7 +24,7 @@ abstract class PredictionContext implements Hashable
      *
      * Here, `$` = {@see PredictionContext::EMPTY_RETURN_STATE}.
      */
-    public const EMPTY_RETURN_STATE = 0x7FFFFFFF;
+    public const EMPTY_RETURN_STATE = 0x7fffffff;
 
     /**
      * Stores the computed hash code of this {@see PredictionContext}. The hash
@@ -55,7 +55,7 @@ abstract class PredictionContext implements Hashable
         $this->id = self::$globalNodeCount++;
     }
 
-    public static function empty() : EmptyPredictionContext
+    public static function empty(): EmptyPredictionContext
     {
         static $empty;
 
@@ -72,15 +72,20 @@ abstract class PredictionContext implements Hashable
      * Convert a {@see RuleContext} tree to a {@see PredictionContext} graph.
      * Return {@see PredictionContext::empty()} if `outerContext` is empty or null.
      */
-    public static function fromRuleContext(ATN $atn, ?RuleContext $outerContext) : PredictionContext
-    {
+    public static function fromRuleContext(
+        ATN $atn,
+        ?RuleContext $outerContext
+    ): PredictionContext {
         if ($outerContext === null) {
             $outerContext = RuleContext::emptyContext();
         }
 
         // If we are in RuleContext of start rule, s, then PredictionContext
         // is EMPTY. Nobody called us. (if we are empty, return empty)
-        if ($outerContext->getParent() === null || $outerContext === RuleContext::emptyContext()) {
+        if (
+            $outerContext->getParent() === null ||
+            $outerContext === RuleContext::emptyContext()
+        ) {
             return self::empty();
         }
 
@@ -90,27 +95,31 @@ abstract class PredictionContext implements Hashable
         $transition = $state->getTransition(0);
 
         if (!$transition instanceof RuleTransition) {
-            throw new \RuntimeException('Unexpected transition type.');
+            throw new \RuntimeException("Unexpected transition type.");
         }
 
-        return SingletonPredictionContext::create($parent, $transition->followState->stateNumber);
+        return SingletonPredictionContext::create(
+            $parent,
+            $transition->followState->stateNumber
+        );
     }
 
     /**
      * This means only the {@see PredictionContext::empty()} (wildcard? not sure)
      * context is in set.
      */
-    public function isEmpty() : bool
+    public function isEmpty(): bool
     {
         return $this === self::empty();
     }
 
-    public function hasEmptyPath() : bool
+    public function hasEmptyPath(): bool
     {
-        return $this->getReturnState($this->getLength() - 1) === self::EMPTY_RETURN_STATE;
+        return $this->getReturnState($this->getLength() - 1) ===
+            self::EMPTY_RETURN_STATE;
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
         if ($this->cachedHashCode === null) {
             $this->cachedHashCode = $this->computeHashCode();
@@ -119,24 +128,27 @@ abstract class PredictionContext implements Hashable
         return $this->cachedHashCode;
     }
 
-    abstract protected function computeHashCode() : int;
-    abstract public function getLength() : int;
-    abstract public function getParent(int $index) : ?self;
-    abstract public function getReturnState(int $index) : int;
-    abstract public function __toString() : string;
+    abstract protected function computeHashCode(): int;
+    abstract public function getLength(): int;
+    abstract public function getParent(int $index): ?self;
+    abstract public function getReturnState(int $index): int;
+    abstract public function __toString(): string;
 
     public static function merge(
         PredictionContext $a,
         PredictionContext $b,
         bool $rootIsWildcard,
         ?DoubleKeyMap $mergeCache
-    ) : PredictionContext {
+    ): PredictionContext {
         // share same graph if both same
         if ($a->equals($b)) {
             return $a;
         }
 
-        if ($a instanceof SingletonPredictionContext && $b instanceof SingletonPredictionContext) {
+        if (
+            $a instanceof SingletonPredictionContext &&
+            $b instanceof SingletonPredictionContext
+        ) {
             return self::mergeSingletons($a, $b, $rootIsWildcard, $mergeCache);
         }
 
@@ -161,8 +173,11 @@ abstract class PredictionContext implements Hashable
             $b = ArrayPredictionContext::fromOne($b);
         }
 
-        if (!$a instanceof ArrayPredictionContext || !$b instanceof ArrayPredictionContext) {
-            throw new \RuntimeException('Unexpected transition type.');
+        if (
+            !$a instanceof ArrayPredictionContext ||
+            !$b instanceof ArrayPredictionContext
+        ) {
+            throw new \RuntimeException("Unexpected transition type.");
         }
 
         return self::mergeArrays($a, $b, $rootIsWildcard, $mergeCache);
@@ -195,7 +210,7 @@ abstract class PredictionContext implements Hashable
         SingletonPredictionContext $b,
         bool $rootIsWildcard,
         ?DoubleKeyMap $mergeCache
-    ) : PredictionContext {
+    ): PredictionContext {
         if ($mergeCache !== null) {
             $previous = $mergeCache->getByTwoKeys($a, $b);
 
@@ -222,10 +237,15 @@ abstract class PredictionContext implements Hashable
 
         if ($a->returnState === $b->returnState) {
             if ($a->parent === null || $b->parent === null) {
-                throw new \RuntimeException('Unexpected null parents.');
+                throw new \RuntimeException("Unexpected null parents.");
             }
 
-            $parent = self::merge($a->parent, $b->parent, $rootIsWildcard, $mergeCache);
+            $parent = self::merge(
+                $a->parent,
+                $b->parent,
+                $rootIsWildcard,
+                $mergeCache
+            );
 
             // If parent is same as existing a or b parent or reduced to a parent, return it
             if ($parent === $a->parent) {
@@ -252,7 +272,10 @@ abstract class PredictionContext implements Hashable
             // see if we can collapse parents due to $+x parents if local ctx
             $singleParent = null;
 
-            if ($a === $b || ($a->parent !== null && $a->parent === $b->parent)) {
+            if (
+                $a === $b ||
+                ($a->parent !== null && $a->parent === $b->parent)
+            ) {
                 // ax +
                 // bx =
                 // [a,b]x
@@ -342,18 +365,18 @@ abstract class PredictionContext implements Hashable
         SingletonPredictionContext $a,
         SingletonPredictionContext $b,
         bool $rootIsWildcard
-    ) : ?PredictionContext {
+    ): ?PredictionContext {
         if ($rootIsWildcard) {
             if ($a === self::empty()) {
-                return self::empty();// // + b =//
+                return self::empty(); // // + b =//
             }
 
             if ($b === self::empty()) {
-                return self::empty();// a +// =//
+                return self::empty(); // a +// =//
             }
         } else {
             if ($a === self::empty() && $b === self::empty()) {
-                return self::empty();// $ + $ = $
+                return self::empty(); // $ + $ = $
             }
 
             if ($a === self::empty()) {
@@ -405,7 +428,7 @@ abstract class PredictionContext implements Hashable
         ArrayPredictionContext $b,
         bool $rootIsWildcard,
         ?DoubleKeyMap $mergeCache
-    ) : PredictionContext {
+    ): PredictionContext {
         if ($mergeCache !== null) {
             $previous = $mergeCache->getByTwoKeys($a, $b);
 
@@ -421,9 +444,9 @@ abstract class PredictionContext implements Hashable
         }
 
         // merge sorted payloads a + b => M
-        $i = 0;// walks a
-        $j = 0;// walks b
-        $k = 0;// walks target M array
+        $i = 0; // walks a
+        $j = 0; // walks b
+        $k = 0; // walks target M array
 
         $mergedReturnStates = [];
         $mergedParents = [];
@@ -438,27 +461,38 @@ abstract class PredictionContext implements Hashable
                 $payload = $a->returnStates[$i];
 
                 // $+$ = $
-                $bothDollars = $payload === self::EMPTY_RETURN_STATE && $a_parent === null && $b_parent === null;
-                $ax_ax = ($a_parent !== null && $b_parent !== null && $a_parent->equals($b_parent));// ax+ax
+                $bothDollars =
+                    $payload === self::EMPTY_RETURN_STATE &&
+                    $a_parent === null &&
+                    $b_parent === null;
+                $ax_ax =
+                    $a_parent !== null &&
+                    $b_parent !== null &&
+                    $a_parent->equals($b_parent); // ax+ax
                 // ->
                 // ax
 
                 if ($bothDollars || $ax_ax) {
-                    $mergedParents[$k] = $a_parent;// choose left
+                    $mergedParents[$k] = $a_parent; // choose left
                     $mergedReturnStates[$k] = $payload;
                 } else {
                     if ($a_parent === null || $b_parent === null) {
-                        throw new \RuntimeException('Unexpected null parents.');
+                        throw new \RuntimeException("Unexpected null parents.");
                     }
 
                     // ax+ay -> a'[x,y]
-                    $mergedParent = self::merge($a_parent, $b_parent, $rootIsWildcard, $mergeCache);
+                    $mergedParent = self::merge(
+                        $a_parent,
+                        $b_parent,
+                        $rootIsWildcard,
+                        $mergeCache
+                    );
                     $mergedParents[$k] = $mergedParent;
                     $mergedReturnStates[$k] = $payload;
                 }
 
-                $i++;// hop over left one as usual
-                $j++;// but also skip one in right side since we merge
+                $i++; // hop over left one as usual
+                $j++; // but also skip one in right side since we merge
             } elseif ($a->returnStates[$i] < $b->returnStates[$j]) {
                 // copy a[i] to M
                 $mergedParents[$k] = $a_parent;
@@ -476,13 +510,21 @@ abstract class PredictionContext implements Hashable
 
         // copy over any payloads remaining in either array
         if ($i < \count($a->returnStates)) {
-            for ($p = $i, $count = \count($a->returnStates); $p < $count; $p++) {
+            for (
+                $p = $i, $count = \count($a->returnStates);
+                $p < $count;
+                $p++
+            ) {
                 $mergedParents[$k] = $a->parents[$p];
                 $mergedReturnStates[$k] = $a->returnStates[$p];
                 $k++;
             }
         } else {
-            for ($p = $j, $count = \count($b->returnStates); $p < $count; $p++) {
+            for (
+                $p = $j, $count = \count($b->returnStates);
+                $p < $count;
+                $p++
+            ) {
                 $mergedParents[$k] = $b->parents[$p];
                 $mergedReturnStates[$k] = $b->returnStates[$p];
                 $k++;
@@ -494,7 +536,10 @@ abstract class PredictionContext implements Hashable
             // write index < last position; trim
             if ($k === 1) {
                 // for just one merged element, return singleton top
-                $a_ = SingletonPredictionContext::create($mergedParents[0], $mergedReturnStates[0]);
+                $a_ = SingletonPredictionContext::create(
+                    $mergedParents[0],
+                    $mergedReturnStates[0]
+                );
 
                 if ($mergeCache !== null) {
                     $mergeCache->set($a, $b, $a_);
@@ -539,7 +584,7 @@ abstract class PredictionContext implements Hashable
     /**
      * @param array<PredictionContext> $parents
      */
-    protected static function combineCommonParents(array &$parents) : void
+    protected static function combineCommonParents(array &$parents): void
     {
         $uniqueParents = new \SplObjectStorage();
 
@@ -561,7 +606,7 @@ abstract class PredictionContext implements Hashable
         PredictionContext $context,
         PredictionContextCache $contextCache,
         array &$visited
-    ) : self {
+    ): self {
         if ($context->isEmpty()) {
             return $context;
         }
@@ -589,9 +634,16 @@ abstract class PredictionContext implements Hashable
                 continue;
             }
 
-            $parent = self::getCachedPredictionContext($parentContext, $contextCache, $visited);
+            $parent = self::getCachedPredictionContext(
+                $parentContext,
+                $contextCache,
+                $visited
+            );
 
-            if ($changed || ($parentContext !== null && !$parent->equals($parentContext))) {
+            if (
+                $changed ||
+                ($parentContext !== null && !$parent->equals($parentContext))
+            ) {
                 if (!$changed) {
                     $parents = [];
 
@@ -619,13 +671,19 @@ abstract class PredictionContext implements Hashable
         if (\count($parents) === 0) {
             $updated = self::empty();
         } elseif (\count($parents) === 1) {
-            $updated = SingletonPredictionContext::create($parents[0], $context->getReturnState(0));
+            $updated = SingletonPredictionContext::create(
+                $parents[0],
+                $context->getReturnState(0)
+            );
         } else {
             if (!$context instanceof ArrayPredictionContext) {
-                throw new \RuntimeException('Unexpected context type.');
+                throw new \RuntimeException("Unexpected context type.");
             }
 
-            $updated = new ArrayPredictionContext($parents, $context->returnStates);
+            $updated = new ArrayPredictionContext(
+                $parents,
+                $context->returnStates
+            );
         }
 
         $contextCache->add($updated);

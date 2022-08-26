@@ -11,39 +11,33 @@ use SetBased\Exception\ErrorException;
  */
 class ErrorExceptionTest extends TestCase
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test ErrorException with valid code.
-   */
-  public function test1(): void
-  {
-    try
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test ErrorException with valid code.
+     */
+    public function test1(): void
     {
-      throw new ErrorException('Something went wrong', E_WARNING);
+        try {
+            throw new ErrorException("Something went wrong", E_WARNING);
+        } catch (ErrorException $e) {
+            self::assertSame("PHP Warning", $e->getName());
+        }
     }
-    catch (ErrorException $e)
-    {
-      self::assertSame('PHP Warning', $e->getName());
-    }
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test ErrorException with invalid code.
-   */
-  public function test2(): void
-  {
-    try
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test ErrorException with invalid code.
+     */
+    public function test2(): void
     {
-      throw new ErrorException('Something went wrong', 123456);
+        try {
+            throw new ErrorException("Something went wrong", 123456);
+        } catch (ErrorException $e) {
+            self::assertSame("Error", $e->getName());
+        }
     }
-    catch (ErrorException $e)
-    {
-      self::assertSame('Error', $e->getName());
-    }
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

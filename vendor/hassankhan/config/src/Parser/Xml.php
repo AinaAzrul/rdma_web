@@ -27,7 +27,7 @@ class Xml implements ParserInterface
         libxml_use_internal_errors(true);
         $data = simplexml_load_file($filename, null, LIBXML_NOERROR);
 
-        return (array)$this->parse($data, $filename);
+        return (array) $this->parse($data, $filename);
     }
 
     /**
@@ -40,7 +40,7 @@ class Xml implements ParserInterface
     {
         libxml_use_internal_errors(true);
         $data = simplexml_load_string($config, null, LIBXML_NOERROR);
-        return (array)$this->parse($data);
+        return (array) $this->parse($data);
     }
 
     /**
@@ -56,14 +56,14 @@ class Xml implements ParserInterface
     protected function parse($data = null, $filename = null)
     {
         if ($data === false) {
-            $errors      = libxml_get_errors();
+            $errors = libxml_get_errors();
             $latestError = array_pop($errors);
-            $error       = [
-                'message' => $latestError->message,
-                'type'    => $latestError->level,
-                'code'    => $latestError->code,
-                'file'    => $filename,
-                'line'    => $latestError->line,
+            $error = [
+                "message" => $latestError->message,
+                "type" => $latestError->level,
+                "code" => $latestError->code,
+                "file" => $filename,
+                "line" => $latestError->line,
             ];
             throw new ParseException($error);
         }
@@ -78,6 +78,6 @@ class Xml implements ParserInterface
      */
     public static function getSupportedExtensions()
     {
-        return ['xml'];
+        return ["xml"];
     }
 }

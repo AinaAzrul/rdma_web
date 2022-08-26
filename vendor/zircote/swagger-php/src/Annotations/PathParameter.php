@@ -16,7 +16,7 @@ class PathParameter extends Parameter
     /**
      * @inheritdoc
      */
-    public $in = 'path';
+    public $in = "path";
 
     /**
      * @inheritdoc

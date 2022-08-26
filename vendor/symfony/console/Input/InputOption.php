@@ -61,14 +61,21 @@ class InputOption
      *
      * @throws InvalidArgumentException If option mode is invalid or incompatible
      */
-    public function __construct(string $name, $shortcut = null, int $mode = null, string $description = '', $default = null)
-    {
-        if (str_starts_with($name, '--')) {
+    public function __construct(
+        string $name,
+        $shortcut = null,
+        int $mode = null,
+        string $description = "",
+        $default = null
+    ) {
+        if (str_starts_with($name, "--")) {
             $name = substr($name, 2);
         }
 
         if (empty($name)) {
-            throw new InvalidArgumentException('An option name cannot be empty.');
+            throw new InvalidArgumentException(
+                "An option name cannot be empty."
+            );
         }
 
         if (empty($shortcut)) {
@@ -77,21 +84,25 @@ class InputOption
 
         if (null !== $shortcut) {
             if (\is_array($shortcut)) {
-                $shortcut = implode('|', $shortcut);
+                $shortcut = implode("|", $shortcut);
             }
-            $shortcuts = preg_split('{(\|)-?}', ltrim($shortcut, '-'));
+            $shortcuts = preg_split("{(\|)-?}", ltrim($shortcut, "-"));
             $shortcuts = array_filter($shortcuts);
-            $shortcut = implode('|', $shortcuts);
+            $shortcut = implode("|", $shortcuts);
 
             if (empty($shortcut)) {
-                throw new InvalidArgumentException('An option shortcut cannot be empty.');
+                throw new InvalidArgumentException(
+                    "An option shortcut cannot be empty."
+                );
             }
         }
 
         if (null === $mode) {
             $mode = self::VALUE_NONE;
-        } elseif ($mode >= (self::VALUE_NEGATABLE << 1) || $mode < 1) {
-            throw new InvalidArgumentException(sprintf('Option mode "%s" is not valid.', $mode));
+        } elseif ($mode >= self::VALUE_NEGATABLE << 1 || $mode < 1) {
+            throw new InvalidArgumentException(
+                sprintf('Option mode "%s" is not valid.', $mode)
+            );
         }
 
         $this->name = $name;
@@ -100,10 +111,14 @@ class InputOption
         $this->description = $description;
 
         if ($this->isArray() && !$this->acceptValue()) {
-            throw new InvalidArgumentException('Impossible to have an option mode VALUE_IS_ARRAY if the option does not accept a value.');
+            throw new InvalidArgumentException(
+                "Impossible to have an option mode VALUE_IS_ARRAY if the option does not accept a value."
+            );
         }
         if ($this->isNegatable() && $this->acceptValue()) {
-            throw new InvalidArgumentException('Impossible to have an option mode VALUE_NEGATABLE if the option also accepts a value.');
+            throw new InvalidArgumentException(
+                "Impossible to have an option mode VALUE_NEGATABLE if the option also accepts a value."
+            );
         }
 
         $this->setDefault($default);
@@ -179,19 +194,27 @@ class InputOption
      */
     public function setDefault($default = null)
     {
-        if (self::VALUE_NONE === (self::VALUE_NONE & $this->mode) && null !== $default) {
-            throw new LogicException('Cannot set a default value when using InputOption::VALUE_NONE mode.');
+        if (
+            self::VALUE_NONE === (self::VALUE_NONE & $this->mode) &&
+            null !== $default
+        ) {
+            throw new LogicException(
+                "Cannot set a default value when using InputOption::VALUE_NONE mode."
+            );
         }
 
         if ($this->isArray()) {
             if (null === $default) {
                 $default = [];
             } elseif (!\is_array($default)) {
-                throw new LogicException('A default value for an array option must be an array.');
+                throw new LogicException(
+                    "A default value for an array option must be an array."
+                );
             }
         }
 
-        $this->default = $this->acceptValue() || $this->isNegatable() ? $default : false;
+        $this->default =
+            $this->acceptValue() || $this->isNegatable() ? $default : false;
     }
 
     /**
@@ -221,13 +244,12 @@ class InputOption
      */
     public function equals(self $option)
     {
-        return $option->getName() === $this->getName()
-            && $option->getShortcut() === $this->getShortcut()
-            && $option->getDefault() === $this->getDefault()
-            && $option->isNegatable() === $this->isNegatable()
-            && $option->isArray() === $this->isArray()
-            && $option->isValueRequired() === $this->isValueRequired()
-            && $option->isValueOptional() === $this->isValueOptional()
-        ;
+        return $option->getName() === $this->getName() &&
+            $option->getShortcut() === $this->getShortcut() &&
+            $option->getDefault() === $this->getDefault() &&
+            $option->isNegatable() === $this->isNegatable() &&
+            $option->isArray() === $this->isArray() &&
+            $option->isValueRequired() === $this->isValueRequired() &&
+            $option->isValueOptional() === $this->isValueOptional();
     }
 }

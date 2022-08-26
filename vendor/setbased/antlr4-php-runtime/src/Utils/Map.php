@@ -25,12 +25,12 @@ final class Map implements Equatable, \Countable, \IteratorAggregate
         $this->equivalence = $equivalence ?? new DefaultEquivalence();
     }
 
-    public function count() : int
+    public function count(): int
     {
         return $this->size;
     }
 
-    public function contains(Hashable $key) : bool
+    public function contains(Hashable $key): bool
     {
         $hash = $this->equivalence->hash($key);
 
@@ -70,7 +70,7 @@ final class Map implements Equatable, \Countable, \IteratorAggregate
     /**
      * @param mixed $value
      */
-    public function put(Hashable $key, $value) : void
+    public function put(Hashable $key, $value): void
     {
         $hash = $this->equivalence->hash($key);
 
@@ -91,7 +91,7 @@ final class Map implements Equatable, \Countable, \IteratorAggregate
         $this->size++;
     }
 
-    public function remove(Hashable $key) : void
+    public function remove(Hashable $key): void
     {
         $hash = $this->equivalence->hash($key);
 
@@ -116,20 +116,25 @@ final class Map implements Equatable, \Countable, \IteratorAggregate
         }
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        if (!$other instanceof self
-            || $this->size !== $other->size
-            || !$this->equivalence->equals($other->equivalence)) {
+        if (
+            !$other instanceof self ||
+            $this->size !== $other->size ||
+            !$this->equivalence->equals($other->equivalence)
+        ) {
             return false;
         }
 
         foreach ($this->table as $hash => $bucket) {
-            if (!isset($other->table[$hash]) || \count($bucket) !== \count($other->table[$hash])) {
+            if (
+                !isset($other->table[$hash]) ||
+                \count($bucket) !== \count($other->table[$hash])
+            ) {
                 return false;
             }
 
@@ -138,8 +143,10 @@ final class Map implements Equatable, \Countable, \IteratorAggregate
             foreach ($bucket as $index => [$key, $value]) {
                 [$otherKey, $otherValue] = $otherBucket[$index];
 
-                if (!$this->equivalence->equivalent($key, $otherKey)
-                    || !self::isEqual($value, $otherValue)) {
+                if (
+                    !$this->equivalence->equivalent($key, $otherKey) ||
+                    !self::isEqual($value, $otherValue)
+                ) {
                     return false;
                 }
             }
@@ -151,7 +158,7 @@ final class Map implements Equatable, \Countable, \IteratorAggregate
     /**
      * @return array<Hashable>
      */
-    public function getKeys() : array
+    public function getKeys(): array
     {
         $values = [];
         foreach ($this->table as $bucket) {
@@ -166,7 +173,7 @@ final class Map implements Equatable, \Countable, \IteratorAggregate
     /**
      * @return array<mixed>
      */
-    public function getValues() : array
+    public function getValues(): array
     {
         $values = [];
         foreach ($this->table as $bucket) {
@@ -178,7 +185,7 @@ final class Map implements Equatable, \Countable, \IteratorAggregate
         return $values;
     }
 
-    public function getIterator() : \Iterator
+    public function getIterator(): \Iterator
     {
         foreach ($this->table as $bucket) {
             foreach ($bucket as [$key, $value]) {
@@ -187,7 +194,7 @@ final class Map implements Equatable, \Countable, \IteratorAggregate
         }
     }
 
-    private static function isEqual($left, $right) : bool
+    private static function isEqual($left, $right): bool
     {
         if ($left instanceof Equatable && $right instanceof Equatable) {
             return $left->equals($right);

@@ -23,7 +23,7 @@ final class DoubleKeyMap
      * @param mixed $secondaryKey
      * @param mixed $value
      */
-    public function set($primaryKey, $secondaryKey, $value) : void
+    public function set($primaryKey, $secondaryKey, $value): void
     {
         $secondaryData = $this->data->get($primaryKey);
 
@@ -56,7 +56,7 @@ final class DoubleKeyMap
     /**
      * @param mixed $primaryKey
      */
-    public function getByOneKey($primaryKey) : Map
+    public function getByOneKey($primaryKey): Map
     {
         return $this->data->get($primaryKey);
     }
@@ -66,7 +66,7 @@ final class DoubleKeyMap
      *
      * @return array<mixed>|null
      */
-    public function values($primaryKey) : ?array
+    public function values($primaryKey): ?array
     {
         $secondaryData = $this->data->get($primaryKey);
 
@@ -80,7 +80,7 @@ final class DoubleKeyMap
     /**
      * @return array<mixed>
      */
-    public function primaryKeys() : array
+    public function primaryKeys(): array
     {
         return $this->data->getKeys();
     }
@@ -90,7 +90,7 @@ final class DoubleKeyMap
      *
      * @return array<mixed>|null
      */
-    public function secondaryKeys($primaryKey) : ?array
+    public function secondaryKeys($primaryKey): ?array
     {
         $secondaryData = $this->data->get($primaryKey);
 

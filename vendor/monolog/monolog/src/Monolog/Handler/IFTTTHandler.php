@@ -36,10 +36,16 @@ class IFTTTHandler extends AbstractProcessingHandler
      * @param string $eventName The name of the IFTTT Maker event that should be triggered
      * @param string $secretKey A valid IFTTT secret key
      */
-    public function __construct(string $eventName, string $secretKey, $level = Logger::ERROR, bool $bubble = true)
-    {
-        if (!extension_loaded('curl')) {
-            throw new MissingExtensionException('The curl extension is needed to use the IFTTTHandler');
+    public function __construct(
+        string $eventName,
+        string $secretKey,
+        $level = Logger::ERROR,
+        bool $bubble = true
+    ) {
+        if (!extension_loaded("curl")) {
+            throw new MissingExtensionException(
+                "The curl extension is needed to use the IFTTTHandler"
+            );
         }
 
         $this->eventName = $eventName;
@@ -61,7 +67,14 @@ class IFTTTHandler extends AbstractProcessingHandler
         $postString = Utils::jsonEncode($postData);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://maker.ifttt.com/trigger/" . $this->eventName . "/with/key/" . $this->secretKey);
+        curl_setopt(
+            $ch,
+            CURLOPT_URL,
+            "https://maker.ifttt.com/trigger/" .
+                $this->eventName .
+                "/with/key/" .
+                $this->secretKey
+        );
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);

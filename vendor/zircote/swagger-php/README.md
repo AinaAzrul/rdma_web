@@ -66,11 +66,12 @@ Generate always-up-to-date documentation.
 
 ```php
 <?php
-require("vendor/autoload.php");
-$openapi = \OpenApi\Generator::scan(['/path/to/project']);
-header('Content-Type: application/x-yaml');
+require "vendor/autoload.php";
+$openapi = \OpenApi\Generator::scan(["/path/to/project"]);
+header("Content-Type: application/x-yaml");
 echo $openapi->toYaml();
 ```
+
 Documentation of how to use the `Generator` class can be found in the [Generator reference](https://zircote.github.io/swagger-php/reference/generator).
 
 ### Usage from the Command Line Interface
@@ -80,6 +81,7 @@ The `openapi` command line interface can be used to generate the documentation t
 ```bash
 ./vendor/bin/openapi --help
 ```
+
 Starting with version 4 the default analyser used on the command line is the new `ReflectionAnalyser`.
 
 Using the `--legacy` flag (`-l`) the legacy `TokenAnalyser` can still be used.
@@ -94,7 +96,7 @@ Generate the OpenApi annotation object from a json string, which makes it easier
 use OpenApi\Serializer;
 
 $serializer = new Serializer();
-$openapi = $serializer->deserialize($jsonString, 'OpenApi\Annotations\OpenApi');
+$openapi = $serializer->deserialize($jsonString, "OpenApi\Annotations\OpenApi");
 echo $openapi->toJson();
 ```
 
@@ -125,26 +127,31 @@ Make sure pull requests pass [PHPUnit](https://phpunit.de/)
 and [PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (PSR-2) tests.
 
 ### To run both unit tests and linting execute:
+
 ```bash
 composer test
 ```
 
 ### Running unit tests only:
+
 ```bash
 ./bin/phpunit
 ```
 
 ### Regenerate annotation/attribute reference markup docs
+
 ```bash
 composer docs:refgen
 ```
 
 ### Running linting only:
+
 ```bash
 composer lint
 ```
 
 ### To make `php-cs-fixer` fix linting errors:
+
 ```bash
 composer cs
 ```

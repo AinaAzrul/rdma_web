@@ -68,12 +68,14 @@ final class LexerActionExecutor implements Equatable
     public static function append(
         ?LexerActionExecutor $lexerActionExecutor,
         LexerAction $lexerAction
-    ) : self {
+    ): self {
         if ($lexerActionExecutor === null) {
             return new LexerActionExecutor([$lexerAction]);
         }
 
-        $lexerActions = \array_merge($lexerActionExecutor->lexerActions, [$lexerAction]);
+        $lexerActions = \array_merge($lexerActionExecutor->lexerActions, [
+            $lexerAction,
+        ]);
 
         return new LexerActionExecutor($lexerActions);
     }
@@ -107,18 +109,26 @@ final class LexerActionExecutor implements Equatable
      * @return self A {@see LexerActionExecutor} which stores input stream offsets
      *              for all position-dependent lexer actions.
      */
-    public function fixOffsetBeforeMatch(int $offset) : self
+    public function fixOffsetBeforeMatch(int $offset): self
     {
         $updatedLexerActions = null;
 
         for ($i = 0, $count = \count($this->lexerActions); $i < $count; $i++) {
-            if ($this->lexerActions[$i]->isPositionDependent()
-                && !$this->lexerActions[$i] instanceof LexerIndexedCustomAction) {
+            if (
+                $this->lexerActions[$i]->isPositionDependent() &&
+                !$this->lexerActions[$i] instanceof LexerIndexedCustomAction
+            ) {
                 if ($updatedLexerActions === null) {
-                    $updatedLexerActions = \array_merge($this->lexerActions, []);
+                    $updatedLexerActions = \array_merge(
+                        $this->lexerActions,
+                        []
+                    );
                 }
 
-                $updatedLexerActions[$i] = new LexerIndexedCustomAction($offset, $this->lexerActions[$i]);
+                $updatedLexerActions[$i] = new LexerIndexedCustomAction(
+                    $offset,
+                    $this->lexerActions[$i]
+                );
             }
         }
 
@@ -134,7 +144,7 @@ final class LexerActionExecutor implements Equatable
      *
      * @return array<LexerAction> The lexer actions to be executed by this executor.
      */
-    public function getLexerActions() : array
+    public function getLexerActions(): array
     {
         return $this->lexerActions;
     }
@@ -161,8 +171,11 @@ final class LexerActionExecutor implements Equatable
      *                               the `input` position to the beginning
      *                               of the token.
      */
-    public function execute(Lexer $lexer, CharStream $input, int $startIndex) : void
-    {
+    public function execute(
+        Lexer $lexer,
+        CharStream $input,
+        int $startIndex
+    ): void {
         $requiresSeek = false;
         $stopIndex = $input->getIndex();
 
@@ -187,7 +200,7 @@ final class LexerActionExecutor implements Equatable
         }
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
         if ($this->cachedHashCode === null) {
             $this->cachedHashCode = Hasher::hash($this->lexerActions);
@@ -196,19 +209,22 @@ final class LexerActionExecutor implements Equatable
         return $this->cachedHashCode;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        return $other instanceof self
-            && $this->hashCode() === $other->hashCode()
-            && Equality::equals($this->lexerActions, $other->lexerActions);
+        return $other instanceof self &&
+            $this->hashCode() === $other->hashCode() &&
+            Equality::equals($this->lexerActions, $other->lexerActions);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return \sprintf('LexerActionExecutor[%s]', \implode(', ', $this->lexerActions));
+        return \sprintf(
+            "LexerActionExecutor[%s]",
+            \implode(", ", $this->lexerActions)
+        );
     }
 }

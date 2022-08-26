@@ -26,9 +26,9 @@ use CurlHandle;
  */
 class LogglyHandler extends AbstractProcessingHandler
 {
-    protected const HOST = 'logs-01.loggly.com';
-    protected const ENDPOINT_SINGLE = 'inputs';
-    protected const ENDPOINT_BATCH = 'bulk';
+    protected const HOST = "logs-01.loggly.com";
+    protected const ENDPOINT_SINGLE = "inputs";
+    protected const ENDPOINT_BATCH = "bulk";
 
     /**
      * Caches the curl handlers for every given endpoint.
@@ -48,10 +48,15 @@ class LogglyHandler extends AbstractProcessingHandler
      *
      * @throws MissingExtensionException If the curl extension is missing
      */
-    public function __construct(string $token, $level = Logger::DEBUG, bool $bubble = true)
-    {
-        if (!extension_loaded('curl')) {
-            throw new MissingExtensionException('The curl extension is needed to use the LogglyHandler');
+    public function __construct(
+        string $token,
+        $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
+        if (!extension_loaded("curl")) {
+            throw new MissingExtensionException(
+                "The curl extension is needed to use the LogglyHandler"
+            );
         }
 
         $this->token = $token;
@@ -84,7 +89,12 @@ class LogglyHandler extends AbstractProcessingHandler
      */
     private function loadCurlHandle(string $endpoint)
     {
-        $url = sprintf("https://%s/%s/%s/", static::HOST, $endpoint, $this->token);
+        $url = sprintf(
+            "https://%s/%s/%s/",
+            static::HOST,
+            $endpoint,
+            $this->token
+        );
 
         $ch = curl_init();
 
@@ -129,11 +139,14 @@ class LogglyHandler extends AbstractProcessingHandler
         $level = $this->level;
 
         $records = array_filter($records, function ($record) use ($level) {
-            return ($record['level'] >= $level);
+            return $record["level"] >= $level;
         });
 
         if ($records) {
-            $this->send($this->getFormatter()->formatBatch($records), static::ENDPOINT_BATCH);
+            $this->send(
+                $this->getFormatter()->formatBatch($records),
+                static::ENDPOINT_BATCH
+            );
         }
     }
 
@@ -141,10 +154,10 @@ class LogglyHandler extends AbstractProcessingHandler
     {
         $ch = $this->getCurlHandler($endpoint);
 
-        $headers = ['Content-Type: application/json'];
+        $headers = ["Content-Type: application/json"];
 
         if (!empty($this->tag)) {
-            $headers[] = 'X-LOGGLY-TAG: '.implode(',', $this->tag);
+            $headers[] = "X-LOGGLY-TAG: " . implode(",", $this->tag);
         }
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);

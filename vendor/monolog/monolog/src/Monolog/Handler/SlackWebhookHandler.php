@@ -56,10 +56,12 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         bool $includeContextAndExtra = false,
         $level = Logger::CRITICAL,
         bool $bubble = true,
-        array $excludeFields = array()
+        array $excludeFields = []
     ) {
-        if (!extension_loaded('curl')) {
-            throw new MissingExtensionException('The curl extension is needed to use the SlackWebhookHandler');
+        if (!extension_loaded("curl")) {
+            throw new MissingExtensionException(
+                "The curl extension is needed to use the SlackWebhookHandler"
+            );
         }
 
         parent::__construct($level, $bubble);
@@ -96,14 +98,14 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         $postString = Utils::jsonEncode($postData);
 
         $ch = curl_init();
-        $options = array(
+        $options = [
             CURLOPT_URL => $this->webhookUrl,
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => array('Content-type: application/json'),
+            CURLOPT_HTTPHEADER => ["Content-type: application/json"],
             CURLOPT_POSTFIELDS => $postString,
-        );
-        if (defined('CURLOPT_SAFE_UPLOAD')) {
+        ];
+        if (defined("CURLOPT_SAFE_UPLOAD")) {
             $options[CURLOPT_SAFE_UPLOAD] = true;
         }
 
@@ -112,8 +114,9 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         Curl\Util::execute($ch);
     }
 
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         parent::setFormatter($formatter);
         $this->slackRecord->setFormatter($formatter);
 

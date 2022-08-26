@@ -38,8 +38,12 @@ class SwiftMailerHandler extends MailHandler
      * @param \Swift_Mailer          $mailer  The mailer to use
      * @param callable|Swift_Message $message An example message for real messages, only the body will be replaced
      */
-    public function __construct(\Swift_Mailer $mailer, $message, $level = Logger::ERROR, bool $bubble = true)
-    {
+    public function __construct(
+        \Swift_Mailer $mailer,
+        $message,
+        $level = Logger::ERROR,
+        bool $bubble = true
+    ) {
         parent::__construct($level, $bubble);
 
         $this->mailer = $mailer;
@@ -73,8 +77,10 @@ class SwiftMailerHandler extends MailHandler
      *
      * @phpstan-param Record[] $records
      */
-    protected function buildMessage(string $content, array $records): Swift_Message
-    {
+    protected function buildMessage(
+        string $content,
+        array $records
+    ): Swift_Message {
         $message = null;
         if ($this->messageTemplate instanceof Swift_Message) {
             $message = clone $this->messageTemplate;
@@ -85,22 +91,31 @@ class SwiftMailerHandler extends MailHandler
 
         if (!$message instanceof Swift_Message) {
             $record = reset($records);
-            throw new \InvalidArgumentException('Could not resolve message as instance of Swift_Message or a callable returning it' . ($record ? Utils::getRecordMessageForException($record) : ''));
+            throw new \InvalidArgumentException(
+                "Could not resolve message as instance of Swift_Message or a callable returning it" .
+                    ($record
+                        ? Utils::getRecordMessageForException($record)
+                        : "")
+            );
         }
 
         if ($records) {
-            $subjectFormatter = $this->getSubjectFormatter($message->getSubject());
-            $message->setSubject($subjectFormatter->format($this->getHighestRecord($records)));
+            $subjectFormatter = $this->getSubjectFormatter(
+                $message->getSubject()
+            );
+            $message->setSubject(
+                $subjectFormatter->format($this->getHighestRecord($records))
+            );
         }
 
-        $mime = 'text/plain';
+        $mime = "text/plain";
         if ($this->isHtmlBody($content)) {
-            $mime = 'text/html';
+            $mime = "text/html";
         }
 
         $message->setBody($content, $mime);
         /** @phpstan-ignore-next-line */
-        if (version_compare(Swift::VERSION, '6.0.0', '>=')) {
+        if (version_compare(Swift::VERSION, "6.0.0", ">=")) {
             $message->setDate(new \DateTimeImmutable());
         } else {
             /** @phpstan-ignore-next-line */

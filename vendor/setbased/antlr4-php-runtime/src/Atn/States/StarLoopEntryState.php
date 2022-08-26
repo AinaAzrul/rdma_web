@@ -22,7 +22,7 @@ final class StarLoopEntryState extends DecisionState
      */
     public $isPrecedenceDecision = false;
 
-    public function getStateType() : int
+    public function getStateType(): int
     {
         return self::STAR_LOOP_ENTRY;
     }

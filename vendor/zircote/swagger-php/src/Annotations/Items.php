@@ -17,13 +17,13 @@ class Items extends Schema
      * @inheritdoc
      */
     public static $_nested = [
-        Discriminator::class => 'discriminator',
-        Items::class => 'items',
-        Property::class => ['properties', 'property'],
-        ExternalDocumentation::class => 'externalDocs',
-        Xml::class => 'xml',
-        AdditionalProperties::class => 'additionalProperties',
-        Attachable::class => ['attachables'],
+        Discriminator::class => "discriminator",
+        Items::class => "items",
+        Property::class => ["properties", "property"],
+        ExternalDocumentation::class => "externalDocs",
+        Xml::class => "xml",
+        AdditionalProperties::class => "additionalProperties",
+        Attachable::class => ["attachables"],
     ];
 
     /**
@@ -41,8 +41,12 @@ class Items extends Schema
     /**
      * @inheritdoc
      */
-    public function validate(array $stack = [], array $skip = [], string $ref = '', $context = null): bool
-    {
+    public function validate(
+        array $stack = [],
+        array $skip = [],
+        string $ref = "",
+        $context = null
+    ): bool {
         if (in_array($this, $skip, true)) {
             return true;
         }
@@ -50,8 +54,10 @@ class Items extends Schema
         $valid = parent::validate($stack, $skip, $ref, $context);
 
         $parent = end($stack);
-        if ($parent instanceof Schema && $parent->type !== 'array') {
-            $this->_context->logger->warning('@OA\\Items() parent type must be "array" in ' . $this->_context);
+        if ($parent instanceof Schema && $parent->type !== "array") {
+            $this->_context->logger->warning(
+                '@OA\\Items() parent type must be "array" in ' . $this->_context
+            );
             $valid = false;
         }
 

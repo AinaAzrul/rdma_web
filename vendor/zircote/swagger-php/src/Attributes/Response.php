@@ -11,7 +11,13 @@ use OpenApi\Annotations\MediaType;
 use OpenApi\Annotations\XmlContent;
 use OpenApi\Generator;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
+#[
+    \Attribute(
+        \Attribute::TARGET_CLASS |
+            \Attribute::TARGET_METHOD |
+            \Attribute::IS_REPEATABLE
+    )
+]
 class Response extends \OpenApi\Annotations\Response
 {
     /**
@@ -33,11 +39,11 @@ class Response extends \OpenApi\Annotations\Response
         ?array $attachables = null
     ) {
         parent::__construct([
-            'ref' => $ref ?? Generator::UNDEFINED,
-            'response' => $response ?? Generator::UNDEFINED,
-            'description' => $description ?? Generator::UNDEFINED,
-            'x' => $x ?? Generator::UNDEFINED,
-            'value' => $this->combine($headers, $content, $links, $attachables),
+            "ref" => $ref ?? Generator::UNDEFINED,
+            "response" => $response ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($headers, $content, $links, $attachables),
         ]);
     }
 }

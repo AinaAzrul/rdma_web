@@ -14,7 +14,7 @@ interface Tree
      * The parent of this node. If the return value is null, then this
      * node is the root of the tree.
      */
-    public function getParent() : ?Tree;
+    public function getParent(): ?Tree;
 
     /**
      * This method returns whatever object represents the data at this note. For
@@ -28,12 +28,12 @@ interface Tree
     /**
      * If there are children, get the `i`th value indexed from 0.
      */
-    public function getChild(int $i, ?string $type = null) : ?Tree;
+    public function getChild(int $i, ?string $type = null): ?Tree;
 
     /**
      * How many children are there? If there is none, then this node represents a leaf node.
      */
-    public function getChildCount() : int;
+    public function getChildCount(): int;
 
     /**
      * Print out a whole tree, not just a node, in LISP format
@@ -41,5 +41,5 @@ interface Tree
      *
      * @param array<string>|null $ruleNames
      */
-    public function toStringTree(?array $ruleNames = null) : string;
+    public function toStringTree(?array $ruleNames = null): string;
 }

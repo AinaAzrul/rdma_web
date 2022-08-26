@@ -23,10 +23,10 @@ class ExternalDocumentation extends \OpenApi\Annotations\ExternalDocumentation
         ?array $attachables = null
     ) {
         parent::__construct([
-                'description' => $description ?? Generator::UNDEFINED,
-                'url' => $url ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($attachables),
-            ]);
+            "description" => $description ?? Generator::UNDEFINED,
+            "url" => $url ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($attachables),
+        ]);
     }
 }

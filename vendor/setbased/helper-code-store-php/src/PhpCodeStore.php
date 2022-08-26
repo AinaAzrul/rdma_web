@@ -8,195 +8,188 @@ namespace SetBased\Helper\CodeStore;
  */
 class PhpCodeStore extends CodeStore
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * The levels of nested default clauses.
-   *
-   * @var int[]
-   */
-  private $defaultLevel = [];
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * The levels of nested default clauses.
+     *
+     * @var int[]
+     */
+    private $defaultLevel = [];
 
-  /**
-   * The heredoc identifier.
-   *
-   * @var string|null
-   */
-  private $heredocIdentifier;
+    /**
+     * The heredoc identifier.
+     *
+     * @var string|null
+     */
+    private $heredocIdentifier;
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Object constructor.
-   *
-   * @param int $indentation The number of spaces per indentation level.
-   * @param int $width       The maximum width of the generated code (in chars).
-   *
-   * @since 1.0.0
-   * @api
-   */
-  public function __construct(int $indentation = 2, int $width = 120)
-  {
-    parent::__construct($indentation, $width);
-
-    $this->separator = '//'.str_repeat('-', $width - 2);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
-  protected function indentationMode(string $line): int
-  {
-    $line = trim($line);
-
-    $mode = 0;
-
-    $mode |= $this->indentationModeHeredoc($line);
-    $mode |= $this->indentationModeSwitch($line);
-    $mode |= $this->indentationModeBLock($line);
-
-    return $mode;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Decrements indent level of the current switch statement (if any).
-   */
-  private function defaultLevelDecrement(): void
-  {
-    if (!empty($this->defaultLevel) && $this->defaultLevel[sizeof($this->defaultLevel) - 1]>0)
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Object constructor.
+     *
+     * @param int $indentation The number of spaces per indentation level.
+     * @param int $width       The maximum width of the generated code (in chars).
+     *
+     * @since 1.0.0
+     * @api
+     */
+    public function __construct(int $indentation = 2, int $width = 120)
     {
-      $this->defaultLevel[sizeof($this->defaultLevel) - 1]--;
-    }
-  }
+        parent::__construct($indentation, $width);
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Increments indent level of the current switch statement (if any).
-   */
-  private function defaultLevelIncrement(): void
-  {
-    if (!empty($this->defaultLevel))
-    {
-      $this->defaultLevel[sizeof($this->defaultLevel) - 1]++;
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns true if the indent level of the current switch statement (if any) is zero. Otherwise, returns false.
-   */
-  private function defaultLevelIsZero(): bool
-  {
-    return (!empty($this->defaultLevel) && $this->defaultLevel[sizeof($this->defaultLevel) - 1]==0);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the indentation mode based blocks of code.
-   *
-   * @param string $line The line of code.
-   *
-   * @return int
-   */
-  private function indentationModeBlock(string $line): int
-  {
-    $mode = 0;
-
-    if ($this->heredocIdentifier!==null) return $mode;
-
-    if (substr($line, -1, 1)=='{')
-    {
-      $mode |= self::C_INDENT_INCREMENT_AFTER;
-
-      $this->defaultLevelIncrement();
+        $this->separator = "//" . str_repeat("-", $width - 2);
     }
 
-    if (substr($line, 0, 1)=='}')
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * {@inheritdoc}
+     */
+    protected function indentationMode(string $line): int
     {
-      $this->defaultLevelDecrement();
+        $line = trim($line);
 
-      if ($this->defaultLevelIsZero())
-      {
-        $mode |= self::C_INDENT_DECREMENT_BEFORE_DOUBLE;
+        $mode = 0;
 
-        array_pop($this->defaultLevel);
-      }
-      else
-      {
-        $mode |= self::C_INDENT_DECREMENT_BEFORE;
-      }
+        $mode |= $this->indentationModeHeredoc($line);
+        $mode |= $this->indentationModeSwitch($line);
+        $mode |= $this->indentationModeBLock($line);
+
+        return $mode;
     }
 
-    return $mode;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   *
-   * @param string $line The line of code.
-   *
-   * @return int
-   */
-  private function indentationModeHeredoc(string $line): int
-  {
-    $mode = 0;
-
-    if ($this->heredocIdentifier!==null)
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Decrements indent level of the current switch statement (if any).
+     */
+    private function defaultLevelDecrement(): void
     {
-      $mode |= self::C_INDENT_HEREDOC;
-
-      if ($line==$this->heredocIdentifier.';')
-      {
-        $this->heredocIdentifier = null;
-      }
-    }
-    else
-    {
-      $n = preg_match('/=\s*<<<\s*([A-Z]+)$/', $line, $parts);
-      if ($n==1)
-      {
-        $this->heredocIdentifier = $parts[1];
-      }
+        if (
+            !empty($this->defaultLevel) &&
+            $this->defaultLevel[sizeof($this->defaultLevel) - 1] > 0
+        ) {
+            $this->defaultLevel[sizeof($this->defaultLevel) - 1]--;
+        }
     }
 
-    return $mode;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the indentation mode based on a line of code for switch statements.
-   *
-   * @param string $line The line of code.
-   *
-   * @return int
-   */
-  private function indentationModeSwitch(string $line): int
-  {
-    $mode = 0;
-
-    if ($this->heredocIdentifier!==null) return $mode;
-
-    if (substr($line, 0, 5)=='case ')
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Increments indent level of the current switch statement (if any).
+     */
+    private function defaultLevelIncrement(): void
     {
-      $mode |= self::C_INDENT_INCREMENT_AFTER;
+        if (!empty($this->defaultLevel)) {
+            $this->defaultLevel[sizeof($this->defaultLevel) - 1]++;
+        }
     }
 
-    if (substr($line, 0, 8)=='default:')
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns true if the indent level of the current switch statement (if any) is zero. Otherwise, returns false.
+     */
+    private function defaultLevelIsZero(): bool
     {
-      $this->defaultLevel[] = 0;
-
-      $mode |= self::C_INDENT_INCREMENT_AFTER;
+        return !empty($this->defaultLevel) &&
+            $this->defaultLevel[sizeof($this->defaultLevel) - 1] == 0;
     }
 
-    if (substr($line, 0, 6)=='break;')
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the indentation mode based blocks of code.
+     *
+     * @param string $line The line of code.
+     *
+     * @return int
+     */
+    private function indentationModeBlock(string $line): int
     {
-      $mode |= self::C_INDENT_DECREMENT_AFTER;
+        $mode = 0;
+
+        if ($this->heredocIdentifier !== null) {
+            return $mode;
+        }
+
+        if (substr($line, -1, 1) == "{") {
+            $mode |= self::C_INDENT_INCREMENT_AFTER;
+
+            $this->defaultLevelIncrement();
+        }
+
+        if (substr($line, 0, 1) == "}") {
+            $this->defaultLevelDecrement();
+
+            if ($this->defaultLevelIsZero()) {
+                $mode |= self::C_INDENT_DECREMENT_BEFORE_DOUBLE;
+
+                array_pop($this->defaultLevel);
+            } else {
+                $mode |= self::C_INDENT_DECREMENT_BEFORE;
+            }
+        }
+
+        return $mode;
     }
 
-    return $mode;
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     *
+     * @param string $line The line of code.
+     *
+     * @return int
+     */
+    private function indentationModeHeredoc(string $line): int
+    {
+        $mode = 0;
 
-  //--------------------------------------------------------------------------------------------------------------------
+        if ($this->heredocIdentifier !== null) {
+            $mode |= self::C_INDENT_HEREDOC;
+
+            if ($line == $this->heredocIdentifier . ";") {
+                $this->heredocIdentifier = null;
+            }
+        } else {
+            $n = preg_match('/=\s*<<<\s*([A-Z]+)$/', $line, $parts);
+            if ($n == 1) {
+                $this->heredocIdentifier = $parts[1];
+            }
+        }
+
+        return $mode;
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the indentation mode based on a line of code for switch statements.
+     *
+     * @param string $line The line of code.
+     *
+     * @return int
+     */
+    private function indentationModeSwitch(string $line): int
+    {
+        $mode = 0;
+
+        if ($this->heredocIdentifier !== null) {
+            return $mode;
+        }
+
+        if (substr($line, 0, 5) == "case ") {
+            $mode |= self::C_INDENT_INCREMENT_AFTER;
+        }
+
+        if (substr($line, 0, 8) == "default:") {
+            $this->defaultLevel[] = 0;
+
+            $mode |= self::C_INDENT_INCREMENT_AFTER;
+        }
+
+        if (substr($line, 0, 6) == "break;") {
+            $mode |= self::C_INDENT_DECREMENT_AFTER;
+        }
+
+        return $mode;
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

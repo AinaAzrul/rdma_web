@@ -13,251 +13,238 @@ use SetBased\Exception\NamedException;
  */
 class FormattedExceptionTestBase extends TestCase
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * The class being tested.
-   *
-   * @var string
-   */
-  static $class;
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * The class being tested.
+     *
+     * @var string
+     */
+    static $class;
 
-  /**
-   * The name of the exception.
-   *
-   * @var string
-   */
-  static $name;
+    /**
+     * The name of the exception.
+     *
+     * @var string
+     */
+    static $name;
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 
-  /**
-   * Test formatting.
-   */
-  public function testCode(): void
-  {
-    $num      = 5;
-    $location = 'tree';
-
-    try
+    /**
+     * Test formatting.
+     */
+    public function testCode(): void
     {
-      $format = 'There are %d monkeys in the %s';
+        $num = 5;
+        $location = "tree";
 
-      throw new self::$class([$num], $format, $num, $location);
+        try {
+            $format = "There are %d monkeys in the %s";
+
+            throw new self::$class([$num], $format, $num, $location);
+        } catch (Exception $e) {
+            self::assertSame(
+                "There are 5 monkeys in the tree",
+                $e->getMessage()
+            );
+            self::assertSame($num, $e->getCode());
+        }
     }
-    catch (Exception $e)
+
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test code & previous exception.
+     */
+    public function testCodePrevious(): void
     {
-      self::assertSame('There are 5 monkeys in the tree', $e->getMessage());
-      self::assertSame($num, $e->getCode());
+        $num = 5;
+        $location = "tree";
+        $previous = new RuntimeException("Previous");
+
+        try {
+            $format = "There are %d monkeys in the %s";
+
+            throw new self::$class([$num, $previous], $format, $num, $location);
+        } catch (Exception $e) {
+            self::assertSame(
+                "There are 5 monkeys in the tree",
+                $e->getMessage()
+            );
+            self::assertSame($previous, $e->getPrevious());
+            self::assertSame($num, $e->getCode());
+        }
     }
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test code & previous exception.
-   */
-  public function testCodePrevious(): void
-  {
-    $num      = 5;
-    $location = 'tree';
-    $previous = new RuntimeException('Previous');
-
-    try
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test formatting.
+     */
+    public function testFormatting(): void
     {
-      $format = 'There are %d monkeys in the %s';
+        $num = 5;
+        $location = "tree";
 
-      throw new self::$class([$num, $previous], $format, $num, $location);
+        try {
+            $format = "There are %d monkeys in the %s";
+
+            throw new self::$class($format, $num, $location);
+        } catch (Exception $e) {
+            self::assertSame(
+                "There are 5 monkeys in the tree",
+                $e->getMessage()
+            );
+        }
     }
-    catch (Exception $e)
+
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test formatting string with missing arguments.
+     */
+    public function testFormattingMissingArgs1(): void
     {
-      self::assertSame('There are 5 monkeys in the tree', $e->getMessage());
-      self::assertSame($previous, $e->getPrevious());
-      self::assertSame($num, $e->getCode());
+        try {
+            $format = "%s";
+
+            throw new self::$class($format);
+        } catch (Exception $e) {
+            self::assertSame("%s", $e->getMessage());
+        }
     }
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test formatting.
-   */
-  public function testFormatting(): void
-  {
-    $num      = 5;
-    $location = 'tree';
-
-    try
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test formatting null string.
+     */
+    public function testFormattingNull1(): void
     {
-      $format = 'There are %d monkeys in the %s';
+        try {
+            $format = null;
 
-      throw new self::$class($format, $num, $location);
+            throw new self::$class($format);
+        } catch (Exception $e) {
+            self::assertSame("", $e->getMessage());
+        }
     }
-    catch (Exception $e)
+
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test formatting null string and bogus arguments.
+     */
+    public function testFormattingNull2(): void
     {
-      self::assertSame('There are 5 monkeys in the tree', $e->getMessage());
-    }
-  }
+        try {
+            $format = null;
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test formatting string with missing arguments.
-   */
-  public function testFormattingMissingArgs1(): void
-  {
-    try
+            throw new self::$class($format, "bogus", 123);
+        } catch (Exception $e) {
+            self::assertSame("", $e->getMessage());
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test formatting string with missing arguments.
+     */
+    public function testFormattingMissingArgs2(): void
     {
-      $format = '%s';
+        try {
+            $format = "%";
 
-      throw new self::$class($format);
+            throw new self::$class($format);
+        } catch (Exception $e) {
+            self::assertSame("%", $e->getMessage());
+        }
     }
-    catch (Exception $e)
+
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test formatting string without arguments.
+     */
+    public function testFormattingNoArgs(): void
     {
-      self::assertSame('%s', $e->getMessage());
-    }
-  }
+        try {
+            $format = "Of all monkey 50% are in the tree";
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test formatting null string.
-   */
-  public function testFormattingNull1(): void
-  {
-    try
+            throw new self::$class($format);
+        } catch (Exception $e) {
+            self::assertSame(
+                "Of all monkey 50% are in the tree",
+                $e->getMessage()
+            );
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test name.
+     */
+    public function testName(): void
     {
-      $format = null;
+        if (self::$name === null) {
+            return;
+        }
 
-      throw new self::$class($format);
+        $num = 5;
+        $location = "tree";
+
+        try {
+            $format = "There are %d monkeys in the %s";
+
+            throw new self::$class([$num], $format, $num, $location);
+        } catch (Exception $e) {
+            /** @var $e NamedException */
+            self::assertSame(self::$name, $e->getName());
+        }
     }
-    catch (Exception $e)
+
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test previous exception.
+     */
+    public function testPrevious(): void
     {
-      self::assertSame('', $e->getMessage());
-    }
-  }
+        $num = 5;
+        $location = "tree";
+        $previous = new RuntimeException("Previous");
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test formatting null string and bogus arguments.
-   */
-  public function testFormattingNull2(): void
-  {
-    try
+        try {
+            $format = "There are %d monkeys in the %s";
+
+            throw new self::$class([$previous], $format, $num, $location);
+        } catch (Exception $e) {
+            self::assertSame(
+                "There are 5 monkeys in the tree",
+                $e->getMessage()
+            );
+            self::assertSame($previous, $e->getPrevious());
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Test previous & code exception.
+     */
+    public function testPreviousCode(): void
     {
-      $format = null;
+        $num = 5;
+        $location = "tree";
+        $previous = new RuntimeException("Previous");
 
-      throw new self::$class($format, 'bogus', 123);
+        try {
+            $format = "There are %d monkeys in the %s";
+
+            throw new self::$class([$previous, $num], $format, $num, $location);
+        } catch (Exception $e) {
+            self::assertSame(
+                "There are 5 monkeys in the tree",
+                $e->getMessage()
+            );
+            self::assertSame($previous, $e->getPrevious());
+            self::assertSame($num, $e->getCode());
+        }
     }
-    catch (Exception $e)
-    {
-      self::assertSame('', $e->getMessage());
-    }
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test formatting string with missing arguments.
-   */
-  public function testFormattingMissingArgs2(): void
-  {
-    try
-    {
-      $format = '%';
-
-      throw new self::$class($format);
-    }
-    catch (Exception $e)
-    {
-      self::assertSame('%', $e->getMessage());
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test formatting string without arguments.
-   */
-  public function testFormattingNoArgs(): void
-  {
-    try
-    {
-      $format = 'Of all monkey 50% are in the tree';
-
-      throw new self::$class($format);
-    }
-    catch (Exception $e)
-    {
-      self::assertSame('Of all monkey 50% are in the tree', $e->getMessage());
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test name.
-   */
-  public function testName(): void
-  {
-    if (self::$name===null) return;
-
-    $num      = 5;
-    $location = 'tree';
-
-    try
-    {
-      $format = 'There are %d monkeys in the %s';
-
-      throw new self::$class([$num], $format, $num, $location);
-    }
-    catch (Exception $e)
-    {
-      /** @var $e NamedException */
-      self::assertSame(self::$name, $e->getName());
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test previous exception.
-   */
-  public function testPrevious(): void
-  {
-    $num      = 5;
-    $location = 'tree';
-    $previous = new RuntimeException('Previous');
-
-    try
-    {
-      $format = 'There are %d monkeys in the %s';
-
-      throw new self::$class([$previous], $format, $num, $location);
-    }
-    catch (Exception $e)
-    {
-      self::assertSame('There are 5 monkeys in the tree', $e->getMessage());
-      self::assertSame($previous, $e->getPrevious());
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test previous & code exception.
-   */
-  public function testPreviousCode(): void
-  {
-    $num      = 5;
-    $location = 'tree';
-    $previous = new RuntimeException('Previous');
-
-    try
-    {
-      $format = 'There are %d monkeys in the %s';
-
-      throw new self::$class([$previous, $num], $format, $num, $location);
-    }
-    catch (Exception $e)
-    {
-      self::assertSame('There are 5 monkeys in the tree', $e->getMessage());
-      self::assertSame($previous, $e->getPrevious());
-      self::assertSame($num, $e->getCode());
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

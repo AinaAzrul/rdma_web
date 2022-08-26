@@ -16,7 +16,9 @@ use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 if (!interface_exists(LocaleAwareInterface::class)) {
-    throw new \LogicException('You cannot use the "Symfony\Component\String\Slugger\AsciiSlugger" as the "symfony/translation-contracts" package is not installed. Try running "composer require symfony/translation-contracts".');
+    throw new \LogicException(
+        'You cannot use the "Symfony\Component\String\Slugger\AsciiSlugger" as the "symfony/translation-contracts" package is not installed. Try running "composer require symfony/translation-contracts".'
+    );
 }
 
 /**
@@ -25,38 +27,38 @@ if (!interface_exists(LocaleAwareInterface::class)) {
 class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
 {
     private const LOCALE_TO_TRANSLITERATOR_ID = [
-        'am' => 'Amharic-Latin',
-        'ar' => 'Arabic-Latin',
-        'az' => 'Azerbaijani-Latin',
-        'be' => 'Belarusian-Latin',
-        'bg' => 'Bulgarian-Latin',
-        'bn' => 'Bengali-Latin',
-        'de' => 'de-ASCII',
-        'el' => 'Greek-Latin',
-        'fa' => 'Persian-Latin',
-        'he' => 'Hebrew-Latin',
-        'hy' => 'Armenian-Latin',
-        'ka' => 'Georgian-Latin',
-        'kk' => 'Kazakh-Latin',
-        'ky' => 'Kirghiz-Latin',
-        'ko' => 'Korean-Latin',
-        'mk' => 'Macedonian-Latin',
-        'mn' => 'Mongolian-Latin',
-        'or' => 'Oriya-Latin',
-        'ps' => 'Pashto-Latin',
-        'ru' => 'Russian-Latin',
-        'sr' => 'Serbian-Latin',
-        'sr_Cyrl' => 'Serbian-Latin',
-        'th' => 'Thai-Latin',
-        'tk' => 'Turkmen-Latin',
-        'uk' => 'Ukrainian-Latin',
-        'uz' => 'Uzbek-Latin',
-        'zh' => 'Han-Latin',
+        "am" => "Amharic-Latin",
+        "ar" => "Arabic-Latin",
+        "az" => "Azerbaijani-Latin",
+        "be" => "Belarusian-Latin",
+        "bg" => "Bulgarian-Latin",
+        "bn" => "Bengali-Latin",
+        "de" => "de-ASCII",
+        "el" => "Greek-Latin",
+        "fa" => "Persian-Latin",
+        "he" => "Hebrew-Latin",
+        "hy" => "Armenian-Latin",
+        "ka" => "Georgian-Latin",
+        "kk" => "Kazakh-Latin",
+        "ky" => "Kirghiz-Latin",
+        "ko" => "Korean-Latin",
+        "mk" => "Macedonian-Latin",
+        "mn" => "Mongolian-Latin",
+        "or" => "Oriya-Latin",
+        "ps" => "Pashto-Latin",
+        "ru" => "Russian-Latin",
+        "sr" => "Serbian-Latin",
+        "sr_Cyrl" => "Serbian-Latin",
+        "th" => "Thai-Latin",
+        "tk" => "Turkmen-Latin",
+        "uk" => "Ukrainian-Latin",
+        "uz" => "Uzbek-Latin",
+        "zh" => "Han-Latin",
     ];
 
     private $defaultLocale;
     private $symbolsMap = [
-        'en' => ['@' => 'at', '&' => 'and'],
+        "en" => ["@" => "at", "&" => "and"],
     ];
 
     /**
@@ -69,10 +71,22 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
     /**
      * @param array|\Closure|null $symbolsMap
      */
-    public function __construct(string $defaultLocale = null, $symbolsMap = null)
-    {
-        if (null !== $symbolsMap && !\is_array($symbolsMap) && !$symbolsMap instanceof \Closure) {
-            throw new \TypeError(sprintf('Argument 2 passed to "%s()" must be array, Closure or null, "%s" given.', __METHOD__, \gettype($symbolsMap)));
+    public function __construct(
+        string $defaultLocale = null,
+        $symbolsMap = null
+    ) {
+        if (
+            null !== $symbolsMap &&
+            !\is_array($symbolsMap) &&
+            !$symbolsMap instanceof \Closure
+        ) {
+            throw new \TypeError(
+                sprintf(
+                    'Argument 2 passed to "%s()" must be array, Closure or null, "%s" given.',
+                    __METHOD__,
+                    \gettype($symbolsMap)
+                )
+            );
         }
 
         $this->defaultLocale = $defaultLocale;
@@ -98,15 +112,18 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function slug(string $string, string $separator = '-', string $locale = null): AbstractUnicodeString
-    {
+    public function slug(
+        string $string,
+        string $separator = "-",
+        string $locale = null
+    ): AbstractUnicodeString {
         $locale = $locale ?? $this->defaultLocale;
 
         $transliterator = [];
-        if ($locale && ('de' === $locale || 0 === strpos($locale, 'de_'))) {
+        if ($locale && ("de" === $locale || 0 === strpos($locale, "de_"))) {
             // Use the shortcut for German in UnicodeString::ascii() if possible (faster and no requirement on intl)
-            $transliterator = ['de-ASCII'];
-        } elseif (\function_exists('transliterator_transliterate') && $locale) {
+            $transliterator = ["de-ASCII"];
+        } elseif (\function_exists("transliterator_transliterate") && $locale) {
             $transliterator = (array) $this->createTransliterator($locale);
         }
 
@@ -114,7 +131,10 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
             // If the symbols map is passed as a closure, there is no need to fallback to the parent locale
             // as the closure can just provide substitutions for all locales of interest.
             $symbolsMap = $this->symbolsMap;
-            array_unshift($transliterator, static function ($s) use ($symbolsMap, $locale) {
+            array_unshift($transliterator, static function ($s) use (
+                $symbolsMap,
+                $locale
+            ) {
                 return $symbolsMap($s, $locale);
             });
         }
@@ -133,15 +153,17 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
             }
             if ($map) {
                 foreach ($map as $char => $replace) {
-                    $unicodeString = $unicodeString->replace($char, ' '.$replace.' ');
+                    $unicodeString = $unicodeString->replace(
+                        $char,
+                        " " . $replace . " "
+                    );
                 }
             }
         }
 
         return $unicodeString
-            ->replaceMatches('/[^A-Za-z0-9]++/', $separator)
-            ->trim($separator)
-        ;
+            ->replaceMatches("/[^A-Za-z0-9]++/", $separator)
+            ->trim($separator);
     }
 
     private function createTransliterator(string $locale): ?\Transliterator
@@ -152,20 +174,26 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
 
         // Exact locale supported, cache and return
         if ($id = self::LOCALE_TO_TRANSLITERATOR_ID[$locale] ?? null) {
-            return $this->transliterators[$locale] = \Transliterator::create($id.'/BGN') ?? \Transliterator::create($id);
+            return $this->transliterators[$locale] =
+                \Transliterator::create($id . "/BGN") ??
+                \Transliterator::create($id);
         }
 
         // Locale not supported and no parent, fallback to any-latin
-        if (!$parent = self::getParentLocale($locale)) {
+        if (!($parent = self::getParentLocale($locale))) {
             return $this->transliterators[$locale] = null;
         }
 
         // Try to use the parent locale (ie. try "de" for "de_AT") and cache both locales
         if ($id = self::LOCALE_TO_TRANSLITERATOR_ID[$parent] ?? null) {
-            $transliterator = \Transliterator::create($id.'/BGN') ?? \Transliterator::create($id);
+            $transliterator =
+                \Transliterator::create($id . "/BGN") ??
+                \Transliterator::create($id);
         }
 
-        return $this->transliterators[$locale] = $this->transliterators[$parent] = $transliterator ?? null;
+        return $this->transliterators[$locale] = $this->transliterators[
+            $parent
+        ] = $transliterator ?? null;
     }
 
     private static function getParentLocale(?string $locale): ?string
@@ -173,7 +201,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
         if (!$locale) {
             return null;
         }
-        if (false === $str = strrchr($locale, '_')) {
+        if (false === ($str = strrchr($locale, "_"))) {
             // no parent locale
             return null;
         }

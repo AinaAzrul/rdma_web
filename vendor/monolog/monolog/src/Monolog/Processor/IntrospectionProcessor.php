@@ -37,10 +37,7 @@ class IntrospectionProcessor implements ProcessorInterface
     /** @var int */
     private $skipStackFramesCount;
     /** @var string[] */
-    private $skipFunctions = [
-        'call_user_func',
-        'call_user_func_array',
-    ];
+    private $skipFunctions = ["call_user_func", "call_user_func_array"];
 
     /**
      * @param string|int $level               The minimum logging level at which this Processor will be triggered
@@ -48,10 +45,16 @@ class IntrospectionProcessor implements ProcessorInterface
      *
      * @phpstan-param Level|LevelName|LogLevel::* $level
      */
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
-    {
+    public function __construct(
+        $level = Logger::DEBUG,
+        array $skipClassesPartials = [],
+        int $skipStackFramesCount = 0
+    ) {
         $this->level = Logger::toMonologLevel($level);
-        $this->skipClassesPartials = array_merge(['Monolog\\'], $skipClassesPartials);
+        $this->skipClassesPartials = array_merge(
+            ["Monolog\\"],
+            $skipClassesPartials
+        );
         $this->skipStackFramesCount = $skipStackFramesCount;
     }
 
@@ -61,7 +64,7 @@ class IntrospectionProcessor implements ProcessorInterface
     public function __invoke(array $record): array
     {
         // return if the level is not high enough
-        if ($record['level'] < $this->level) {
+        if ($record["level"] < $this->level) {
             return $record;
         }
 
@@ -75,15 +78,15 @@ class IntrospectionProcessor implements ProcessorInterface
         $i = 0;
 
         while ($this->isTraceClassOrSkippedFunction($trace, $i)) {
-            if (isset($trace[$i]['class'])) {
+            if (isset($trace[$i]["class"])) {
                 foreach ($this->skipClassesPartials as $part) {
-                    if (strpos($trace[$i]['class'], $part) !== false) {
+                    if (strpos($trace[$i]["class"], $part) !== false) {
                         $i++;
 
                         continue 2;
                     }
                 }
-            } elseif (in_array($trace[$i]['function'], $this->skipFunctions)) {
+            } elseif (in_array($trace[$i]["function"], $this->skipFunctions)) {
                 $i++;
 
                 continue;
@@ -95,16 +98,19 @@ class IntrospectionProcessor implements ProcessorInterface
         $i += $this->skipStackFramesCount;
 
         // we should have the call source now
-        $record['extra'] = array_merge(
-            $record['extra'],
-            [
-                'file'      => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
-                'line'      => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
-                'class'     => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
-                'callType'  => isset($trace[$i]['type']) ? $trace[$i]['type'] : null,
-                'function'  => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
-            ]
-        );
+        $record["extra"] = array_merge($record["extra"], [
+            "file" => isset($trace[$i - 1]["file"])
+                ? $trace[$i - 1]["file"]
+                : null,
+            "line" => isset($trace[$i - 1]["line"])
+                ? $trace[$i - 1]["line"]
+                : null,
+            "class" => isset($trace[$i]["class"]) ? $trace[$i]["class"] : null,
+            "callType" => isset($trace[$i]["type"]) ? $trace[$i]["type"] : null,
+            "function" => isset($trace[$i]["function"])
+                ? $trace[$i]["function"]
+                : null,
+        ]);
 
         return $record;
     }
@@ -112,12 +118,15 @@ class IntrospectionProcessor implements ProcessorInterface
     /**
      * @param array[] $trace
      */
-    private function isTraceClassOrSkippedFunction(array $trace, int $index): bool
-    {
+    private function isTraceClassOrSkippedFunction(
+        array $trace,
+        int $index
+    ): bool {
         if (!isset($trace[$index])) {
             return false;
         }
 
-        return isset($trace[$index]['class']) || in_array($trace[$index]['function'], $this->skipFunctions);
+        return isset($trace[$index]["class"]) ||
+            in_array($trace[$index]["function"], $this->skipFunctions);
     }
 }

@@ -39,21 +39,38 @@ final class Util
      * @param  bool                $closeAfterDone
      * @return bool|string         @see curl_exec
      */
-    public static function execute($ch, int $retries = 5, bool $closeAfterDone = true)
-    {
+    public static function execute(
+        $ch,
+        int $retries = 5,
+        bool $closeAfterDone = true
+    ) {
         while ($retries--) {
             $curlResponse = curl_exec($ch);
             if ($curlResponse === false) {
                 $curlErrno = curl_errno($ch);
 
-                if (false === in_array($curlErrno, self::$retriableErrorCodes, true) || !$retries) {
+                if (
+                    false ===
+                        in_array(
+                            $curlErrno,
+                            self::$retriableErrorCodes,
+                            true
+                        ) ||
+                    !$retries
+                ) {
                     $curlError = curl_error($ch);
 
                     if ($closeAfterDone) {
                         curl_close($ch);
                     }
 
-                    throw new \RuntimeException(sprintf('Curl error (code %d): %s', $curlErrno, $curlError));
+                    throw new \RuntimeException(
+                        sprintf(
+                            "Curl error (code %d): %s",
+                            $curlErrno,
+                            $curlError
+                        )
+                    );
                 }
 
                 continue;

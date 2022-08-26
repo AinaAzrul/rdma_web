@@ -32,8 +32,12 @@ class SqsHandler extends AbstractProcessingHandler
     /** @var string */
     private $queueUrl;
 
-    public function __construct(SqsClient $sqsClient, string $queueUrl, $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        SqsClient $sqsClient,
+        string $queueUrl,
+        $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
         parent::__construct($level, $bubble);
 
         $this->client = $sqsClient;
@@ -45,18 +49,28 @@ class SqsHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        if (!isset($record['formatted']) || 'string' !== gettype($record['formatted'])) {
-            throw new \InvalidArgumentException('SqsHandler accepts only formatted records as a string' . Utils::getRecordMessageForException($record));
+        if (
+            !isset($record["formatted"]) ||
+            "string" !== gettype($record["formatted"])
+        ) {
+            throw new \InvalidArgumentException(
+                "SqsHandler accepts only formatted records as a string" .
+                    Utils::getRecordMessageForException($record)
+            );
         }
 
-        $messageBody = $record['formatted'];
+        $messageBody = $record["formatted"];
         if (strlen($messageBody) >= static::MAX_MESSAGE_SIZE) {
-            $messageBody = Utils::substr($messageBody, 0, static::HEAD_MESSAGE_SIZE);
+            $messageBody = Utils::substr(
+                $messageBody,
+                0,
+                static::HEAD_MESSAGE_SIZE
+            );
         }
 
         $this->client->sendMessage([
-            'QueueUrl' => $this->queueUrl,
-            'MessageBody' => $messageBody,
+            "QueueUrl" => $this->queueUrl,
+            "MessageBody" => $messageBody,
         ]);
     }
 }

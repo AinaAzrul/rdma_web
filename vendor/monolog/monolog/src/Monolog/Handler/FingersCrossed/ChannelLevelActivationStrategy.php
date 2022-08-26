@@ -57,10 +57,15 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
      * @phpstan-param array<string, Level>        $channelToActionLevel
      * @phpstan-param Level|LevelName|LogLevel::* $defaultActionLevel
      */
-    public function __construct($defaultActionLevel, array $channelToActionLevel = [])
-    {
+    public function __construct(
+        $defaultActionLevel,
+        array $channelToActionLevel = []
+    ) {
         $this->defaultActionLevel = Logger::toMonologLevel($defaultActionLevel);
-        $this->channelToActionLevel = array_map('Monolog\Logger::toMonologLevel', $channelToActionLevel);
+        $this->channelToActionLevel = array_map(
+            "Monolog\Logger::toMonologLevel",
+            $channelToActionLevel
+        );
     }
 
     /**
@@ -68,10 +73,11 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
      */
     public function isHandlerActivated(array $record): bool
     {
-        if (isset($this->channelToActionLevel[$record['channel']])) {
-            return $record['level'] >= $this->channelToActionLevel[$record['channel']];
+        if (isset($this->channelToActionLevel[$record["channel"]])) {
+            return $record["level"] >=
+                $this->channelToActionLevel[$record["channel"]];
         }
 
-        return $record['level'] >= $this->defaultActionLevel;
+        return $record["level"] >= $this->defaultActionLevel;
     }
 }

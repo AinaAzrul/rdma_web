@@ -26,30 +26,47 @@ final class Dumper
     private $cloner;
     private $handler;
 
-    public function __construct(OutputInterface $output, CliDumper $dumper = null, ClonerInterface $cloner = null)
-    {
+    public function __construct(
+        OutputInterface $output,
+        CliDumper $dumper = null,
+        ClonerInterface $cloner = null
+    ) {
         $this->output = $output;
         $this->dumper = $dumper;
         $this->cloner = $cloner;
 
         if (class_exists(CliDumper::class)) {
             $this->handler = function ($var): string {
-                $dumper = $this->dumper ?? $this->dumper = new CliDumper(null, null, CliDumper::DUMP_LIGHT_ARRAY | CliDumper::DUMP_COMMA_SEPARATOR);
+                $dumper =
+                    $this->dumper ??
+                    ($this->dumper = new CliDumper(
+                        null,
+                        null,
+                        CliDumper::DUMP_LIGHT_ARRAY |
+                            CliDumper::DUMP_COMMA_SEPARATOR
+                    ));
                 $dumper->setColors($this->output->isDecorated());
 
-                return rtrim($dumper->dump(($this->cloner ?? $this->cloner = new VarCloner())->cloneVar($var)->withRefHandles(false), true));
+                return rtrim(
+                    $dumper->dump(
+                        ($this->cloner ?? ($this->cloner = new VarCloner()))
+                            ->cloneVar($var)
+                            ->withRefHandles(false),
+                        true
+                    )
+                );
             };
         } else {
             $this->handler = function ($var): string {
                 switch (true) {
                     case null === $var:
-                        return 'null';
+                        return "null";
                     case true === $var:
-                        return 'true';
+                        return "true";
                     case false === $var:
-                        return 'false';
+                        return "false";
                     case \is_string($var):
-                        return '"'.$var.'"';
+                        return '"' . $var . '"';
                     default:
                         return rtrim(print_r($var, true));
                 }

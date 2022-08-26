@@ -37,10 +37,16 @@ class RedisPubSubHandler extends AbstractProcessingHandler
      * @param \Predis\Client|\Redis $redis The redis instance
      * @param string                $key   The channel key to publish records to
      */
-    public function __construct($redis, string $key, $level = Logger::DEBUG, bool $bubble = true)
-    {
-        if (!(($redis instanceof \Predis\Client) || ($redis instanceof \Redis))) {
-            throw new \InvalidArgumentException('Predis\Client or Redis instance required');
+    public function __construct(
+        $redis,
+        string $key,
+        $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
+        if (!($redis instanceof \Predis\Client || $redis instanceof \Redis)) {
+            throw new \InvalidArgumentException(
+                "Predis\Client or Redis instance required"
+            );
         }
 
         $this->redisClient = $redis;

@@ -68,20 +68,20 @@ class Server extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_nested = [
-        ServerVariable::class => ['variables', 'serverVariable'],
-        Attachable::class => ['attachables'],
+        ServerVariable::class => ["variables", "serverVariable"],
+        Attachable::class => ["attachables"],
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_required = ['url'];
+    public static $_required = ["url"];
 
     /**
      * @inheritdoc
      */
     public static $_types = [
-        'url' => 'string',
-        'description' => 'string',
+        "url" => "string",
+        "description" => "string",
     ];
 }

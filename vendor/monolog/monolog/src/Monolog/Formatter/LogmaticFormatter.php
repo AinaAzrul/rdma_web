@@ -23,12 +23,12 @@ class LogmaticFormatter extends JsonFormatter
     /**
      * @var string
      */
-    protected $hostname = '';
+    protected $hostname = "";
 
     /**
      * @var string
      */
-    protected $appname = '';
+    protected $appname = "";
 
     public function setHostname(string $hostname): self
     {

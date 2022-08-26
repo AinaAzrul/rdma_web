@@ -33,12 +33,12 @@ class Generator
     public static $context;
 
     /** @var string Magic value to differentiate between null and undefined. */
-    public const UNDEFINED = '@OA\Generator::UNDEFINED🙈';
+    public const UNDEFINED = "@OA\Generator::UNDEFINED🙈";
 
     /** @var array<string,string> */
-    public const DEFAULT_ALIASES = ['oa' => 'OpenApi\\Annotations'];
+    public const DEFAULT_ALIASES = ["oa" => "OpenApi\\Annotations"];
     /** @var array<string> */
-    public const DEFAULT_NAMESPACES = ['OpenApi\\Annotations\\'];
+    public const DEFAULT_NAMESPACES = ["OpenApi\\Annotations\\"];
 
     /** @var array<string,string> Map of namespace aliases to be supported by doctrine. */
     protected $aliases;
@@ -80,7 +80,7 @@ class Generator
         $this->setNamespaces(self::DEFAULT_NAMESPACES);
 
         // kinda config stack to stay BC...
-        $this->configStack = new class() {
+        $this->configStack = new class {
             protected $generator;
 
             public function push(Generator $generator): void
@@ -90,27 +90,45 @@ class Generator
                     // keeping track of &this->generator allows to 'disable' the loader after we are done;
                     // no unload, unfortunately :/
                     $gref = &$this->generator;
-                    AnnotationRegistry::registerLoader(
-                        function (string $class) use (&$gref): bool {
-                            if ($gref) {
-                                foreach ($gref->getNamespaces() as $namespace) {
-                                    if (strtolower(substr($class, 0, strlen($namespace))) === strtolower($namespace)) {
-                                        $loaded = class_exists($class);
-                                        if (!$loaded && $namespace === 'OpenApi\\Annotations\\') {
-                                            if (in_array(strtolower(substr($class, 20)), ['definition', 'path'])) {
-                                                // Detected an 2.x annotation?
-                                                throw new \Exception('The annotation @SWG\\' . substr($class, 20) . '() is deprecated. Found in ' . Generator::$context . "\nFor more information read the migration guide: https://github.com/zircote/swagger-php/blob/master/docs/Migrating-to-v3.md");
-                                            }
+                    AnnotationRegistry::registerLoader(function (
+                        string $class
+                    ) use (&$gref): bool {
+                        if ($gref) {
+                            foreach ($gref->getNamespaces() as $namespace) {
+                                if (
+                                    strtolower(
+                                        substr($class, 0, strlen($namespace))
+                                    ) === strtolower($namespace)
+                                ) {
+                                    $loaded = class_exists($class);
+                                    if (
+                                        !$loaded &&
+                                        $namespace === "OpenApi\\Annotations\\"
+                                    ) {
+                                        if (
+                                            in_array(
+                                                strtolower(substr($class, 20)),
+                                                ["definition", "path"]
+                                            )
+                                        ) {
+                                            // Detected an 2.x annotation?
+                                            throw new \Exception(
+                                                "The annotation @SWG\\" .
+                                                    substr($class, 20) .
+                                                    "() is deprecated. Found in " .
+                                                    Generator::$context .
+                                                    "\nFor more information read the migration guide: https://github.com/zircote/swagger-php/blob/master/docs/Migrating-to-v3.md"
+                                            );
                                         }
-
-                                        return $loaded;
                                     }
+
+                                    return $loaded;
                                 }
                             }
-
-                            return false;
                         }
-                    );
+
+                        return false;
+                    });
                 }
             }
 
@@ -167,7 +185,12 @@ class Generator
 
     public function getAnalyser(): AnalyserInterface
     {
-        $this->analyser = $this->analyser ?: new ReflectionAnalyser([new DocBlockAnnotationFactory(), new AttributeAnnotationFactory()]);
+        $this->analyser =
+            $this->analyser ?:
+            new ReflectionAnalyser([
+                new DocBlockAnnotationFactory(),
+                new AttributeAnnotationFactory(),
+            ]);
         $this->analyser->setGenerator($this);
 
         return $this->analyser;
@@ -183,8 +206,8 @@ class Generator
     public function getDefaultConfig(): array
     {
         return [
-            'operationId' => [
-                'hash' => true,
+            "operationId" => [
+                "hash" => true,
             ],
         ];
     }
@@ -240,7 +263,7 @@ class Generator
             $processorKey = lcfirst($rc->getShortName());
             if (array_key_exists($processorKey, $config)) {
                 foreach ($config[$processorKey] as $name => $value) {
-                    $setter = 'set' . ucfirst($name);
+                    $setter = "set" . ucfirst($name);
                     if (method_exists($processor, $setter)) {
                         $processor->{$setter}($value);
                     }
@@ -270,14 +293,16 @@ class Generator
         return $this;
     }
 
-    public function removeProcessor(callable $processor, bool $silent = false): Generator
-    {
+    public function removeProcessor(
+        callable $processor,
+        bool $silent = false
+    ): Generator {
         $processors = $this->getProcessors();
         if (false === ($key = array_search($processor, $processors, true))) {
             if ($silent) {
                 return $this;
             }
-            throw new \InvalidArgumentException('Processor not found');
+            throw new \InvalidArgumentException("Processor not found");
         }
         unset($processors[$key]);
         $this->setProcessors($processors);
@@ -292,13 +317,17 @@ class Generator
      * @param null|callable $matcher   Optional matcher callable to identify the processor to replace.
      *                                 If none given, matching is based on the processors class.
      */
-    public function updateProcessor(callable $processor, ?callable $matcher = null): Generator
-    {
-        $matcher = $matcher ?: function ($other) use ($processor): bool {
-            $otherClass = get_class($other);
+    public function updateProcessor(
+        callable $processor,
+        ?callable $matcher = null
+    ): Generator {
+        $matcher =
+            $matcher ?:
+            function ($other) use ($processor): bool {
+                $otherClass = get_class($other);
 
-            return $processor instanceof $otherClass;
-        };
+                return $processor instanceof $otherClass;
+            };
 
         $processors = array_map(function ($other) use ($processor, $matcher) {
             return $matcher($other) ? $processor : $other;
@@ -325,27 +354,29 @@ class Generator
         return $this;
     }
 
-    public static function scan(iterable $sources, array $options = []): ?OpenApi
-    {
+    public static function scan(
+        iterable $sources,
+        array $options = []
+    ): ?OpenApi {
         // merge with defaults
         $config = $options + [
-                'aliases' => self::DEFAULT_ALIASES,
-                'namespaces' => self::DEFAULT_NAMESPACES,
-                'analyser' => null,
-                'analysis' => null,
-                'processors' => null,
-                'logger' => null,
-                'validate' => true,
-                'version' => null,
-            ];
+            "aliases" => self::DEFAULT_ALIASES,
+            "namespaces" => self::DEFAULT_NAMESPACES,
+            "analyser" => null,
+            "analysis" => null,
+            "processors" => null,
+            "logger" => null,
+            "validate" => true,
+            "version" => null,
+        ];
 
-        return (new Generator($config['logger']))
-            ->setVersion($config['version'])
-            ->setAliases($config['aliases'])
-            ->setNamespaces($config['namespaces'])
-            ->setAnalyser($config['analyser'])
-            ->setProcessors($config['processors'])
-            ->generate($sources, $config['analysis'], $config['validate']);
+        return (new Generator($config["logger"]))
+            ->setVersion($config["version"])
+            ->setAliases($config["aliases"])
+            ->setNamespaces($config["namespaces"])
+            ->setAnalyser($config["analyser"])
+            ->setProcessors($config["processors"])
+            ->generate($sources, $config["analysis"], $config["validate"]);
     }
 
     /**
@@ -359,8 +390,8 @@ class Generator
     public function withContext(callable $callable)
     {
         $rootContext = new Context([
-            'version' => $this->getVersion(),
-            'logger' => $this->getLogger(),
+            "version" => $this->getVersion(),
+            "logger" => $this->getLogger(),
         ]);
         $analysis = new Analysis([], $rootContext);
 
@@ -383,11 +414,14 @@ class Generator
      * @param null|Analysis $analysis custom analysis instance
      * @param bool          $validate flag to enable/disable validation of the returned spec
      */
-    public function generate(iterable $sources, ?Analysis $analysis = null, bool $validate = true): ?OpenApi
-    {
+    public function generate(
+        iterable $sources,
+        ?Analysis $analysis = null,
+        bool $validate = true
+    ): ?OpenApi {
         $rootContext = new Context([
-            'version' => $this->getVersion(),
-            'logger' => $this->getLogger(),
+            "version" => $this->getVersion(),
+            "logger" => $this->getLogger(),
         ]);
         $analysis = $analysis ?: new Analysis([], $rootContext);
 
@@ -399,7 +433,8 @@ class Generator
             $analysis->process($this->getProcessors());
 
             if ($analysis->openapi) {
-                $analysis->openapi->openapi = $this->version ?: $analysis->openapi->openapi;
+                $analysis->openapi->openapi =
+                    $this->version ?: $analysis->openapi->openapi;
                 $rootContext->version = $analysis->openapi->openapi;
             }
 
@@ -414,23 +449,37 @@ class Generator
         return $analysis->openapi;
     }
 
-    protected function scanSources(iterable $sources, Analysis $analysis, Context $rootContext): void
-    {
+    protected function scanSources(
+        iterable $sources,
+        Analysis $analysis,
+        Context $rootContext
+    ): void {
         $analyser = $this->getAnalyser();
 
         foreach ($sources as $source) {
             if (is_iterable($source)) {
                 $this->scanSources($source, $analysis, $rootContext);
             } else {
-                $resolvedSource = $source instanceof \SplFileInfo ? $source->getPathname() : realpath($source);
+                $resolvedSource =
+                    $source instanceof \SplFileInfo
+                        ? $source->getPathname()
+                        : realpath($source);
                 if (!$resolvedSource) {
-                    $rootContext->logger->warning(sprintf('Skipping invalid source: %s', $source));
+                    $rootContext->logger->warning(
+                        sprintf("Skipping invalid source: %s", $source)
+                    );
                     continue;
                 }
                 if (is_dir($resolvedSource)) {
-                    $this->scanSources(Util::finder($resolvedSource), $analysis, $rootContext);
+                    $this->scanSources(
+                        Util::finder($resolvedSource),
+                        $analysis,
+                        $rootContext
+                    );
                 } else {
-                    $analysis->addAnalysis($analyser->fromFile($resolvedSource, $rootContext));
+                    $analysis->addAnalysis(
+                        $analyser->fromFile($resolvedSource, $rootContext)
+                    );
                 }
             }
         }

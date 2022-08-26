@@ -27,8 +27,10 @@ class ArrayInput extends Input
 {
     private $parameters;
 
-    public function __construct(array $parameters, InputDefinition $definition = null)
-    {
+    public function __construct(
+        array $parameters,
+        InputDefinition $definition = null
+    ) {
         $this->parameters = $parameters;
 
         parent::__construct($definition);
@@ -40,7 +42,7 @@ class ArrayInput extends Input
     public function getFirstArgument()
     {
         foreach ($this->parameters as $param => $value) {
-            if ($param && \is_string($param) && '-' === $param[0]) {
+            if ($param && \is_string($param) && "-" === $param[0]) {
                 continue;
             }
 
@@ -62,7 +64,7 @@ class ArrayInput extends Input
                 $v = $k;
             }
 
-            if ($onlyParams && '--' === $v) {
+            if ($onlyParams && "--" === $v) {
                 return false;
             }
 
@@ -77,12 +79,15 @@ class ArrayInput extends Input
     /**
      * {@inheritdoc}
      */
-    public function getParameterOption($values, $default = false, bool $onlyParams = false)
-    {
+    public function getParameterOption(
+        $values,
+        $default = false,
+        bool $onlyParams = false
+    ) {
         $values = (array) $values;
 
         foreach ($this->parameters as $k => $v) {
-            if ($onlyParams && ('--' === $k || (\is_int($k) && '--' === $v))) {
+            if ($onlyParams && ("--" === $k || (\is_int($k) && "--" === $v))) {
                 return $default;
             }
 
@@ -107,21 +112,27 @@ class ArrayInput extends Input
     {
         $params = [];
         foreach ($this->parameters as $param => $val) {
-            if ($param && \is_string($param) && '-' === $param[0]) {
-                $glue = ('-' === $param[1]) ? '=' : ' ';
+            if ($param && \is_string($param) && "-" === $param[0]) {
+                $glue = "-" === $param[1] ? "=" : " ";
                 if (\is_array($val)) {
                     foreach ($val as $v) {
-                        $params[] = $param.('' != $v ? $glue.$this->escapeToken($v) : '');
+                        $params[] =
+                            $param .
+                            ("" != $v ? $glue . $this->escapeToken($v) : "");
                     }
                 } else {
-                    $params[] = $param.('' != $val ? $glue.$this->escapeToken($val) : '');
+                    $params[] =
+                        $param .
+                        ("" != $val ? $glue . $this->escapeToken($val) : "");
                 }
             } else {
-                $params[] = \is_array($val) ? implode(' ', array_map([$this, 'escapeToken'], $val)) : $this->escapeToken($val);
+                $params[] = \is_array($val)
+                    ? implode(" ", array_map([$this, "escapeToken"], $val))
+                    : $this->escapeToken($val);
             }
         }
 
-        return implode(' ', $params);
+        return implode(" ", $params);
     }
 
     /**
@@ -130,12 +141,12 @@ class ArrayInput extends Input
     protected function parse()
     {
         foreach ($this->parameters as $key => $value) {
-            if ('--' === $key) {
+            if ("--" === $key) {
                 return;
             }
-            if (str_starts_with($key, '--')) {
+            if (str_starts_with($key, "--")) {
                 $this->addLongOption(substr($key, 2), $value);
-            } elseif (str_starts_with($key, '-')) {
+            } elseif (str_starts_with($key, "-")) {
                 $this->addShortOption(substr($key, 1), $value);
             } else {
                 $this->addArgument($key, $value);
@@ -151,10 +162,15 @@ class ArrayInput extends Input
     private function addShortOption(string $shortcut, $value)
     {
         if (!$this->definition->hasShortcut($shortcut)) {
-            throw new InvalidOptionException(sprintf('The "-%s" option does not exist.', $shortcut));
+            throw new InvalidOptionException(
+                sprintf('The "-%s" option does not exist.', $shortcut)
+            );
         }
 
-        $this->addLongOption($this->definition->getOptionForShortcut($shortcut)->getName(), $value);
+        $this->addLongOption(
+            $this->definition->getOptionForShortcut($shortcut)->getName(),
+            $value
+        );
     }
 
     /**
@@ -167,7 +183,9 @@ class ArrayInput extends Input
     {
         if (!$this->definition->hasOption($name)) {
             if (!$this->definition->hasNegation($name)) {
-                throw new InvalidOptionException(sprintf('The "--%s" option does not exist.', $name));
+                throw new InvalidOptionException(
+                    sprintf('The "--%s" option does not exist.', $name)
+                );
             }
 
             $optionName = $this->definition->negationToName($name);
@@ -180,7 +198,9 @@ class ArrayInput extends Input
 
         if (null === $value) {
             if ($option->isValueRequired()) {
-                throw new InvalidOptionException(sprintf('The "--%s" option requires a value.', $name));
+                throw new InvalidOptionException(
+                    sprintf('The "--%s" option requires a value.', $name)
+                );
             }
 
             if (!$option->isValueOptional()) {
@@ -202,7 +222,9 @@ class ArrayInput extends Input
     private function addArgument($name, $value)
     {
         if (!$this->definition->hasArgument($name)) {
-            throw new InvalidArgumentException(sprintf('The "%s" argument does not exist.', $name));
+            throw new InvalidArgumentException(
+                sprintf('The "%s" argument does not exist.', $name)
+            );
         }
 
         $this->arguments[$name] = $value;

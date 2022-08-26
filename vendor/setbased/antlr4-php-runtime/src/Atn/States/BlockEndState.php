@@ -9,7 +9,7 @@ final class BlockEndState extends ATNState
     /** @var BlockStartState|null */
     public $startState;
 
-    public function getStateType() : int
+    public function getStateType(): int
     {
         return self::BLOCK_END;
     }

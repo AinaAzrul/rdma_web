@@ -26,13 +26,13 @@ class Xml extends \OpenApi\Annotations\Xml
         ?array $attachables = null
     ) {
         parent::__construct([
-                'name' => $name ?? Generator::UNDEFINED,
-                'namespace' => $namespace ?? Generator::UNDEFINED,
-                'prefix' => $prefix ?? Generator::UNDEFINED,
-                'attribute' => $attribute ?? Generator::UNDEFINED,
-                'wrapped' => $wrapped ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($attachables),
-            ]);
+            "name" => $name ?? Generator::UNDEFINED,
+            "namespace" => $namespace ?? Generator::UNDEFINED,
+            "prefix" => $prefix ?? Generator::UNDEFINED,
+            "attribute" => $attribute ?? Generator::UNDEFINED,
+            "wrapped" => $wrapped ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($attachables),
+        ]);
     }
 }

@@ -23,29 +23,29 @@ use Symfony\Component\Console\Exception\LogicException;
  */
 class TableStyle
 {
-    private $paddingChar = ' ';
-    private $horizontalOutsideBorderChar = '-';
-    private $horizontalInsideBorderChar = '-';
-    private $verticalOutsideBorderChar = '|';
-    private $verticalInsideBorderChar = '|';
-    private $crossingChar = '+';
-    private $crossingTopRightChar = '+';
-    private $crossingTopMidChar = '+';
-    private $crossingTopLeftChar = '+';
-    private $crossingMidRightChar = '+';
-    private $crossingBottomRightChar = '+';
-    private $crossingBottomMidChar = '+';
-    private $crossingBottomLeftChar = '+';
-    private $crossingMidLeftChar = '+';
-    private $crossingTopLeftBottomChar = '+';
-    private $crossingTopMidBottomChar = '+';
-    private $crossingTopRightBottomChar = '+';
-    private $headerTitleFormat = '<fg=black;bg=white;options=bold> %s </>';
-    private $footerTitleFormat = '<fg=black;bg=white;options=bold> %s </>';
-    private $cellHeaderFormat = '<info>%s</info>';
-    private $cellRowFormat = '%s';
-    private $cellRowContentFormat = ' %s ';
-    private $borderFormat = '%s';
+    private $paddingChar = " ";
+    private $horizontalOutsideBorderChar = "-";
+    private $horizontalInsideBorderChar = "-";
+    private $verticalOutsideBorderChar = "|";
+    private $verticalInsideBorderChar = "|";
+    private $crossingChar = "+";
+    private $crossingTopRightChar = "+";
+    private $crossingTopMidChar = "+";
+    private $crossingTopLeftChar = "+";
+    private $crossingMidRightChar = "+";
+    private $crossingBottomRightChar = "+";
+    private $crossingBottomMidChar = "+";
+    private $crossingBottomLeftChar = "+";
+    private $crossingMidLeftChar = "+";
+    private $crossingTopLeftBottomChar = "+";
+    private $crossingTopMidBottomChar = "+";
+    private $crossingTopRightBottomChar = "+";
+    private $headerTitleFormat = "<fg=black;bg=white;options=bold> %s </>";
+    private $footerTitleFormat = "<fg=black;bg=white;options=bold> %s </>";
+    private $cellHeaderFormat = "<info>%s</info>";
+    private $cellRowFormat = "%s";
+    private $cellRowContentFormat = " %s ";
+    private $borderFormat = "%s";
     private $padType = \STR_PAD_RIGHT;
 
     /**
@@ -56,7 +56,7 @@ class TableStyle
     public function setPaddingChar(string $paddingChar)
     {
         if (!$paddingChar) {
-            throw new LogicException('The padding char must not be empty.');
+            throw new LogicException("The padding char must not be empty.");
         }
 
         $this->paddingChar = $paddingChar;
@@ -88,8 +88,10 @@ class TableStyle
      * ╚═══════════════╧══════════════════════════╧══════════════════╝
      * </code>
      */
-    public function setHorizontalBorderChars(string $outside, string $inside = null): self
-    {
+    public function setHorizontalBorderChars(
+        string $outside,
+        string $inside = null
+    ): self {
         $this->horizontalOutsideBorderChar = $outside;
         $this->horizontalInsideBorderChar = $inside ?? $outside;
 
@@ -111,8 +113,10 @@ class TableStyle
      * ╚═══════════════╧══════════════════════════╧══════════════════╝
      * </code>
      */
-    public function setVerticalBorderChars(string $outside, string $inside = null): self
-    {
+    public function setVerticalBorderChars(
+        string $outside,
+        string $inside = null
+    ): self {
         $this->verticalOutsideBorderChar = $outside;
         $this->verticalInsideBorderChar = $inside ?? $outside;
 
@@ -163,8 +167,20 @@ class TableStyle
      * @param string|null $topMidBottom   Top mid bottom char (see #0' of example), equals to $cross if null
      * @param string|null $topRightBottom Top right bottom char (see #4' of example), equals to $midRight if null
      */
-    public function setCrossingChars(string $cross, string $topLeft, string $topMid, string $topRight, string $midRight, string $bottomRight, string $bottomMid, string $bottomLeft, string $midLeft, string $topLeftBottom = null, string $topMidBottom = null, string $topRightBottom = null): self
-    {
+    public function setCrossingChars(
+        string $cross,
+        string $topLeft,
+        string $topMid,
+        string $topRight,
+        string $midRight,
+        string $bottomRight,
+        string $bottomMid,
+        string $bottomLeft,
+        string $midLeft,
+        string $topLeftBottom = null,
+        string $topMidBottom = null,
+        string $topRightBottom = null
+    ): self {
         $this->crossingChar = $cross;
         $this->crossingTopLeftChar = $topLeft;
         $this->crossingTopMidChar = $topMid;
@@ -188,7 +204,17 @@ class TableStyle
      */
     public function setDefaultCrossingChar(string $char): self
     {
-        return $this->setCrossingChars($char, $char, $char, $char, $char, $char, $char, $char, $char);
+        return $this->setCrossingChars(
+            $char,
+            $char,
+            $char,
+            $char,
+            $char,
+            $char,
+            $char,
+            $char,
+            $char
+        );
     }
 
     /**
@@ -319,8 +345,16 @@ class TableStyle
      */
     public function setPadType(int $padType)
     {
-        if (!\in_array($padType, [\STR_PAD_LEFT, \STR_PAD_RIGHT, \STR_PAD_BOTH], true)) {
-            throw new InvalidArgumentException('Invalid padding type. Expected one of (STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH).');
+        if (
+            !\in_array(
+                $padType,
+                [\STR_PAD_LEFT, \STR_PAD_RIGHT, \STR_PAD_BOTH],
+                true
+            )
+        ) {
+            throw new InvalidArgumentException(
+                "Invalid padding type. Expected one of (STR_PAD_LEFT, STR_PAD_RIGHT, STR_PAD_BOTH)."
+            );
         }
 
         $this->padType = $padType;

@@ -31,7 +31,11 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Alexey Karapetov <alexey@karapetov.com>
  */
-class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, FormattableHandlerInterface, ResettableInterface
+class HandlerWrapper implements
+    HandlerInterface,
+    ProcessableHandlerInterface,
+    FormattableHandlerInterface,
+    ResettableInterface
 {
     /**
      * @var HandlerInterface
@@ -86,7 +90,10 @@ class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, F
             return $this;
         }
 
-        throw new \LogicException('The wrapped handler does not implement ' . ProcessableHandlerInterface::class);
+        throw new \LogicException(
+            "The wrapped handler does not implement " .
+                ProcessableHandlerInterface::class
+        );
     }
 
     /**
@@ -98,21 +105,28 @@ class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, F
             return $this->handler->popProcessor();
         }
 
-        throw new \LogicException('The wrapped handler does not implement ' . ProcessableHandlerInterface::class);
+        throw new \LogicException(
+            "The wrapped handler does not implement " .
+                ProcessableHandlerInterface::class
+        );
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         if ($this->handler instanceof FormattableHandlerInterface) {
             $this->handler->setFormatter($formatter);
 
             return $this;
         }
 
-        throw new \LogicException('The wrapped handler does not implement ' . FormattableHandlerInterface::class);
+        throw new \LogicException(
+            "The wrapped handler does not implement " .
+                FormattableHandlerInterface::class
+        );
     }
 
     /**
@@ -124,7 +138,10 @@ class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, F
             return $this->handler->getFormatter();
         }
 
-        throw new \LogicException('The wrapped handler does not implement ' . FormattableHandlerInterface::class);
+        throw new \LogicException(
+            "The wrapped handler does not implement " .
+                FormattableHandlerInterface::class
+        );
     }
 
     public function reset()

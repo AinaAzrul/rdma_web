@@ -81,8 +81,8 @@ class ElasticsearchFormatter extends NormalizerFormatter
      */
     protected function getDocument(array $record): array
     {
-        $record['_index'] = $this->index;
-        $record['_type'] = $this->type;
+        $record["_index"] = $this->index;
+        $record["_type"] = $this->type;
 
         return $record;
     }

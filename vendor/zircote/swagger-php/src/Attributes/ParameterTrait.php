@@ -37,22 +37,22 @@ trait ParameterTrait
         ?array $attachables = null
     ) {
         parent::__construct([
-                'parameter' => $parameter ?? Generator::UNDEFINED,
-                'name' => $name ?? Generator::UNDEFINED,
-                'description' => $description ?? Generator::UNDEFINED,
-                'in' => Generator::isDefault($this->in) ? $in : $this->in,
-                'required' => $required ?? Generator::UNDEFINED,
-                'deprecated' => $deprecated ?? Generator::UNDEFINED,
-                'allowEmptyValue' => $allowEmptyValue ?? Generator::UNDEFINED,
-                'ref' => $ref ?? Generator::UNDEFINED,
-                'example' => $example,
-                'style' => $style ?? Generator::UNDEFINED,
-                'explode' => $explode ?? Generator::UNDEFINED,
-                'allowReserved' => $allowReserved ?? Generator::UNDEFINED,
-                'spaceDelimited' => $spaceDelimited ?? Generator::UNDEFINED,
-                'pipeDelimited' => $pipeDelimited ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($schema, $examples, $attachables),
-            ]);
+            "parameter" => $parameter ?? Generator::UNDEFINED,
+            "name" => $name ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "in" => Generator::isDefault($this->in) ? $in : $this->in,
+            "required" => $required ?? Generator::UNDEFINED,
+            "deprecated" => $deprecated ?? Generator::UNDEFINED,
+            "allowEmptyValue" => $allowEmptyValue ?? Generator::UNDEFINED,
+            "ref" => $ref ?? Generator::UNDEFINED,
+            "example" => $example,
+            "style" => $style ?? Generator::UNDEFINED,
+            "explode" => $explode ?? Generator::UNDEFINED,
+            "allowReserved" => $allowReserved ?? Generator::UNDEFINED,
+            "spaceDelimited" => $spaceDelimited ?? Generator::UNDEFINED,
+            "pipeDelimited" => $pipeDelimited ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($schema, $examples, $attachables),
+        ]);
     }
 }

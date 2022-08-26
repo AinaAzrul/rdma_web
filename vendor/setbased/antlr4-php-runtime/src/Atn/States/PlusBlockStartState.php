@@ -9,7 +9,7 @@ final class PlusBlockStartState extends BlockStartState
     /** @var PlusLoopbackState|null */
     public $loopBackState;
 
-    public function getStateType() : int
+    public function getStateType(): int
     {
         return self::PLUS_BLOCK_START;
     }

@@ -20,22 +20,34 @@ class TableCell
 {
     private $value;
     private $options = [
-        'rowspan' => 1,
-        'colspan' => 1,
-        'style' => null,
+        "rowspan" => 1,
+        "colspan" => 1,
+        "style" => null,
     ];
 
-    public function __construct(string $value = '', array $options = [])
+    public function __construct(string $value = "", array $options = [])
     {
         $this->value = $value;
 
         // check option names
-        if ($diff = array_diff(array_keys($options), array_keys($this->options))) {
-            throw new InvalidArgumentException(sprintf('The TableCell does not support the following options: \'%s\'.', implode('\', \'', $diff)));
+        if (
+            $diff = array_diff(array_keys($options), array_keys($this->options))
+        ) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The TableCell does not support the following options: \'%s\'.',
+                    implode('\', \'', $diff)
+                )
+            );
         }
 
-        if (isset($options['style']) && !$options['style'] instanceof TableCellStyle) {
-            throw new InvalidArgumentException('The style option must be an instance of "TableCellStyle".');
+        if (
+            isset($options["style"]) &&
+            !$options["style"] instanceof TableCellStyle
+        ) {
+            throw new InvalidArgumentException(
+                'The style option must be an instance of "TableCellStyle".'
+            );
         }
 
         $this->options = array_merge($this->options, $options);
@@ -58,7 +70,7 @@ class TableCell
      */
     public function getColspan()
     {
-        return (int) $this->options['colspan'];
+        return (int) $this->options["colspan"];
     }
 
     /**
@@ -68,11 +80,11 @@ class TableCell
      */
     public function getRowspan()
     {
-        return (int) $this->options['rowspan'];
+        return (int) $this->options["rowspan"];
     }
 
     public function getStyle(): ?TableCellStyle
     {
-        return $this->options['style'];
+        return $this->options["style"];
     }
 }

@@ -17,7 +17,7 @@ final class SignalRegistry
 
     public function __construct()
     {
-        if (\function_exists('pcntl_async_signals')) {
+        if (\function_exists("pcntl_async_signals")) {
             pcntl_async_signals(true);
         }
     }
@@ -34,16 +34,21 @@ final class SignalRegistry
 
         $this->signalHandlers[$signal][] = $signalHandler;
 
-        pcntl_signal($signal, [$this, 'handle']);
+        pcntl_signal($signal, [$this, "handle"]);
     }
 
     public static function isSupported(): bool
     {
-        if (!\function_exists('pcntl_signal')) {
+        if (!\function_exists("pcntl_signal")) {
             return false;
         }
 
-        if (\in_array('pcntl_signal', explode(',', ini_get('disable_functions')))) {
+        if (
+            \in_array(
+                "pcntl_signal",
+                explode(",", ini_get("disable_functions"))
+            )
+        ) {
             return false;
         }
 

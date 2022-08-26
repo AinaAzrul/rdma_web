@@ -51,7 +51,7 @@ final class RuntimeMetaData
      * - suffix is an optional string. When `suffix` is omitted, the `-`
      * (hyphen-minus) appearing before it is also omitted.
      */
-    public const VERSION = '4.9';
+    public const VERSION = "4.9";
 
     /**
      * Gets the currently executing version of the ANTLR 4 runtime library.
@@ -62,7 +62,7 @@ final class RuntimeMetaData
      *
      * @return string The currently executing version of the ANTLR 4 library
      */
-    public static function getRuntimeVersion() : string
+    public static function getRuntimeVersion(): string
     {
         return self::VERSION;
     }
@@ -121,19 +121,25 @@ final class RuntimeMetaData
      *                                      always be passed using a direct reference
      *                                      to {@see RuntimeMetaData::VERSION}.
      */
-    public static function checkVersion(string $generatingToolVersion, string $compileTimeVersion) : void
-    {
-        $runtimeConflictsWithGeneratingTool = $generatingToolVersion !== self::VERSION
-            && self::getMajorMinorVersion($generatingToolVersion) !== self::getMajorMinorVersion(self::VERSION);
+    public static function checkVersion(
+        string $generatingToolVersion,
+        string $compileTimeVersion
+    ): void {
+        $runtimeConflictsWithGeneratingTool =
+            $generatingToolVersion !== self::VERSION &&
+            self::getMajorMinorVersion($generatingToolVersion) !==
+                self::getMajorMinorVersion(self::VERSION);
 
-        $runtimeConflictsWithCompileTimeTool = $compileTimeVersion !== self::VERSION
-            && self::getMajorMinorVersion($compileTimeVersion) !== self::getMajorMinorVersion(self::VERSION);
+        $runtimeConflictsWithCompileTimeTool =
+            $compileTimeVersion !== self::VERSION &&
+            self::getMajorMinorVersion($compileTimeVersion) !==
+                self::getMajorMinorVersion(self::VERSION);
 
         if ($runtimeConflictsWithGeneratingTool) {
             \trigger_error(
                 \sprintf(
-                    'ANTLR Tool version %s used for code generation does not ' .
-                    'match the current runtime version %s',
+                    "ANTLR Tool version %s used for code generation does not " .
+                        "match the current runtime version %s",
                     $generatingToolVersion,
                     self::VERSION
                 ),
@@ -144,8 +150,8 @@ final class RuntimeMetaData
         if ($runtimeConflictsWithCompileTimeTool) {
             \trigger_error(
                 \sprintf(
-                    'ANTLR Runtime version %s used for parser compilation does not ' .
-                    'match the current runtime version %s',
+                    "ANTLR Runtime version %s used for parser compilation does not " .
+                        "match the current runtime version %s",
                     $compileTimeVersion,
                     self::VERSION
                 ),
@@ -164,17 +170,17 @@ final class RuntimeMetaData
      * @return string A string of the form `major`.`minor` containing
      * only the major and minor components of the version string.
      */
-    public static function getMajorMinorVersion(string $version) : string
+    public static function getMajorMinorVersion(string $version): string
     {
-        $firstDot = \strpos($version, '.');
+        $firstDot = \strpos($version, ".");
         $referenceLength = \strlen($version);
         $secondDot = false;
 
         if ($firstDot >= 0 && $firstDot < $referenceLength) {
-            $secondDot = \strpos($version, '.', $firstDot + 1);
+            $secondDot = \strpos($version, ".", $firstDot + 1);
         }
 
-        $firstDash = \strpos($version, '-');
+        $firstDash = \strpos($version, "-");
 
         if ($secondDot !== false) {
             $referenceLength = \min($secondDot, $secondDot);

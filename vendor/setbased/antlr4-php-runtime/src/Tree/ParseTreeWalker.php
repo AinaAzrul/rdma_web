@@ -8,14 +8,14 @@ use Antlr\Antlr4\Runtime\ParserRuleContext;
 
 class ParseTreeWalker
 {
-    public static function default() : self
+    public static function default(): self
     {
         static $instance;
 
         return $instance ?? ($instance = new self());
     }
 
-    public function walk(ParseTreeListener $listener, ParseTree $tree) : void
+    public function walk(ParseTreeListener $listener, ParseTree $tree): void
     {
         if ($tree instanceof ErrorNode) {
             $listener->visitErrorNode($tree);
@@ -30,7 +30,7 @@ class ParseTreeWalker
         }
 
         if (!$tree instanceof RuleNode) {
-            throw new \RuntimeException('Unexpected tree type.');
+            throw new \RuntimeException("Unexpected tree type.");
         }
 
         $this->enterRule($listener, $tree);
@@ -54,8 +54,10 @@ class ParseTreeWalker
      * {@see RuleContext}-specific event. First we trigger the generic and then
      * the rule specific. We to them in reverse order upon finishing the node.
      */
-    protected function enterRule(ParseTreeListener $listener, RuleNode $ruleNode) : void
-    {
+    protected function enterRule(
+        ParseTreeListener $listener,
+        RuleNode $ruleNode
+    ): void {
         /** @var ParserRuleContext $ctx */
         $ctx = $ruleNode->getRuleContext();
 
@@ -64,8 +66,10 @@ class ParseTreeWalker
         $ctx->enterRule($listener);
     }
 
-    protected function exitRule(ParseTreeListener $listener, RuleNode $ruleNode) : void
-    {
+    protected function exitRule(
+        ParseTreeListener $listener,
+        RuleNode $ruleNode
+    ): void {
         /** @var ParserRuleContext $ctx */
         $ctx = $ruleNode->getRuleContext();
 

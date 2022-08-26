@@ -5,36 +5,62 @@
 $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
-return array(
-    'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
-    'Symfony\\Polyfill\\Php73\\' => array($vendorDir . '/symfony/polyfill-php73'),
-    'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
-    'Symfony\\Polyfill\\Intl\\Normalizer\\' => array($vendorDir . '/symfony/polyfill-intl-normalizer'),
-    'Symfony\\Polyfill\\Intl\\Grapheme\\' => array($vendorDir . '/symfony/polyfill-intl-grapheme'),
-    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
-    'Symfony\\Contracts\\Service\\' => array($vendorDir . '/symfony/service-contracts'),
-    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
-    'Symfony\\Component\\String\\' => array($vendorDir . '/symfony/string'),
-    'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
-    'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
-    'SetBased\\Stratum\\MySql\\' => array($vendorDir . '/setbased/php-stratum-mysql/src'),
-    'SetBased\\Stratum\\Middle\\' => array($vendorDir . '/setbased/php-stratum-middle/src'),
-    'SetBased\\Stratum\\Common\\' => array($vendorDir . '/setbased/php-stratum-common/src'),
-    'SetBased\\Stratum\\Backend\\' => array($vendorDir . '/setbased/php-stratum-backend/src'),
-    'SetBased\\Helper\\CodeStore\\' => array($vendorDir . '/setbased/helper-code-store/src', $vendorDir . '/setbased/helper-code-store-mysql/src', $vendorDir . '/setbased/helper-code-store-php/src'),
-    'SetBased\\Helper\\' => array($vendorDir . '/setbased/helper-cast/src'),
-    'SetBased\\Exception\\' => array($vendorDir . '/setbased/exception/src'),
-    'SetBased\\ErrorHandler\\' => array($vendorDir . '/setbased/error-handler/src'),
-    'SetBased\\Config\\' => array($vendorDir . '/setbased/typed-config/src'),
-    'SetBased\\Audit\\' => array($vendorDir . '/setbased/php-audit/src'),
-    'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
-    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
-    'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
-    'OpenApi\\' => array($vendorDir . '/zircote/swagger-php/src'),
-    'Noodlehaus\\' => array($vendorDir . '/hassankhan/config/src'),
-    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
-    'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
-    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib/Doctrine/Common/Lexer'),
-    'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib/Doctrine/Common/Annotations'),
-    'Antlr\\Antlr4\\Runtime\\' => array($vendorDir . '/setbased/antlr4-php-runtime/src'),
-);
+return [
+    "Symfony\\Polyfill\\Php80\\" => [$vendorDir . "/symfony/polyfill-php80"],
+    "Symfony\\Polyfill\\Php73\\" => [$vendorDir . "/symfony/polyfill-php73"],
+    "Symfony\\Polyfill\\Mbstring\\" => [
+        $vendorDir . "/symfony/polyfill-mbstring",
+    ],
+    "Symfony\\Polyfill\\Intl\\Normalizer\\" => [
+        $vendorDir . "/symfony/polyfill-intl-normalizer",
+    ],
+    "Symfony\\Polyfill\\Intl\\Grapheme\\" => [
+        $vendorDir . "/symfony/polyfill-intl-grapheme",
+    ],
+    "Symfony\\Polyfill\\Ctype\\" => [$vendorDir . "/symfony/polyfill-ctype"],
+    "Symfony\\Contracts\\Service\\" => [
+        $vendorDir . "/symfony/service-contracts",
+    ],
+    "Symfony\\Component\\Yaml\\" => [$vendorDir . "/symfony/yaml"],
+    "Symfony\\Component\\String\\" => [$vendorDir . "/symfony/string"],
+    "Symfony\\Component\\Finder\\" => [$vendorDir . "/symfony/finder"],
+    "Symfony\\Component\\Console\\" => [$vendorDir . "/symfony/console"],
+    "SetBased\\Stratum\\MySql\\" => [
+        $vendorDir . "/setbased/php-stratum-mysql/src",
+    ],
+    "SetBased\\Stratum\\Middle\\" => [
+        $vendorDir . "/setbased/php-stratum-middle/src",
+    ],
+    "SetBased\\Stratum\\Common\\" => [
+        $vendorDir . "/setbased/php-stratum-common/src",
+    ],
+    "SetBased\\Stratum\\Backend\\" => [
+        $vendorDir . "/setbased/php-stratum-backend/src",
+    ],
+    "SetBased\\Helper\\CodeStore\\" => [
+        $vendorDir . "/setbased/helper-code-store/src",
+        $vendorDir . "/setbased/helper-code-store-mysql/src",
+        $vendorDir . "/setbased/helper-code-store-php/src",
+    ],
+    "SetBased\\Helper\\" => [$vendorDir . "/setbased/helper-cast/src"],
+    "SetBased\\Exception\\" => [$vendorDir . "/setbased/exception/src"],
+    "SetBased\\ErrorHandler\\" => [$vendorDir . "/setbased/error-handler/src"],
+    "SetBased\\Config\\" => [$vendorDir . "/setbased/typed-config/src"],
+    "SetBased\\Audit\\" => [$vendorDir . "/setbased/php-audit/src"],
+    "Psr\\Log\\" => [$vendorDir . "/psr/log/src"],
+    "Psr\\Container\\" => [$vendorDir . "/psr/container/src"],
+    "Psr\\Cache\\" => [$vendorDir . "/psr/cache/src"],
+    "OpenApi\\" => [$vendorDir . "/zircote/swagger-php/src"],
+    "Noodlehaus\\" => [$vendorDir . "/hassankhan/config/src"],
+    "Monolog\\" => [$vendorDir . "/monolog/monolog/src/Monolog"],
+    "Firebase\\JWT\\" => [$vendorDir . "/firebase/php-jwt/src"],
+    "Doctrine\\Common\\Lexer\\" => [
+        $vendorDir . "/doctrine/lexer/lib/Doctrine/Common/Lexer",
+    ],
+    "Doctrine\\Common\\Annotations\\" => [
+        $vendorDir . "/doctrine/annotations/lib/Doctrine/Common/Annotations",
+    ],
+    "Antlr\\Antlr4\\Runtime\\" => [
+        $vendorDir . "/setbased/antlr4-php-runtime/src",
+    ],
+];

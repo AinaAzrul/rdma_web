@@ -67,12 +67,12 @@ class NoViableAltException extends RecognitionException
         $this->setOffendingToken($offendingToken);
     }
 
-    public function getStartToken() : ?Token
+    public function getStartToken(): ?Token
     {
         return $this->startToken;
     }
 
-    public function getDeadEndConfigs() : ?ATNConfigSet
+    public function getDeadEndConfigs(): ?ATNConfigSet
     {
         return $this->deadEndConfigs;
     }

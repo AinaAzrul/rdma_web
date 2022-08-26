@@ -51,9 +51,9 @@ final class AnnotationRegistry
     public static function reset(): void
     {
         self::$autoloadNamespaces = [];
-        self::$loaders            = [];
-        self::$failedToAutoload   = [];
-        self::$registerFileUsed   = false;
+        self::$loaders = [];
+        self::$failedToAutoload = [];
+        self::$registerFileUsed = false;
     }
 
     /**
@@ -79,8 +79,10 @@ final class AnnotationRegistry
      *
      * @phpstan-param string|list<string>|null $dirs
      */
-    public static function registerAutoloadNamespace(string $namespace, $dirs = null): void
-    {
+    public static function registerAutoloadNamespace(
+        string $namespace,
+        $dirs = null
+    ): void {
         self::$autoloadNamespaces[$namespace] = $dirs;
     }
 
@@ -96,7 +98,10 @@ final class AnnotationRegistry
      */
     public static function registerAutoloadNamespaces(array $namespaces): void
     {
-        self::$autoloadNamespaces = array_merge(self::$autoloadNamespaces, $namespaces);
+        self::$autoloadNamespaces = array_merge(
+            self::$autoloadNamespaces,
+            $namespaces
+        );
     }
 
     /**
@@ -112,7 +117,7 @@ final class AnnotationRegistry
     {
         // Reset our static cache now that we have a new loader to work with
         self::$failedToAutoload = [];
-        self::$loaders[]        = $callable;
+        self::$loaders[] = $callable;
     }
 
     /**
@@ -148,7 +153,7 @@ final class AnnotationRegistry
                 continue;
             }
 
-            $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+            $file = str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
 
             if ($dirs === null) {
                 $path = stream_resolve_include_path($file);

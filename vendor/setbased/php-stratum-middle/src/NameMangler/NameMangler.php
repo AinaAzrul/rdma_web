@@ -9,33 +9,33 @@ namespace SetBased\Stratum\Middle\NameMangler;
  */
 interface NameMangler
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the name of the wrapper method in the data layer for a stored routine.
-   *
-   * @param string $routineName The name of the stored routine.
-   *
-   * @return string
-   *
-   * @since 4.0.0
-   * @api
-   */
-  static function getMethodName(string $routineName): string;
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the name of the wrapper method in the data layer for a stored routine.
+     *
+     * @param string $routineName The name of the stored routine.
+     *
+     * @return string
+     *
+     * @since 4.0.0
+     * @api
+     */
+    static function getMethodName(string $routineName): string;
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the parameter name in the wrapper method.
-   *
-   * @param string $parameterName The name of the parameter in the stored routine.
-   *
-   * @return string
-   *
-   * @since 4.0.0
-   * @api
-   */
-  static function getParameterName(string $parameterName): string;
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns the parameter name in the wrapper method.
+     *
+     * @param string $parameterName The name of the parameter in the stored routine.
+     *
+     * @return string
+     *
+     * @since 4.0.0
+     * @api
+     */
+    static function getParameterName(string $parameterName): string;
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

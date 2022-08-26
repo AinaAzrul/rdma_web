@@ -22,21 +22,32 @@ class ExpandEnums
 
     public function __invoke(Analysis $analysis)
     {
-        if (!class_exists('\\ReflectionEnum')) {
+        if (!class_exists("\\ReflectionEnum")) {
             return;
         }
 
         /** @var AnnotationSchema[] $schemas */
-        $schemas = $analysis->getAnnotationsOfType([AnnotationSchema::class, AttributeSchema::class], true);
+        $schemas = $analysis->getAnnotationsOfType(
+            [AnnotationSchema::class, AttributeSchema::class],
+            true
+        );
 
         foreach ($schemas as $schema) {
-            if ($schema->_context->is('enum')) {
+            if ($schema->_context->is("enum")) {
                 $source = $schema->_context->enum;
-                $re = new \ReflectionEnum($schema->_context->fullyQualifiedName($source));
-                $schema->schema = !Generator::isDefault($schema->schema) ? $schema->schema : $re->getShortName();
-                $type = 'string';
-                $schemaType = 'string';
-                if ($re->isBacked() && ($backingType = $re->getBackingType()) && method_exists($backingType, 'getName')) {
+                $re = new \ReflectionEnum(
+                    $schema->_context->fullyQualifiedName($source)
+                );
+                $schema->schema = !Generator::isDefault($schema->schema)
+                    ? $schema->schema
+                    : $re->getShortName();
+                $type = "string";
+                $schemaType = "string";
+                if (
+                    $re->isBacked() &&
+                    ($backingType = $re->getBackingType()) &&
+                    method_exists($backingType, "getName")
+                ) {
                     if (Generator::isDefault($schema->type)) {
                         $type = $backingType->getName();
                     } else {
@@ -44,13 +55,18 @@ class ExpandEnums
                         $schemaType = $schema->type;
                     }
                 }
-                $schema->enum = array_map(function ($case) use ($re, $schemaType, $type) {
+                $schema->enum = array_map(function ($case) use (
+                    $re,
+                    $schemaType,
+                    $type
+                ) {
                     if ($re->isBacked() && $type === $schemaType) {
                         return $case->getBackingValue();
                     }
 
                     return $case->name;
-                }, $re->getCases());
+                },
+                $re->getCases());
                 $this->mapNativeType($schema, $type);
             }
         }

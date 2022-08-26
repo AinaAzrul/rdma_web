@@ -15,7 +15,7 @@ final class ATNDeserializationOptions
     /** @var bool */
     private $generateRuleBypassTransitions;
 
-    public static function defaultOptions() : ATNDeserializationOptions
+    public static function defaultOptions(): ATNDeserializationOptions
     {
         static $defaultOptions;
 
@@ -30,42 +30,44 @@ final class ATNDeserializationOptions
     public function __construct(?ATNDeserializationOptions $options = null)
     {
         $this->verifyATN = $options === null ? true : $options->verifyATN;
-        $this->generateRuleBypassTransitions = $options === null ? false : $options->generateRuleBypassTransitions;
+        $this->generateRuleBypassTransitions =
+            $options === null ? false : $options->generateRuleBypassTransitions;
     }
 
-    public function isReadOnly() : bool
+    public function isReadOnly(): bool
     {
         return $this->readOnly;
     }
 
-    public function makeReadOnly() : void
+    public function makeReadOnly(): void
     {
         $this->readOnly = true;
     }
 
-    public function isVerifyATN() : bool
+    public function isVerifyATN(): bool
     {
         return $this->verifyATN;
     }
 
-    public function setVerifyATN(bool $verifyATN) : void
+    public function setVerifyATN(bool $verifyATN): void
     {
         if ($this->readOnly) {
-            throw new \InvalidArgumentException('The object is read only.');
+            throw new \InvalidArgumentException("The object is read only.");
         }
 
         $this->verifyATN = $verifyATN;
     }
 
-    public function isGenerateRuleBypassTransitions() : bool
+    public function isGenerateRuleBypassTransitions(): bool
     {
         return $this->generateRuleBypassTransitions;
     }
 
-    public function setGenerateRuleBypassTransitions(bool $generateRuleBypassTransitions) : void
-    {
+    public function setGenerateRuleBypassTransitions(
+        bool $generateRuleBypassTransitions
+    ): void {
         if ($this->readOnly) {
-            throw new \InvalidArgumentException('The object is read only.');
+            throw new \InvalidArgumentException("The object is read only.");
         }
 
         $this->generateRuleBypassTransitions = $generateRuleBypassTransitions;

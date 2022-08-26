@@ -53,19 +53,32 @@ class OperationId
 
             $context = $operation->_context;
             if ($context && $context->method) {
-                $source = $context->class ?? $context->interface ?? $context->trait;
+                $source =
+                    $context->class ?? ($context->interface ?? $context->trait);
                 $operationId = null;
                 if ($source) {
                     if ($context->namespace) {
-                        $operationId = $context->namespace . '\\' . $source . '::' . $context->method;
+                        $operationId =
+                            $context->namespace .
+                            "\\" .
+                            $source .
+                            "::" .
+                            $context->method;
                     } else {
-                        $operationId = $source . '::' . $context->method;
+                        $operationId = $source . "::" . $context->method;
                     }
                 } else {
                     $operationId = $context->method;
                 }
-                $operationId = strtoupper($operation->method) . '::' . $operation->path . '::' . $operationId;
-                $operation->operationId = $this->hash ? md5($operationId) : $operationId;
+                $operationId =
+                    strtoupper($operation->method) .
+                    "::" .
+                    $operation->path .
+                    "::" .
+                    $operationId;
+                $operation->operationId = $this->hash
+                    ? md5($operationId)
+                    : $operationId;
             }
         }
     }

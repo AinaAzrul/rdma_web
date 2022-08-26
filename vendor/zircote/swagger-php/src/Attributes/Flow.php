@@ -26,13 +26,13 @@ class Flow extends \OpenApi\Annotations\Flow
         ?array $attachables = null
     ) {
         parent::__construct([
-                'authorizationUrl' => $authorizationUrl ?? Generator::UNDEFINED,
-                'tokenUrl' => $tokenUrl ?? Generator::UNDEFINED,
-                'refreshUrl' => $refreshUrl ?? Generator::UNDEFINED,
-                'flow' => $flow ?? Generator::UNDEFINED,
-                'scopes' => $scopes ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($attachables),
-            ]);
+            "authorizationUrl" => $authorizationUrl ?? Generator::UNDEFINED,
+            "tokenUrl" => $tokenUrl ?? Generator::UNDEFINED,
+            "refreshUrl" => $refreshUrl ?? Generator::UNDEFINED,
+            "flow" => $flow ?? Generator::UNDEFINED,
+            "scopes" => $scopes ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($attachables),
+        ]);
     }
 }

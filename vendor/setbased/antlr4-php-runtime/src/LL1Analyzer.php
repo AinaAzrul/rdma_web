@@ -46,7 +46,7 @@ class LL1Analyzer
      * @return array<IntervalSet|null>|null The expected symbols for
      *                                      each outgoing transition of `s`.
      */
-    public function getDecisionLookahead(?ATNState $s) : ?array
+    public function getDecisionLookahead(?ATNState $s): ?array
     {
         if ($s === null) {
             return null;
@@ -71,7 +71,10 @@ class LL1Analyzer
 
             // Wipe out lookahead for this alternative if we found nothing
             // or we had a predicate when we !seeThruPreds
-            if ($interval->length() === 0 || $interval->contains(self::HIT_PRED)) {
+            if (
+                $interval->length() === 0 ||
+                $interval->contains(self::HIT_PRED)
+            ) {
                 $look[$alt] = null;
             } else {
                 $look[$alt] = $interval;
@@ -100,14 +103,18 @@ class LL1Analyzer
      * @return IntervalSet The set of tokens that can follow `s` in the ATN
      *                     in the specified `context`.
      */
-    public function look(ATNState $s, ?ATNState $stopState, ?RuleContext $context) : IntervalSet
-    {
+    public function look(
+        ATNState $s,
+        ?ATNState $stopState,
+        ?RuleContext $context
+    ): IntervalSet {
         $r = new IntervalSet();
-        $seeThruPreds = true;// ignore preds; get all lookahead
+        $seeThruPreds = true; // ignore preds; get all lookahead
 
-        $lookContext = $context !== null && $s->atn !== null ?
-            PredictionContext::fromRuleContext($s->atn, $context) :
-            null;
+        $lookContext =
+            $context !== null && $s->atn !== null
+                ? PredictionContext::fromRuleContext($s->atn, $context)
+                : null;
 
         $this->lookRecursively(
             $s,
@@ -180,7 +187,7 @@ class LL1Analyzer
         BitSet $calledRuleStack,
         bool $seeThruPreds,
         bool $addEOF
-    ) : void {
+    ): void {
         $c = new ATNConfig(null, $s, $context, null, 0);
 
         if (!$lookBusy->add($c)) {
@@ -221,7 +228,8 @@ class LL1Analyzer
                 try {
                     $calledRuleStack->remove($s->ruleIndex);
                     for ($i = 0; $i < $context->getLength(); $i++) {
-                        $returnState = $this->atn->states[$context->getReturnState($i)];
+                        $returnState =
+                            $this->atn->states[$context->getReturnState($i)];
                         $this->lookRecursively(
                             $returnState,
                             $stopState,
@@ -250,7 +258,10 @@ class LL1Analyzer
                     continue;
                 }
 
-                $newContext = SingletonPredictionContext::create($context, $t->followState->stateNumber);
+                $newContext = SingletonPredictionContext::create(
+                    $context,
+                    $t->followState->stateNumber
+                );
 
                 try {
                     $calledRuleStack->add($t->target->ruleIndex);
@@ -294,16 +305,21 @@ class LL1Analyzer
                     $addEOF
                 );
             } elseif ($t instanceof WildcardTransition) {
-                $look->addRange(Token::MIN_USER_TOKEN_TYPE, $this->atn->maxTokenType);
+                $look->addRange(
+                    Token::MIN_USER_TOKEN_TYPE,
+                    $this->atn->maxTokenType
+                );
             } else {
                 $set = $t->label();
 
                 if ($set !== null) {
                     if ($t instanceof NotSetTransition) {
-                        $set = $set->complement(IntervalSet::fromRange(
-                            Token::MIN_USER_TOKEN_TYPE,
-                            $this->atn->maxTokenType
-                        ));
+                        $set = $set->complement(
+                            IntervalSet::fromRange(
+                                Token::MIN_USER_TOKEN_TYPE,
+                                $this->atn->maxTokenType
+                            )
+                        );
                     }
 
                     if ($set !== null) {

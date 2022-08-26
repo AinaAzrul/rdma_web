@@ -8,7 +8,13 @@ namespace OpenApi\Attributes;
 
 use OpenApi\Generator;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
+#[
+    \Attribute(
+        \Attribute::TARGET_CLASS |
+            \Attribute::TARGET_METHOD |
+            \Attribute::IS_REPEATABLE
+    )
+]
 class Tag extends \OpenApi\Annotations\Tag
 {
     /**
@@ -24,10 +30,10 @@ class Tag extends \OpenApi\Annotations\Tag
         ?array $attachables = null
     ) {
         parent::__construct([
-                'name' => $name ?? Generator::UNDEFINED,
-                'description' => $description ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($externalDocs, $attachables),
-            ]);
+            "name" => $name ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($externalDocs, $attachables),
+        ]);
     }
 }

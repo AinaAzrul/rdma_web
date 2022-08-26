@@ -27,12 +27,12 @@ class AdditionalProperties extends Schema
      * @inheritdoc
      */
     public static $_nested = [
-        Discriminator::class => 'discriminator',
-        Items::class => 'items',
-        Property::class => ['properties', 'property'],
-        ExternalDocumentation::class => 'externalDocs',
-        Xml::class => 'xml',
-        AdditionalProperties::class => 'additionalProperties',
-        Attachable::class => ['attachables'],
+        Discriminator::class => "discriminator",
+        Items::class => "items",
+        Property::class => ["properties", "property"],
+        ExternalDocumentation::class => "externalDocs",
+        Xml::class => "xml",
+        AdditionalProperties::class => "additionalProperties",
+        Attachable::class => ["attachables"],
     ];
 }

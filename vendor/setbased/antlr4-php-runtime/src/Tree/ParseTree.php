@@ -11,12 +11,12 @@ interface ParseTree extends SyntaxTree
     /**
      * @return ParseTree|null
      */
-    public function getParent() : ?Tree;
+    public function getParent(): ?Tree;
 
     /**
      * @return ParseTree|null
      */
-    public function getChild(int $i, ?string $type = null) : ?Tree;
+    public function getChild(int $i, ?string $type = null): ?Tree;
 
     /**
      * Set the parent for this node.
@@ -32,7 +32,7 @@ interface ParseTree extends SyntaxTree
      * but that's a major change. So I'll do the
      * minimal change, which is to add this method.
      */
-    public function setParent(RuleContext $parent) : void;
+    public function setParent(RuleContext $parent): void;
 
     /**
      * The {@see ParseTreeVisitor} needs a double dispatch method.
@@ -44,7 +44,7 @@ interface ParseTree extends SyntaxTree
      * off-channel tokens (if any) so won't return whitespace and
      * comments if they are sent to parser on hidden channel.
      */
-    public function getText() : ?string;
+    public function getText(): ?string;
 
     /**
      * Specialize toStringTree so that it can print out more information
@@ -52,5 +52,5 @@ interface ParseTree extends SyntaxTree
      *
      * @param array<string>|null $ruleNames
      */
-    public function toStringTree(?array $ruleNames = null) : string;
+    public function toStringTree(?array $ruleNames = null): string;
 }

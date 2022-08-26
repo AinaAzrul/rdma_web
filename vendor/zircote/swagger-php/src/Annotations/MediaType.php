@@ -17,7 +17,6 @@ use OpenApi\Generator;
  */
 class MediaType extends AbstractAnnotation
 {
-
     /**
      * The key into Operation->content array.
      *
@@ -72,16 +71,13 @@ class MediaType extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_nested = [
-        Schema::class => 'schema',
-        Examples::class => ['examples', 'example'],
-        Attachable::class => ['attachables'],
+        Schema::class => "schema",
+        Examples::class => ["examples", "example"],
+        Attachable::class => ["attachables"],
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        Response::class,
-        RequestBody::class,
-    ];
+    public static $_parents = [Response::class, RequestBody::class];
 }

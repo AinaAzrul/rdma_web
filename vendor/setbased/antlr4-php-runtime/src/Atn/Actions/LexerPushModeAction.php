@@ -28,7 +28,7 @@ final class LexerPushModeAction implements LexerAction
      *
      * @return int The lexer mode for this `pushMode` command.
      */
-    public function getMode() : int
+    public function getMode(): int
     {
         return $this->mode;
     }
@@ -38,7 +38,7 @@ final class LexerPushModeAction implements LexerAction
      *
      * @return int This method returns {@see LexerActionType::PUSH_MODE}.
      */
-    public function getActionType() : int
+    public function getActionType(): int
     {
         return LexerActionType::PUSH_MODE;
     }
@@ -48,7 +48,7 @@ final class LexerPushModeAction implements LexerAction
      *
      * @return bool This method returns `false`.
      */
-    public function isPositionDependent() : bool
+    public function isPositionDependent(): bool
     {
         return false;
     }
@@ -59,17 +59,17 @@ final class LexerPushModeAction implements LexerAction
      * This action is implemented by calling {@see Lexer::pushMode()} with the
      * value provided by {@see LexerPushModeAction::getMode()}.
      */
-    public function execute(Lexer $lexer) : void
+    public function execute(Lexer $lexer): void
     {
         $lexer->pushMode($this->mode);
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
         return Hasher::hash($this->getActionType(), $this->mode);
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
@@ -82,8 +82,8 @@ final class LexerPushModeAction implements LexerAction
         return $this->mode === $other->mode;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return \sprintf('pushMode(%d)', $this->mode);
+        return \sprintf("pushMode(%d)", $this->mode);
     }
 }

@@ -26,8 +26,11 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
     /** @var CouchDBClient */
     private $client;
 
-    public function __construct(CouchDBClient $client, $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        CouchDBClient $client,
+        $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
         $this->client = $client;
         parent::__construct($level, $bubble);
     }
@@ -37,11 +40,11 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        $this->client->postDocument($record['formatted']);
+        $this->client->postDocument($record["formatted"]);
     }
 
     protected function getDefaultFormatter(): FormatterInterface
     {
-        return new NormalizerFormatter;
+        return new NormalizerFormatter();
     }
 }

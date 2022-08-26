@@ -25,29 +25,37 @@ class LexerNoViableAltException extends RecognitionException
      */
     private $deadEndConfigs;
 
-    public function __construct(Lexer $lexer, CharStream $input, int $startIndex, ATNConfigSet $deadEndConfigs)
-    {
+    public function __construct(
+        Lexer $lexer,
+        CharStream $input,
+        int $startIndex,
+        ATNConfigSet $deadEndConfigs
+    ) {
         parent::__construct($lexer, $input, null);
 
         $this->startIndex = $startIndex;
         $this->deadEndConfigs = $deadEndConfigs;
     }
 
-    public function getDeadEndConfigs() : ATNConfigSet
+    public function getDeadEndConfigs(): ATNConfigSet
     {
         return $this->deadEndConfigs;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        $symbol = '';
+        $symbol = "";
         $input = $this->getInputStream();
 
         if (!$input instanceof CharStream) {
-            throw new \RuntimeException('Unexpected stream type.');
+            throw new \RuntimeException("Unexpected stream type.");
         }
 
-        if ($input !== null && $this->startIndex >= 0 && $this->startIndex < $input->getLength()) {
+        if (
+            $input !== null &&
+            $this->startIndex >= 0 &&
+            $this->startIndex < $input->getLength()
+        ) {
             $symbol = $input->getText($this->startIndex, $this->startIndex);
             $symbol = StringUtils::escapeWhitespace($symbol, false);
         }

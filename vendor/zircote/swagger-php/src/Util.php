@@ -30,9 +30,11 @@ class Util
     public static function getRelativePath(string $fullPath, $basePaths): string
     {
         $relativePath = null;
-        if (is_string($basePaths)) { // just a single path, not an array of possible paths
+        if (is_string($basePaths)) {
+            // just a single path, not an array of possible paths
             $relativePath = self::removePrefix($fullPath, $basePaths);
-        } else { // an array of paths
+        } else {
+            // an array of paths
             foreach ($basePaths as $basePath) {
                 $relativePath = self::removePrefix($fullPath, $basePath);
                 if (!empty($relativePath)) {
@@ -41,7 +43,7 @@ class Util
             }
         }
 
-        return !empty($relativePath) ? trim($relativePath, '/') : $fullPath;
+        return !empty($relativePath) ? trim($relativePath, "/") : $fullPath;
     }
 
     /**
@@ -65,8 +67,11 @@ class Util
      *
      * @throws InvalidArgumentException
      */
-    public static function finder($directory, $exclude = null, $pattern = null): Finder
-    {
+    public static function finder(
+        $directory,
+        $exclude = null,
+        $pattern = null
+    ): Finder {
         if ($directory instanceof Finder) {
             // Make sure that the provided Finder only finds files and follows symbolic links.
             return $directory->files()->followLinks();
@@ -75,26 +80,34 @@ class Util
             $finder->sortByName();
         }
         if ($pattern === null) {
-            $pattern = '*.php';
+            $pattern = "*.php";
         }
 
-        $finder->files()->followLinks()->name($pattern);
+        $finder
+            ->files()
+            ->followLinks()
+            ->name($pattern);
         if (is_string($directory)) {
-            if (is_file($directory)) { // Scan a single file?
+            if (is_file($directory)) {
+                // Scan a single file?
                 $finder->append([$directory]);
-            } else { // Scan a directory
+            } else {
+                // Scan a directory
                 $finder->in($directory);
             }
         } elseif (is_array($directory)) {
             foreach ($directory as $path) {
-                if (is_file($path)) { // Scan a file?
+                if (is_file($path)) {
+                    // Scan a file?
                     $finder->append([$path]);
                 } else {
                     $finder->in($path);
                 }
             }
         } else {
-            throw new InvalidArgumentException('Unexpected $directory value:' . gettype($directory));
+            throw new InvalidArgumentException(
+                'Unexpected $directory value:' . gettype($directory)
+            );
         }
         if ($exclude !== null) {
             if (is_string($exclude)) {
@@ -104,7 +117,9 @@ class Util
                     $finder->notPath(Util::getRelativePath($path, $directory));
                 }
             } else {
-                throw new InvalidArgumentException('Unexpected $exclude value:' . gettype($exclude));
+                throw new InvalidArgumentException(
+                    'Unexpected $exclude value:' . gettype($exclude)
+                );
             }
         }
 
@@ -119,7 +134,7 @@ class Util
      */
     public static function refEncode(string $raw): string
     {
-        return str_replace('/', '~1', str_replace('~', '~0', $raw));
+        return str_replace("/", "~1", str_replace("~", "~0", $raw));
     }
 
     /**
@@ -130,7 +145,7 @@ class Util
      */
     public static function refDecode(string $encoded): string
     {
-        return str_replace('~1', '/', str_replace('~0', '~', $encoded));
+        return str_replace("~1", "/", str_replace("~0", "~", $encoded));
     }
 
     /**
@@ -144,10 +159,13 @@ class Util
     {
         $short = [];
         foreach ((array) $classes as $class) {
-            $short[] = '@' . str_replace([
-                'OpenApi\\Annotations\\',
-                'OpenApi\\Attributes\\',
-                ], 'OA\\', $class);
+            $short[] =
+                "@" .
+                str_replace(
+                    ["OpenApi\\Annotations\\", "OpenApi\\Attributes\\"],
+                    "OA\\",
+                    $class
+                );
         }
 
         return is_array($classes) ? $short : array_pop($short);

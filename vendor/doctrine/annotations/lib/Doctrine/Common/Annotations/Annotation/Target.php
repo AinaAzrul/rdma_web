@@ -21,21 +21,21 @@ use function sprintf;
  */
 final class Target
 {
-    public const TARGET_CLASS      = 1;
-    public const TARGET_METHOD     = 2;
-    public const TARGET_PROPERTY   = 4;
+    public const TARGET_CLASS = 1;
+    public const TARGET_METHOD = 2;
+    public const TARGET_PROPERTY = 4;
     public const TARGET_ANNOTATION = 8;
-    public const TARGET_FUNCTION   = 16;
-    public const TARGET_ALL        = 31;
+    public const TARGET_FUNCTION = 16;
+    public const TARGET_ALL = 31;
 
     /** @var array<string, int> */
     private static $map = [
-        'ALL'        => self::TARGET_ALL,
-        'CLASS'      => self::TARGET_CLASS,
-        'METHOD'     => self::TARGET_METHOD,
-        'PROPERTY'   => self::TARGET_PROPERTY,
-        'FUNCTION'   => self::TARGET_FUNCTION,
-        'ANNOTATION' => self::TARGET_ANNOTATION,
+        "ALL" => self::TARGET_ALL,
+        "CLASS" => self::TARGET_CLASS,
+        "METHOD" => self::TARGET_METHOD,
+        "PROPERTY" => self::TARGET_PROPERTY,
+        "FUNCTION" => self::TARGET_FUNCTION,
+        "ANNOTATION" => self::TARGET_ANNOTATION,
     ];
 
     /** @phpstan-var list<string> */
@@ -62,31 +62,33 @@ final class Target
      */
     public function __construct(array $values)
     {
-        if (! isset($values['value'])) {
-            $values['value'] = null;
+        if (!isset($values["value"])) {
+            $values["value"] = null;
         }
 
-        if (is_string($values['value'])) {
-            $values['value'] = [$values['value']];
+        if (is_string($values["value"])) {
+            $values["value"] = [$values["value"]];
         }
 
-        if (! is_array($values['value'])) {
+        if (!is_array($values["value"])) {
             throw new InvalidArgumentException(
                 sprintf(
                     '@Target expects either a string value, or an array of strings, "%s" given.',
-                    is_object($values['value']) ? get_class($values['value']) : gettype($values['value'])
+                    is_object($values["value"])
+                        ? get_class($values["value"])
+                        : gettype($values["value"])
                 )
             );
         }
 
         $bitmask = 0;
-        foreach ($values['value'] as $literal) {
-            if (! isset(self::$map[$literal])) {
+        foreach ($values["value"] as $literal) {
+            if (!isset(self::$map[$literal])) {
                 throw new InvalidArgumentException(
                     sprintf(
                         'Invalid Target "%s". Available targets: [%s]',
                         $literal,
-                        implode(', ', array_keys(self::$map))
+                        implode(", ", array_keys(self::$map))
                     )
                 );
             }
@@ -95,7 +97,7 @@ final class Target
         }
 
         $this->targets = $bitmask;
-        $this->value   = $values['value'];
-        $this->literal = implode(', ', $this->value);
+        $this->value = $values["value"];
+        $this->literal = implode(", ", $this->value);
     }
 }

@@ -39,28 +39,26 @@ class Tag extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public static $_required = ['name'];
+    public static $_required = ["name"];
 
     /**
      * @inheritdoc
      */
     public static $_types = [
-        'name' => 'string',
-        'description' => 'string',
+        "name" => "string",
+        "description" => "string",
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        OpenApi::class,
-    ];
+    public static $_parents = [OpenApi::class];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        ExternalDocumentation::class => 'externalDocs',
-        Attachable::class => ['attachables'],
+        ExternalDocumentation::class => "externalDocs",
+        Attachable::class => ["attachables"],
     ];
 }

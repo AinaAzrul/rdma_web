@@ -8,7 +8,13 @@ namespace OpenApi\Attributes;
 
 use OpenApi\Generator;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::TARGET_PARAMETER)]
+#[
+    \Attribute(
+        \Attribute::TARGET_CLASS |
+            \Attribute::TARGET_METHOD |
+            \Attribute::TARGET_PARAMETER
+    )
+]
 class RequestBody extends \OpenApi\Annotations\RequestBody
 {
     /**
@@ -27,12 +33,12 @@ class RequestBody extends \OpenApi\Annotations\RequestBody
         ?array $attachables = null
     ) {
         parent::__construct([
-            'ref' => $ref ?? Generator::UNDEFINED,
-            'request' => $request ?? Generator::UNDEFINED,
-            'description' => $description ?? Generator::UNDEFINED,
-            'required' => $required ?? Generator::UNDEFINED,
-            'x' => $x ?? Generator::UNDEFINED,
-            'value' => $this->combine($content, $attachables),
+            "ref" => $ref ?? Generator::UNDEFINED,
+            "request" => $request ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "required" => $required ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($content, $attachables),
         ]);
     }
 }

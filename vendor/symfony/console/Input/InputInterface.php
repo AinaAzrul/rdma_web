@@ -57,7 +57,11 @@ interface InputInterface
      *
      * @return mixed The option value
      */
-    public function getParameterOption($values, $default = false, bool $onlyParams = false);
+    public function getParameterOption(
+        $values,
+        $default = false,
+        bool $onlyParams = false
+    );
 
     /**
      * Binds the current Input instance with the given arguments and options.

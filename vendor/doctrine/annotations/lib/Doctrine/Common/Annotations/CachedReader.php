@@ -44,8 +44,8 @@ final class CachedReader implements Reader
     public function __construct(Reader $reader, Cache $cache, $debug = false)
     {
         $this->delegate = $reader;
-        $this->cache    = $cache;
-        $this->debug    = (bool) $debug;
+        $this->cache = $cache;
+        $this->debug = (bool) $debug;
     }
 
     /**
@@ -87,7 +87,7 @@ final class CachedReader implements Reader
      */
     public function getPropertyAnnotations(ReflectionProperty $property)
     {
-        $class    = $property->getDeclaringClass();
+        $class = $property->getDeclaringClass();
         $cacheKey = $class->getName() . '$' . $property->getName();
 
         if (isset($this->loadedAnnotations[$cacheKey])) {
@@ -106,8 +106,10 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
-    {
+    public function getPropertyAnnotation(
+        ReflectionProperty $property,
+        $annotationName
+    ) {
         foreach ($this->getPropertyAnnotations($property) as $annot) {
             if ($annot instanceof $annotationName) {
                 return $annot;
@@ -122,8 +124,8 @@ final class CachedReader implements Reader
      */
     public function getMethodAnnotations(ReflectionMethod $method)
     {
-        $class    = $method->getDeclaringClass();
-        $cacheKey = $class->getName() . '#' . $method->getName();
+        $class = $method->getDeclaringClass();
+        $cacheKey = $class->getName() . "#" . $method->getName();
 
         if (isset($this->loadedAnnotations[$cacheKey])) {
             return $this->loadedAnnotations[$cacheKey];
@@ -141,8 +143,10 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
-    {
+    public function getMethodAnnotation(
+        ReflectionMethod $method,
+        $annotationName
+    ) {
         foreach ($this->getMethodAnnotations($method) as $annot) {
             if ($annot instanceof $annotationName) {
                 return $annot;
@@ -160,7 +164,7 @@ final class CachedReader implements Reader
     public function clearLoadedAnnotations()
     {
         $this->loadedAnnotations = [];
-        $this->loadedFilemtimes  = [];
+        $this->loadedFilemtimes = [];
     }
 
     /**
@@ -174,7 +178,7 @@ final class CachedReader implements Reader
     {
         $data = $this->cache->fetch($cacheKey);
         if ($data !== false) {
-            if (! $this->debug || $this->isCacheFresh($cacheKey, $class)) {
+            if (!$this->debug || $this->isCacheFresh($cacheKey, $class)) {
                 return $data;
             }
         }
@@ -193,11 +197,11 @@ final class CachedReader implements Reader
     private function saveToCache($cacheKey, $value)
     {
         $this->cache->save($cacheKey, $value);
-        if (! $this->debug) {
+        if (!$this->debug) {
             return;
         }
 
-        $this->cache->save('[C]' . $cacheKey, time());
+        $this->cache->save("[C]" . $cacheKey, time());
     }
 
     /**
@@ -214,7 +218,7 @@ final class CachedReader implements Reader
             return true;
         }
 
-        return $this->cache->fetch('[C]' . $cacheKey) >= $lastModification;
+        return $this->cache->fetch("[C]" . $cacheKey) >= $lastModification;
     }
 
     /**
@@ -230,36 +234,45 @@ final class CachedReader implements Reader
 
         $parent = $class->getParentClass();
 
-        $lastModification =  max(array_merge(
-            [$filename ? filemtime($filename) : 0],
-            array_map(function (ReflectionClass $reflectionTrait): int {
-                return $this->getTraitLastModificationTime($reflectionTrait);
-            }, $class->getTraits()),
-            array_map(function (ReflectionClass $class): int {
-                return $this->getLastModification($class);
-            }, $class->getInterfaces()),
-            $parent ? [$this->getLastModification($parent)] : []
-        ));
+        $lastModification = max(
+            array_merge(
+                [$filename ? filemtime($filename) : 0],
+                array_map(function (ReflectionClass $reflectionTrait): int {
+                    return $this->getTraitLastModificationTime(
+                        $reflectionTrait
+                    );
+                }, $class->getTraits()),
+                array_map(function (ReflectionClass $class): int {
+                    return $this->getLastModification($class);
+                }, $class->getInterfaces()),
+                $parent ? [$this->getLastModification($parent)] : []
+            )
+        );
 
         assert($lastModification !== false);
 
         return $this->loadedFilemtimes[$filename] = $lastModification;
     }
 
-    private function getTraitLastModificationTime(ReflectionClass $reflectionTrait): int
-    {
+    private function getTraitLastModificationTime(
+        ReflectionClass $reflectionTrait
+    ): int {
         $fileName = $reflectionTrait->getFileName();
 
         if (isset($this->loadedFilemtimes[$fileName])) {
             return $this->loadedFilemtimes[$fileName];
         }
 
-        $lastModificationTime = max(array_merge(
-            [$fileName ? filemtime($fileName) : 0],
-            array_map(function (ReflectionClass $reflectionTrait): int {
-                return $this->getTraitLastModificationTime($reflectionTrait);
-            }, $reflectionTrait->getTraits())
-        ));
+        $lastModificationTime = max(
+            array_merge(
+                [$fileName ? filemtime($fileName) : 0],
+                array_map(function (ReflectionClass $reflectionTrait): int {
+                    return $this->getTraitLastModificationTime(
+                        $reflectionTrait
+                    );
+                }, $reflectionTrait->getTraits())
+            )
+        );
 
         assert($lastModificationTime !== false);
 

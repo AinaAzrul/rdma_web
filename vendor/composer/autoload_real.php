@@ -8,8 +8,8 @@ class ComposerAutoloaderInit32c9370f0a66913a456c47abad5fbb15
 
     public static function loadClassLoader($class)
     {
-        if ('Composer\Autoload\ClassLoader' === $class) {
-            require __DIR__ . '/ClassLoader.php';
+        if ("Composer\Autoload\ClassLoader" === $class) {
+            require __DIR__ . "/ClassLoader.php";
         }
     }
 
@@ -22,20 +22,40 @@ class ComposerAutoloaderInit32c9370f0a66913a456c47abad5fbb15
             return self::$loader;
         }
 
-        require __DIR__ . '/platform_check.php';
+        require __DIR__ . "/platform_check.php";
 
-        spl_autoload_register(array('ComposerAutoloaderInit32c9370f0a66913a456c47abad5fbb15', 'loadClassLoader'), true, true);
-        self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(__DIR__));
-        spl_autoload_unregister(array('ComposerAutoloaderInit32c9370f0a66913a456c47abad5fbb15', 'loadClassLoader'));
+        spl_autoload_register(
+            [
+                "ComposerAutoloaderInit32c9370f0a66913a456c47abad5fbb15",
+                "loadClassLoader",
+            ],
+            true,
+            true
+        );
+        self::$loader = $loader = new \Composer\Autoload\ClassLoader(
+            \dirname(__DIR__)
+        );
+        spl_autoload_unregister([
+            "ComposerAutoloaderInit32c9370f0a66913a456c47abad5fbb15",
+            "loadClassLoader",
+        ]);
 
-        require __DIR__ . '/autoload_static.php';
-        call_user_func(\Composer\Autoload\ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::getInitializer($loader));
+        require __DIR__ . "/autoload_static.php";
+        call_user_func(
+            \Composer\Autoload\ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::getInitializer(
+                $loader
+            )
+        );
 
         $loader->register(true);
 
-        $includeFiles = \Composer\Autoload\ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::$files;
+        $includeFiles =
+            \Composer\Autoload\ComposerStaticInit32c9370f0a66913a456c47abad5fbb15::$files;
         foreach ($includeFiles as $fileIdentifier => $file) {
-            composerRequire32c9370f0a66913a456c47abad5fbb15($fileIdentifier, $file);
+            composerRequire32c9370f0a66913a456c47abad5fbb15(
+                $fileIdentifier,
+                $file
+            );
         }
 
         return $loader;
@@ -49,8 +69,8 @@ class ComposerAutoloaderInit32c9370f0a66913a456c47abad5fbb15
  */
 function composerRequire32c9370f0a66913a456c47abad5fbb15($fileIdentifier, $file)
 {
-    if (empty($GLOBALS['__composer_autoload_files'][$fileIdentifier])) {
-        $GLOBALS['__composer_autoload_files'][$fileIdentifier] = true;
+    if (empty($GLOBALS["__composer_autoload_files"][$fileIdentifier])) {
+        $GLOBALS["__composer_autoload_files"][$fileIdentifier] = true;
 
         require $file;
     }

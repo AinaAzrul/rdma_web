@@ -26,7 +26,7 @@ class PredictionContextCache
      * return that one instead and do not add a new context to the cache.
      * Protect shared cache from unsafe thread access.
      */
-    public function add(PredictionContext $ctx) : PredictionContext
+    public function add(PredictionContext $ctx): PredictionContext
     {
         if ($ctx === PredictionContext::empty()) {
             return $ctx;
@@ -43,12 +43,12 @@ class PredictionContextCache
         return $ctx;
     }
 
-    public function get(PredictionContext $ctx) : ?PredictionContext
+    public function get(PredictionContext $ctx): ?PredictionContext
     {
         return $this->cache->get($ctx);
     }
 
-    public function length() : int
+    public function length(): int
     {
         return $this->cache->count();
     }

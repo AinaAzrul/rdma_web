@@ -14,18 +14,27 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class AlterAuditTableCommand extends AuditCommand
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function configure()
-  {
-    $this->setName('alter-audit-table')
-         ->setDescription('Creates alter SQL statements for audit tables')
-         ->addArgument('config file', InputArgument::REQUIRED, 'The audit configuration file')
-         ->addArgument('sql file', InputArgument::OPTIONAL, 'The destination file for the SQL statements');
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function configure()
+    {
+        $this->setName("alter-audit-table")
+            ->setDescription("Creates alter SQL statements for audit tables")
+            ->addArgument(
+                "config file",
+                InputArgument::REQUIRED,
+                "The audit configuration file"
+            )
+            ->addArgument(
+                "sql file",
+                InputArgument::OPTIONAL,
+                "The destination file for the SQL statements"
+            );
 
-    $this->setHelp(<<<EOL
+        $this->setHelp(
+            <<<EOL
 Generates alter table SQL statements for aligning the audit tables with the 
 audit configuration file and data tables.
 
@@ -40,40 +49,37 @@ No SQL statements will be generated for missing or obsolete columns in the
 audit tables. Use the command 'audit' for creating missing columns in audit
 tables.
 EOL
-    );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function execute(InputInterface $input, OutputInterface $output)
-  {
-    $this->io = new AuditStyle($input, $output);
-
-    $sqlFilename = $input->getArgument('sql file');
-
-    $this->configFileName = $input->getArgument('config file');
-    $this->readConfigFile();
-
-    $this->connect();
-
-    $alter = new AlterAuditTable($this->config);
-    $sql   = $alter->main();
-
-    if ($sqlFilename!==null)
-    {
-      $this->writeTwoPhases($sqlFilename, $sql);
-    }
-    else
-    {
-      $this->io->write($sql);
+        );
     }
 
-    return 0;
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->io = new AuditStyle($input, $output);
 
-  //--------------------------------------------------------------------------------------------------------------------
+        $sqlFilename = $input->getArgument("sql file");
+
+        $this->configFileName = $input->getArgument("config file");
+        $this->readConfigFile();
+
+        $this->connect();
+
+        $alter = new AlterAuditTable($this->config);
+        $sql = $alter->main();
+
+        if ($sqlFilename !== null) {
+            $this->writeTwoPhases($sqlFilename, $sql);
+        } else {
+            $this->io->write($sql);
+        }
+
+        return 0;
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

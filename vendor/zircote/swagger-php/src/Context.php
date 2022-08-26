@@ -124,7 +124,9 @@ class Context
     public function isVersion($versions): bool
     {
         if (!$this->version) {
-            throw new \RuntimeException('Version is only available reliably for validation and serialization');
+            throw new \RuntimeException(
+                "Version is only available reliably for validation and serialization"
+            );
         }
 
         $versions = (array) $versions;
@@ -140,28 +142,29 @@ class Context
      */
     public function getDebugLocation(): string
     {
-        $location = '';
+        $location = "";
         if ($this->class && ($this->method || $this->property)) {
             $location .= $this->fullyQualifiedName($this->class);
             if ($this->method) {
-                $location .= ($this->static ? '::' : '->') . $this->method . '()';
+                $location .=
+                    ($this->static ? "::" : "->") . $this->method . "()";
             } elseif ($this->property) {
-                $location .= ($this->static ? '::$' : '->') . $this->property;
+                $location .= ($this->static ? '::$' : "->") . $this->property;
             }
         }
         if ($this->filename) {
-            if ($location !== '') {
-                $location .= ' in ';
+            if ($location !== "") {
+                $location .= " in ";
             }
             $location .= $this->filename;
         }
         if ($this->line) {
-            if ($location !== '') {
-                $location .= ' on';
+            if ($location !== "") {
+                $location .= " on";
             }
-            $location .= ' line ' . $this->line;
+            $location .= " line " . $this->line;
             if ($this->character) {
-                $location .= ':' . $this->character;
+                $location .= ":" . $this->character;
             }
         }
 
@@ -187,7 +190,7 @@ class Context
 
     public function __debugInfo()
     {
-        return ['-' => $this->getDebugLocation()];
+        return ["-" => $this->getDebugLocation()];
     }
 
     /**
@@ -200,24 +203,24 @@ class Context
         $context = new Context();
         $backtrace = debug_backtrace();
         $position = $backtrace[$index];
-        if (isset($position['file'])) {
-            $context->filename = $position['file'];
+        if (isset($position["file"])) {
+            $context->filename = $position["file"];
         }
-        if (isset($position['line'])) {
-            $context->line = $position['line'];
+        if (isset($position["line"])) {
+            $context->line = $position["line"];
         }
         $caller = isset($backtrace[$index + 1]) ? $backtrace[$index + 1] : null;
-        if (isset($caller['function'])) {
-            $context->method = $caller['function'];
-            if (isset($caller['type']) && $caller['type'] === '::') {
+        if (isset($caller["function"])) {
+            $context->method = $caller["function"];
+            if (isset($caller["type"]) && $caller["type"] === "::") {
                 $context->static = true;
             }
         }
-        if (isset($caller['class'])) {
-            $fqn = explode('\\', $caller['class']);
+        if (isset($caller["class"])) {
+            $fqn = explode("\\", $caller["class"]);
             $context->class = array_pop($fqn);
             if (count($fqn)) {
-                $context->namespace = implode('\\', $fqn);
+                $context->namespace = implode("\\", $fqn);
             }
         }
 
@@ -231,21 +234,25 @@ class Context
     public function fullyQualifiedName(?string $source): string
     {
         if ($source === null) {
-            return '';
+            return "";
         }
 
         if ($this->namespace) {
-            $namespace = str_replace('\\\\', '\\', '\\' . $this->namespace . '\\');
+            $namespace = str_replace(
+                "\\\\",
+                "\\",
+                "\\" . $this->namespace . "\\"
+            );
         } else {
             // global namespace
-            $namespace = '\\';
+            $namespace = "\\";
         }
 
-        $thisSource = $this->class ?? $this->interface ?? $this->trait;
+        $thisSource = $this->class ?? ($this->interface ?? $this->trait);
         if ($thisSource && strcasecmp($source, $thisSource) === 0) {
             return $namespace . $thisSource;
         }
-        $pos = strpos($source, '\\');
+        $pos = strpos($source, "\\");
         if ($pos !== false) {
             if ($pos === 0) {
                 // Fully qualified name (\Foo\Bar)
@@ -254,10 +261,17 @@ class Context
             // Qualified name (Foo\Bar)
             if ($this->uses) {
                 foreach ($this->uses as $alias => $aliasedNamespace) {
-                    $alias .= '\\';
-                    if (strcasecmp(substr($source, 0, strlen($alias)), $alias) === 0) {
+                    $alias .= "\\";
+                    if (
+                        strcasecmp(
+                            substr($source, 0, strlen($alias)),
+                            $alias
+                        ) === 0
+                    ) {
                         // Aliased namespace (use \Long\Namespace as Foo)
-                        return '\\' . $aliasedNamespace . substr($source, strlen($alias) - 1);
+                        return "\\" .
+                            $aliasedNamespace .
+                            substr($source, strlen($alias) - 1);
                     }
                 }
             }
@@ -265,7 +279,7 @@ class Context
             // Unqualified name (Foo)
             foreach ($this->uses as $alias => $aliasedNamespace) {
                 if (strcasecmp($alias, $source) === 0) {
-                    return '\\' . $aliasedNamespace;
+                    return "\\" . $aliasedNamespace;
                 }
             }
         }

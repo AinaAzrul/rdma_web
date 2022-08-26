@@ -15,45 +15,51 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class AuditCommand extends BaseCommand
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function configure()
-  {
-    $this->setName('audit')
-         ->setDescription('Maintains audit tables and audit triggers')
-         ->setHelp("Maintains audit tables and audit triggers:\n".
-                   "- creates new audit tables\n".
-                   "- adds new columns to exiting audit tables\n".
-                   "- creates new and recreates existing audit triggers\n")
-         ->addArgument('config file', InputArgument::REQUIRED, 'The audit configuration file');
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function configure()
+    {
+        $this->setName("audit")
+            ->setDescription("Maintains audit tables and audit triggers")
+            ->setHelp(
+                "Maintains audit tables and audit triggers:\n" .
+                    "- creates new audit tables\n" .
+                    "- adds new columns to exiting audit tables\n" .
+                    "- creates new and recreates existing audit triggers\n"
+            )
+            ->addArgument(
+                "config file",
+                InputArgument::REQUIRED,
+                "The audit configuration file"
+            );
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function execute(InputInterface $input, OutputInterface $output)
-  {
-    $this->io = new AuditStyle($input, $output);
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->io = new AuditStyle($input, $output);
 
-    $this->configFileName = $input->getArgument('config file');
-    $this->readConfigFile();
+        $this->configFileName = $input->getArgument("config file");
+        $this->readConfigFile();
 
-    $this->connect();
+        $this->connect();
 
-    $audit = new Audit($this->config, $this->io);
-    $audit->main();
+        $audit = new Audit($this->config, $this->io);
+        $audit->main();
 
-    AuditDataLayer::$dl->disconnect();
+        AuditDataLayer::$dl->disconnect();
 
-    $this->rewriteConfig();
+        $this->rewriteConfig();
 
-    return 0;
-  }
+        return 0;
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

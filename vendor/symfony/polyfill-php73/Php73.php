@@ -30,10 +30,10 @@ final class Php73
     {
         $ns = microtime(false);
         $s = substr($ns, 11) - self::$startAt;
-        $ns = 1E9 * (float) $ns;
+        $ns = 1e9 * (float) $ns;
 
         if ($asNum) {
-            $ns += $s * 1E9;
+            $ns += $s * 1e9;
 
             return \PHP_INT_SIZE === 4 ? $ns : (int) $ns;
         }

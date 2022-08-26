@@ -19,10 +19,12 @@ class Comparator
     private string $target;
     private string $operator;
 
-    public function __construct(string $target, string $operator = '==')
+    public function __construct(string $target, string $operator = "==")
     {
-        if (!\in_array($operator, ['>', '<', '>=', '<=', '==', '!='])) {
-            throw new \InvalidArgumentException(sprintf('Invalid operator "%s".', $operator));
+        if (!\in_array($operator, [">", "<", ">=", "<=", "==", "!="])) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid operator "%s".', $operator)
+            );
         }
 
         $this->target = $target;
@@ -51,11 +53,11 @@ class Comparator
     public function test(mixed $test): bool
     {
         return match ($this->operator) {
-            '>' => $test > $this->target,
-            '>=' => $test >= $this->target,
-            '<' => $test < $this->target,
-            '<=' => $test <= $this->target,
-            '!=' => $test != $this->target,
+            ">" => $test > $this->target,
+            ">=" => $test >= $this->target,
+            "<" => $test < $this->target,
+            "<=" => $test <= $this->target,
+            "!=" => $test != $this->target,
             default => $test == $this->target,
         };
     }

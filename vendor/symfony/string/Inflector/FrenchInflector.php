@@ -47,7 +47,10 @@ final class FrenchInflector implements InflectorInterface
 
         // Words finishing with "al" are pluralized with a "aux" excepted
         // Les mots finissant en "al" se terminent en "aux" sauf
-        ['/^(bal|carnaval|caracal|chacal|choral|corral|étal|festival|récital|val)$/i', '\1s'],
+        [
+            '/^(bal|carnaval|caracal|chacal|choral|corral|étal|festival|récital|val)$/i',
+            '\1s',
+        ],
         ['/al$/i', '\1aux'],
 
         // Aspirail, bail, corail, émail, fermail, soupirail, travail, vantail et vitrail font leur pluriel en -aux
@@ -80,7 +83,10 @@ final class FrenchInflector implements InflectorInterface
 
         // Words finishing with "al" are pluralized with a "aux" expected
         // Les mots finissant en "al" se terminent en "aux" sauf
-        ['/(amir|anim|arsen|boc|can|capit|capor|chev|crist|génér|hopit|hôpit|idé|journ|littor|loc|m|mét|minér|princip|radic|termin)aux$/i', '\1al'],
+        [
+            '/(amir|anim|arsen|boc|can|capit|capor|chev|crist|génér|hopit|hôpit|idé|journ|littor|loc|m|mét|minér|princip|radic|termin)aux$/i',
+            '\1al',
+        ],
 
         // Words finishing with "au" are pluralized with a "x" excepted "landau"
         // Les mots finissant par "au" prennent un "x" au pluriel sauf "landau"
@@ -101,7 +107,7 @@ final class FrenchInflector implements InflectorInterface
         ['/^Mes(sieur|seigneur)s$/', 'Mon\1'],
 
         // Default rule
-        ['/s$/i', ''],
+        ['/s$/i', ""],
     ];
 
     /**
@@ -147,7 +153,7 @@ final class FrenchInflector implements InflectorInterface
             }
         }
 
-        return [$singular.'s'];
+        return [$singular . "s"];
     }
 
     private function isInflectedWord(string $word): bool

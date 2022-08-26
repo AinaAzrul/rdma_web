@@ -32,8 +32,11 @@ class GelfHandler extends AbstractProcessingHandler
     /**
      * @param PublisherInterface $publisher a gelf publisher object
      */
-    public function __construct(PublisherInterface $publisher, $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        PublisherInterface $publisher,
+        $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
         parent::__construct($level, $bubble);
 
         $this->publisher = $publisher;
@@ -44,7 +47,7 @@ class GelfHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        $this->publisher->publish($record['formatted']);
+        $this->publisher->publish($record["formatted"]);
     }
 
     /**

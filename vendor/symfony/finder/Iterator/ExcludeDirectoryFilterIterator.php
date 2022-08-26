@@ -21,7 +21,8 @@ use Symfony\Component\Finder\SplFileInfo;
  * @extends \FilterIterator<string, SplFileInfo>
  * @implements \RecursiveIterator<string, SplFileInfo>
  */
-class ExcludeDirectoryFilterIterator extends \FilterIterator implements \RecursiveIterator
+class ExcludeDirectoryFilterIterator extends \FilterIterator implements
+    \RecursiveIterator
 {
     /** @var \Iterator<string, SplFileInfo> */
     private \Iterator $iterator;
@@ -39,15 +40,16 @@ class ExcludeDirectoryFilterIterator extends \FilterIterator implements \Recursi
         $this->isRecursive = $iterator instanceof \RecursiveIterator;
         $patterns = [];
         foreach ($directories as $directory) {
-            $directory = rtrim($directory, '/');
-            if (!$this->isRecursive || str_contains($directory, '/')) {
-                $patterns[] = preg_quote($directory, '#');
+            $directory = rtrim($directory, "/");
+            if (!$this->isRecursive || str_contains($directory, "/")) {
+                $patterns[] = preg_quote($directory, "#");
             } else {
                 $this->excludedDirs[$directory] = true;
             }
         }
         if ($patterns) {
-            $this->excludedPattern = '#(?:^|/)(?:'.implode('|', $patterns).')(?:/|$)#';
+            $this->excludedPattern =
+                "#(?:^|/)(?:" . implode("|", $patterns) . ')(?:/|$)#';
         }
 
         parent::__construct($iterator);
@@ -58,13 +60,19 @@ class ExcludeDirectoryFilterIterator extends \FilterIterator implements \Recursi
      */
     public function accept(): bool
     {
-        if ($this->isRecursive && isset($this->excludedDirs[$this->getFilename()]) && $this->isDir()) {
+        if (
+            $this->isRecursive &&
+            isset($this->excludedDirs[$this->getFilename()]) &&
+            $this->isDir()
+        ) {
             return false;
         }
 
         if ($this->excludedPattern) {
-            $path = $this->isDir() ? $this->current()->getRelativePathname() : $this->current()->getRelativePath();
-            $path = str_replace('\\', '/', $path);
+            $path = $this->isDir()
+                ? $this->current()->getRelativePathname()
+                : $this->current()->getRelativePath();
+            $path = str_replace("\\", "/", $path);
 
             return !preg_match($this->excludedPattern, $path);
         }

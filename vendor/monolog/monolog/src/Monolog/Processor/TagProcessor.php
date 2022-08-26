@@ -54,7 +54,7 @@ class TagProcessor implements ProcessorInterface
      */
     public function __invoke(array $record): array
     {
-        $record['extra']['tags'] = $this->tags;
+        $record["extra"]["tags"] = $this->tags;
 
         return $record;
     }

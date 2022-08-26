@@ -18,40 +18,40 @@ final class ParserTraceListener implements ParseTreeListener
         $this->parser = $parser;
     }
 
-    public function enterEveryRule(ParserRuleContext $context) : void
+    public function enterEveryRule(ParserRuleContext $context): void
     {
         $stream = $this->parser->getTokenStream();
         $token = $stream !== null ? $stream->LT(1) : null;
 
         echo \sprintf(
-            'enter   %s, LT(1)=%s',
+            "enter   %s, LT(1)=%s",
             $this->parser->getRuleNames()[$context->getRuleIndex()],
-            $token === null? '' : $token->getText() ?? ''
+            $token === null ? "" : $token->getText() ?? ""
         );
     }
 
-    public function visitTerminal(TerminalNode $node) : void
+    public function visitTerminal(TerminalNode $node): void
     {
         echo \sprintf(
-            'consume %s rule %s',
+            "consume %s rule %s",
             $node->getSymbol(),
             $this->parser->getCurrentRuleName()
         );
     }
 
-    public function exitEveryRule(ParserRuleContext $context) : void
+    public function exitEveryRule(ParserRuleContext $context): void
     {
         $stream = $this->parser->getTokenStream();
         $token = $stream !== null ? $stream->LT(1) : null;
 
         echo \sprintf(
-            'exit    %s, LT(1)=%s',
+            "exit    %s, LT(1)=%s",
             $this->parser->getRuleNames()[$context->getRuleIndex()],
-            $token === null? '' : $token->getText() ?? ''
+            $token === null ? "" : $token->getText() ?? ""
         );
     }
 
-    public function visitErrorNode(ErrorNode $node) : void
+    public function visitErrorNode(ErrorNode $node): void
     {
     }
 }

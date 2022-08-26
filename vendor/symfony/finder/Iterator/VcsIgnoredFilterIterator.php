@@ -40,7 +40,10 @@ final class VcsIgnoredFilterIterator extends \FilterIterator
     {
         $this->baseDir = $this->normalizePath($baseDir);
 
-        foreach ($this->parentDirectoriesUpwards($this->baseDir) as $parentDirectory) {
+        foreach (
+            $this->parentDirectoriesUpwards($this->baseDir)
+            as $parentDirectory
+        ) {
             if (@is_dir("{$parentDirectory}/.git")) {
                 $this->baseDir = $parentDirectory;
                 break;
@@ -61,8 +64,8 @@ final class VcsIgnoredFilterIterator extends \FilterIterator
 
     private function isIgnored(string $fileRealPath): bool
     {
-        if (is_dir($fileRealPath) && !str_ends_with($fileRealPath, '/')) {
-            $fileRealPath .= '/';
+        if (is_dir($fileRealPath) && !str_ends_with($fileRealPath, "/")) {
+            $fileRealPath .= "/";
         }
 
         if (isset($this->ignoredPathsCache[$fileRealPath])) {
@@ -71,15 +74,26 @@ final class VcsIgnoredFilterIterator extends \FilterIterator
 
         $ignored = false;
 
-        foreach ($this->parentDirectoriesDownwards($fileRealPath) as $parentDirectory) {
+        foreach (
+            $this->parentDirectoriesDownwards($fileRealPath)
+            as $parentDirectory
+        ) {
             if ($this->isIgnored($parentDirectory)) {
                 // rules in ignored directories are ignored, no need to check further.
                 break;
             }
 
-            $fileRelativePath = substr($fileRealPath, \strlen($parentDirectory) + 1);
+            $fileRelativePath = substr(
+                $fileRealPath,
+                \strlen($parentDirectory) + 1
+            );
 
-            if (null === $regexps = $this->readGitignoreFile("{$parentDirectory}/.gitignore")) {
+            if (
+                null ===
+                ($regexps = $this->readGitignoreFile(
+                    "{$parentDirectory}/.gitignore"
+                ))
+            ) {
                 continue;
             }
 
@@ -156,7 +170,9 @@ final class VcsIgnoredFilterIterator extends \FilterIterator
         }
 
         if (!is_file($path) || !is_readable($path)) {
-            throw new \RuntimeException("The \"ignoreVCSIgnored\" option cannot be used by the Finder as the \"{$path}\" file is not readable.");
+            throw new \RuntimeException(
+                "The \"ignoreVCSIgnored\" option cannot be used by the Finder as the \"{$path}\" file is not readable."
+            );
         }
 
         $gitignoreFileContent = file_get_contents($path);
@@ -169,8 +185,8 @@ final class VcsIgnoredFilterIterator extends \FilterIterator
 
     private function normalizePath(string $path): string
     {
-        if ('\\' === \DIRECTORY_SEPARATOR) {
-            return str_replace('\\', '/', $path);
+        if ("\\" === \DIRECTORY_SEPARATOR) {
+            return str_replace("\\", "/", $path);
         }
 
         return $path;

@@ -26,7 +26,7 @@ class Json implements ParserInterface
     {
         $data = json_decode(file_get_contents($filename), true);
 
-        return (array)$this->parse($data, $filename);
+        return (array) $this->parse($data, $filename);
     }
 
     /**
@@ -39,7 +39,7 @@ class Json implements ParserInterface
     {
         $data = json_decode($config, true);
 
-        return (array)$this->parse($data);
+        return (array) $this->parse($data);
     }
 
     /**
@@ -54,15 +54,15 @@ class Json implements ParserInterface
     protected function parse($data = null, $filename = null)
     {
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $error_message  = 'Syntax error';
-            if (function_exists('json_last_error_msg')) {
+            $error_message = "Syntax error";
+            if (function_exists("json_last_error_msg")) {
                 $error_message = json_last_error_msg();
             }
 
             $error = [
-                'message' => $error_message,
-                'type'    => json_last_error(),
-                'file'    => $filename,
+                "message" => $error_message,
+                "type" => json_last_error(),
+                "file" => $filename,
             ];
 
             throw new ParseException($error);
@@ -76,6 +76,6 @@ class Json implements ParserInterface
      */
     public static function getSupportedExtensions()
     {
-        return ['json'];
+        return ["json"];
     }
 }

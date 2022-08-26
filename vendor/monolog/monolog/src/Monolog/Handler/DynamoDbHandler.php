@@ -26,7 +26,7 @@ use Monolog\Logger;
  */
 class DynamoDbHandler extends AbstractProcessingHandler
 {
-    public const DATE_FORMAT = 'Y-m-d\TH:i:s.uO';
+    public const DATE_FORMAT = "Y-m-d\TH:i:s.uO";
 
     /**
      * @var DynamoDbClient
@@ -48,12 +48,19 @@ class DynamoDbHandler extends AbstractProcessingHandler
      */
     protected $marshaler;
 
-    public function __construct(DynamoDbClient $client, string $table, $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        DynamoDbClient $client,
+        string $table,
+        $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
         /** @phpstan-ignore-next-line */
-        if (defined('Aws\Sdk::VERSION') && version_compare(Sdk::VERSION, '3.0', '>=')) {
+        if (
+            defined("Aws\Sdk::VERSION") &&
+            version_compare(Sdk::VERSION, "3.0", ">=")
+        ) {
             $this->version = 3;
-            $this->marshaler = new Marshaler;
+            $this->marshaler = new Marshaler();
         } else {
             $this->version = 2;
         }
@@ -69,7 +76,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        $filtered = $this->filterEmptyFields($record['formatted']);
+        $filtered = $this->filterEmptyFields($record["formatted"]);
         if ($this->version === 3) {
             $formatted = $this->marshaler->marshalItem($filtered);
         } else {
@@ -78,8 +85,8 @@ class DynamoDbHandler extends AbstractProcessingHandler
         }
 
         $this->client->putItem([
-            'TableName' => $this->table,
-            'Item' => $formatted,
+            "TableName" => $this->table,
+            "Item" => $formatted,
         ]);
     }
 

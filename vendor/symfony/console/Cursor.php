@@ -24,7 +24,8 @@ final class Cursor
     public function __construct(OutputInterface $output, $input = null)
     {
         $this->output = $output;
-        $this->input = $input ?? (\defined('STDIN') ? \STDIN : fopen('php://input', 'r+'));
+        $this->input =
+            $input ?? (\defined("STDIN") ? \STDIN : fopen("php://input", "r+"));
     }
 
     public function moveUp(int $lines = 1): self
@@ -144,22 +145,30 @@ final class Cursor
     {
         static $isTtySupported;
 
-        if (null === $isTtySupported && \function_exists('proc_open')) {
-            $isTtySupported = (bool) @proc_open('echo 1 >/dev/null', [['file', '/dev/tty', 'r'], ['file', '/dev/tty', 'w'], ['file', '/dev/tty', 'w']], $pipes);
+        if (null === $isTtySupported && \function_exists("proc_open")) {
+            $isTtySupported = (bool) @proc_open(
+                "echo 1 >/dev/null",
+                [
+                    ["file", "/dev/tty", "r"],
+                    ["file", "/dev/tty", "w"],
+                    ["file", "/dev/tty", "w"],
+                ],
+                $pipes
+            );
         }
 
         if (!$isTtySupported) {
             return [1, 1];
         }
 
-        $sttyMode = shell_exec('stty -g');
-        shell_exec('stty -icanon -echo');
+        $sttyMode = shell_exec("stty -g");
+        shell_exec("stty -icanon -echo");
 
         @fwrite($this->input, "\033[6n");
 
         $code = trim(fread($this->input, 1024));
 
-        shell_exec(sprintf('stty %s', $sttyMode));
+        shell_exec(sprintf("stty %s", $sttyMode));
 
         sscanf($code, "\033[%d;%dR", $row, $col);
 

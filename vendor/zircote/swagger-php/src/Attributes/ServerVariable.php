@@ -27,13 +27,13 @@ class ServerVariable extends \OpenApi\Annotations\ServerVariable
         ?array $attachables = null
     ) {
         parent::__construct([
-                'serverVariable' => $serverVariable ?? Generator::UNDEFINED,
-                'description' => $description ?? Generator::UNDEFINED,
-                'default' => $default ?? Generator::UNDEFINED,
-                'enum' => $enum ?? Generator::UNDEFINED,
-                'variables' => $variables ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($attachables),
-            ]);
+            "serverVariable" => $serverVariable ?? Generator::UNDEFINED,
+            "description" => $description ?? Generator::UNDEFINED,
+            "default" => $default ?? Generator::UNDEFINED,
+            "enum" => $enum ?? Generator::UNDEFINED,
+            "variables" => $variables ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($attachables),
+        ]);
     }
 }

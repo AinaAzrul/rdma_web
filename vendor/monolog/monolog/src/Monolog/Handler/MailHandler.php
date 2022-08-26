@@ -31,7 +31,7 @@ abstract class MailHandler extends AbstractProcessingHandler
         $messages = [];
 
         foreach ($records as $record) {
-            if ($record['level'] < $this->level) {
+            if ($record["level"] < $this->level) {
                 continue;
             }
             /** @var Record $message */
@@ -40,7 +40,10 @@ abstract class MailHandler extends AbstractProcessingHandler
         }
 
         if (!empty($messages)) {
-            $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
+            $this->send(
+                (string) $this->getFormatter()->formatBatch($messages),
+                $messages
+            );
         }
     }
 
@@ -59,7 +62,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        $this->send((string) $record['formatted'], [$record]);
+        $this->send((string) $record["formatted"], [$record]);
     }
 
     /**
@@ -70,7 +73,10 @@ abstract class MailHandler extends AbstractProcessingHandler
     {
         $highestRecord = null;
         foreach ($records as $record) {
-            if ($highestRecord === null || $highestRecord['level'] < $record['level']) {
+            if (
+                $highestRecord === null ||
+                $highestRecord["level"] < $record["level"]
+            ) {
                 $highestRecord = $record;
             }
         }
@@ -80,7 +86,7 @@ abstract class MailHandler extends AbstractProcessingHandler
 
     protected function isHtmlBody(string $body): bool
     {
-        return ($body[0] ?? null) === '<';
+        return ($body[0] ?? null) === "<";
     }
 
     /**

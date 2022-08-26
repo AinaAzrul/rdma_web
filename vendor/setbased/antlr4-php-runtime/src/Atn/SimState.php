@@ -36,7 +36,7 @@ final class SimState
     /** @var DFAState|null */
     private $dfaState;
 
-    public function reset() : void
+    public function reset(): void
     {
         $this->index = -1;
         $this->line = 0;
@@ -44,42 +44,42 @@ final class SimState
         $this->dfaState = null;
     }
 
-    public function getIndex() : int
+    public function getIndex(): int
     {
         return $this->index;
     }
 
-    public function setIndex(int $index) : void
+    public function setIndex(int $index): void
     {
         $this->index = $index;
     }
 
-    public function getLine() : int
+    public function getLine(): int
     {
         return $this->line;
     }
 
-    public function setLine(int $line) : void
+    public function setLine(int $line): void
     {
         $this->line = $line;
     }
 
-    public function getCharPos() : int
+    public function getCharPos(): int
     {
         return $this->charPos;
     }
 
-    public function setCharPos(int $charPos) : void
+    public function setCharPos(int $charPos): void
     {
         $this->charPos = $charPos;
     }
 
-    public function getDfaState() : ?DFAState
+    public function getDfaState(): ?DFAState
     {
         return $this->dfaState;
     }
 
-    public function setDfaState(?DFAState $dfaState) : void
+    public function setDfaState(?DFAState $dfaState): void
     {
         $this->dfaState = $dfaState;
     }

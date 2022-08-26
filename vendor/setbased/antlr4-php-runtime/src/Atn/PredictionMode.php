@@ -162,8 +162,10 @@ final class PredictionMode
      * the configurations to strip out all of the predicates so that a standard
      * {@see ATNConfigSet} will merge everything ignoring predicates.
      */
-    public static function hasSLLConflictTerminatingPrediction(int $mode, ATNConfigSet $configs) : bool
-    {
+    public static function hasSLLConflictTerminatingPrediction(
+        int $mode,
+        ATNConfigSet $configs
+    ): bool {
         /* Configs in rule stop states indicate reaching the end of the decision
          * rule (local context) or end of start rule (full context). If all
          * configs meet this condition, then none of the configurations is able
@@ -195,7 +197,8 @@ final class PredictionMode
         // pure SLL or combined SLL+LL mode parsing
         $altsets = self::getConflictingAltSubsets($configs);
 
-        return self::hasConflictingAltSet($altsets) && !self::hasStateAssociatedWithOneAlt($configs);
+        return self::hasConflictingAltSet($altsets) &&
+            !self::hasStateAssociatedWithOneAlt($configs);
     }
 
     /**
@@ -208,7 +211,7 @@ final class PredictionMode
      * @return bool If any configuration in  is in a if any configuration in
      *              `configs` is in a {@see RuleStopState}, otherwise `false`.
      */
-    public static function hasConfigInRuleStopState(ATNConfigSet $configs) : bool
+    public static function hasConfigInRuleStopState(ATNConfigSet $configs): bool
     {
         foreach ($configs->elements() as $c) {
             if ($c->state instanceof RuleStopState) {
@@ -229,8 +232,9 @@ final class PredictionMode
      * @return bool If all configurations in  are in a if all configurations in
      *              `configs` are in a {@see RuleStopState}, otherwise `false`.
      */
-    public static function allConfigsInRuleStopStates(ATNConfigSet $configs) : bool
-    {
+    public static function allConfigsInRuleStopStates(
+        ATNConfigSet $configs
+    ): bool {
         foreach ($configs->elements() as $c) {
             if (!$c->state instanceof RuleStopState) {
                 return false;
@@ -362,7 +366,7 @@ final class PredictionMode
      *
      * @param array<BitSet> $altsets
      */
-    public static function resolvesToJustOneViableAlt(array $altsets) : int
+    public static function resolvesToJustOneViableAlt(array $altsets): int
     {
         return self::getSingleViableAlt($altsets);
     }
@@ -376,7 +380,7 @@ final class PredictionMode
      * @return bool If every >BitSet in `altsets` {@see BitSet::length()} > 1,
      *              otherwise `false`.
      */
-    public static function allSubsetsConflict(array $altsets) : bool
+    public static function allSubsetsConflict(array $altsets): bool
     {
         return !self::hasNonConflictingAltSet($altsets);
     }
@@ -390,7 +394,7 @@ final class PredictionMode
      * @return bool `true` if `altsets` contains a {@see BitSet} with
      *              {@see BitSet::length()} 1, otherwise `false`.
      */
-    public static function hasNonConflictingAltSet(array $altsets) : bool
+    public static function hasNonConflictingAltSet(array $altsets): bool
     {
         foreach ($altsets as $alts) {
             if ($alts->length() === 1) {
@@ -410,7 +414,7 @@ final class PredictionMode
      * @return bool `true` if `altsets` contains a {@see BitSet} with
      *              {@see BitSet::length()} > 1, otherwise `false`.
      */
-    public static function hasConflictingAltSet(array $altsets) : bool
+    public static function hasConflictingAltSet(array $altsets): bool
     {
         foreach ($altsets as $alts) {
             if ($alts->length() > 1) {
@@ -429,7 +433,7 @@ final class PredictionMode
      * @return bool `true` if every member of `altsets` is equal to
      *              the others, otherwise `false`.
      */
-    public static function allSubsetsEqual(array $altsets) : bool
+    public static function allSubsetsEqual(array $altsets): bool
     {
         $first = null;
 
@@ -451,7 +455,7 @@ final class PredictionMode
      *
      * @param array<BitSet> $altsets a collection of alternative subsets
      */
-    public static function getUniqueAlt(array $altsets) : int
+    public static function getUniqueAlt(array $altsets): int
     {
         $all = self::getAlts($altsets);
 
@@ -471,7 +475,7 @@ final class PredictionMode
      *
      * @return BitSet the set of represented alternatives in `altsets`.
      */
-    public static function getAlts(array $altsets) : BitSet
+    public static function getAlts(array $altsets): BitSet
     {
         $all = new BitSet();
 
@@ -491,31 +495,42 @@ final class PredictionMode
      *
      * @return array<BitSet>
      */
-    public static function getConflictingAltSubsets(ATNConfigSet $configs) : array
-    {
-        $configToAlts = new Map(new class implements Equivalence {
-            public function equals(object $other) : bool
-            {
-                return $this instanceof self;
-            }
-
-            public function equivalent(Hashable $left, Hashable $right) : bool
-            {
-                return $left instanceof ATNConfig
-                    && $right instanceof ATNConfig
-                    && $left->state->stateNumber === $right->state->stateNumber
-                    && Equality::equals($left->context, $right->context);
-            }
-
-            public function hash(Hashable $value) : int
-            {
-                if (!$value instanceof ATNConfig) {
-                    throw new \InvalidArgumentException('Unsupported value.');
+    public static function getConflictingAltSubsets(
+        ATNConfigSet $configs
+    ): array {
+        $configToAlts = new Map(
+            new class implements Equivalence {
+                public function equals(object $other): bool
+                {
+                    return $this instanceof self;
                 }
 
-                return Hasher::hash($value->state->stateNumber, $value->context);
+                public function equivalent(
+                    Hashable $left,
+                    Hashable $right
+                ): bool {
+                    return $left instanceof ATNConfig &&
+                        $right instanceof ATNConfig &&
+                        $left->state->stateNumber ===
+                            $right->state->stateNumber &&
+                        Equality::equals($left->context, $right->context);
+                }
+
+                public function hash(Hashable $value): int
+                {
+                    if (!$value instanceof ATNConfig) {
+                        throw new \InvalidArgumentException(
+                            "Unsupported value."
+                        );
+                    }
+
+                    return Hasher::hash(
+                        $value->state->stateNumber,
+                        $value->context
+                    );
+                }
             }
-        });
+        );
 
         foreach ($configs->elements() as $cfg) {
             $alts = $configToAlts->get($cfg);
@@ -537,7 +552,7 @@ final class PredictionMode
      *
      *     map[c.{@see ATNConfig::$state}] U= c.{@see ATNConfig::$alt}
      */
-    public static function getStateToAltMap(ATNConfigSet $configs) : Map
+    public static function getStateToAltMap(ATNConfigSet $configs): Map
     {
         $m = new Map();
 
@@ -555,8 +570,9 @@ final class PredictionMode
         return $m;
     }
 
-    public static function hasStateAssociatedWithOneAlt(ATNConfigSet $configs) : bool
-    {
+    public static function hasStateAssociatedWithOneAlt(
+        ATNConfigSet $configs
+    ): bool {
         foreach (self::getStateToAltMap($configs)->getValues() as $value) {
             if ($value instanceof BitSet && $value->length() === 1) {
                 return true;
@@ -569,7 +585,7 @@ final class PredictionMode
     /**
      * @param array<BitSet> $altsets
      */
-    public static function getSingleViableAlt(array $altsets) : int
+    public static function getSingleViableAlt(array $altsets): int
     {
         $result = 0;
 

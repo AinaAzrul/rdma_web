@@ -34,7 +34,8 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Kris Buist <krisbuist@gmail.com>
  */
-class OverflowHandler extends AbstractHandler implements FormattableHandlerInterface
+class OverflowHandler extends AbstractHandler implements
+    FormattableHandlerInterface
 {
     /** @var HandlerInterface */
     private $handler;
@@ -89,11 +90,11 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
      */
     public function handle(array $record): bool
     {
-        if ($record['level'] < $this->level) {
+        if ($record["level"] < $this->level) {
             return false;
         }
 
-        $level = $record['level'];
+        $level = $record["level"];
 
         if (!isset($this->thresholdMap[$level])) {
             $this->thresholdMap[$level] = 0;
@@ -124,15 +125,20 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         if ($this->handler instanceof FormattableHandlerInterface) {
             $this->handler->setFormatter($formatter);
 
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($this->handler).' does not support formatters.');
+        throw new \UnexpectedValueException(
+            "The nested handler of type " .
+                get_class($this->handler) .
+                " does not support formatters."
+        );
     }
 
     /**
@@ -144,6 +150,10 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
             return $this->handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($this->handler).' does not support formatters.');
+        throw new \UnexpectedValueException(
+            "The nested handler of type " .
+                get_class($this->handler) .
+                " does not support formatters."
+        );
     }
 }

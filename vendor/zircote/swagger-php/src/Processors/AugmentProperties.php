@@ -25,10 +25,16 @@ class AugmentProperties
     public function __invoke(Analysis $analysis)
     {
         $refs = [];
-        if (!Generator::isDefault($analysis->openapi->components) && !Generator::isDefault($analysis->openapi->components->schemas)) {
+        if (
+            !Generator::isDefault($analysis->openapi->components) &&
+            !Generator::isDefault($analysis->openapi->components->schemas)
+        ) {
             foreach ($analysis->openapi->components->schemas as $schema) {
                 if (!Generator::isDefault($schema->schema)) {
-                    $refKey = $this->toRefKey($schema->_context, $schema->_context->class);
+                    $refKey = $this->toRefKey(
+                        $schema->_context,
+                        $schema->_context->class
+                    );
                     $refs[$refKey] = Components::ref($schema);
                 }
             }
@@ -49,23 +55,48 @@ class AugmentProperties
             }
 
             $comment = str_replace("\r\n", "\n", (string) $context->comment);
-            preg_match('/@var\s+(?<type>[^\s]+)([ \t])?(?<description>.+)?$/im', $comment, $varMatches);
+            preg_match(
+                '/@var\s+(?<type>[^\s]+)([ \t])?(?<description>.+)?$/im',
+                $comment,
+                $varMatches
+            );
 
             if (Generator::isDefault($property->type)) {
-                $this->augmentType($analysis, $property, $context, $refs, $varMatches);
+                $this->augmentType(
+                    $analysis,
+                    $property,
+                    $context,
+                    $refs,
+                    $varMatches
+                );
             } else {
                 $this->mapNativeType($property, $property->type);
             }
 
-            if (Generator::isDefault($property->description) && isset($varMatches['description'])) {
-                $property->description = trim($varMatches['description']);
+            if (
+                Generator::isDefault($property->description) &&
+                isset($varMatches["description"])
+            ) {
+                $property->description = trim($varMatches["description"]);
             }
-            if (Generator::isDefault($property->description) && $this->isRoot($property)) {
-                $property->description = $this->extractContent($context->comment);
+            if (
+                Generator::isDefault($property->description) &&
+                $this->isRoot($property)
+            ) {
+                $property->description = $this->extractContent(
+                    $context->comment
+                );
             }
 
-            if (Generator::isDefault($property->example) && preg_match('/@example\s+([ \t])?(?<example>.+)?$/im', $comment, $varMatches)) {
-                $property->example = $varMatches['example'];
+            if (
+                Generator::isDefault($property->example) &&
+                preg_match(
+                    '/@example\s+([ \t])?(?<example>.+)?$/im',
+                    $comment,
+                    $varMatches
+                )
+            ) {
+                $property->example = $varMatches["example"];
             }
         }
     }
@@ -74,16 +105,24 @@ class AugmentProperties
     {
         $fqn = strtolower($context->fullyQualifiedName($name));
 
-        return ltrim($fqn, '\\');
+        return ltrim($fqn, "\\");
     }
 
-    protected function augmentType(Analysis $analysis, Property $property, Context $context, array $refs, array $varMatches): void
-    {
+    protected function augmentType(
+        Analysis $analysis,
+        Property $property,
+        Context $context,
+        array $refs,
+        array $varMatches
+    ): void {
         // docblock typehints
-        if (isset($varMatches['type'])) {
-            $allTypes = strtolower(trim($varMatches['type']));
+        if (isset($varMatches["type"])) {
+            $allTypes = strtolower(trim($varMatches["type"]));
 
-            if ($this->isNullable($allTypes) && Generator::isDefault($property->nullable)) {
+            if (
+                $this->isNullable($allTypes) &&
+                Generator::isDefault($property->nullable)
+            ) {
                 $property->nullable = true;
             }
 
@@ -94,38 +133,46 @@ class AugmentProperties
             // finalise property type/ref
             if (!$this->mapNativeType($property, $type)) {
                 $refKey = $this->toRefKey($context, $type);
-                if (Generator::isDefault($property->ref) && array_key_exists($refKey, $refs)) {
+                if (
+                    Generator::isDefault($property->ref) &&
+                    array_key_exists($refKey, $refs)
+                ) {
                     $property->ref = $refs[$refKey];
                 }
             }
 
             // ok, so we possibly have a type or ref
-            if (!Generator::isDefault($property->ref) && $typeMatches[2] === '' && $property->nullable) {
+            if (
+                !Generator::isDefault($property->ref) &&
+                $typeMatches[2] === "" &&
+                $property->nullable
+            ) {
                 $refKey = $this->toRefKey($context, $type);
                 $property->oneOf = [
-                    $schema = new Schema([
-                        'ref' => $refs[$refKey],
-                        '_context' => $property->_context,
-                        '_aux' => true,
-                    ]),
+                    ($schema = new Schema([
+                        "ref" => $refs[$refKey],
+                        "_context" => $property->_context,
+                        "_aux" => true,
+                    ])),
                 ];
                 $analysis->addAnnotation($schema, $schema->_context);
                 $property->nullable = true;
-            } elseif ($typeMatches[2] === '[]') {
+            } elseif ($typeMatches[2] === "[]") {
                 if (Generator::isDefault($property->items)) {
-                    $property->items = $items = new Items(
-                        [
-                            'type' => $property->type,
-                            '_context' => new Context(['generated' => true], $context),
-                            '_aux' => true,
-                        ]
-                    );
+                    $property->items = $items = new Items([
+                        "type" => $property->type,
+                        "_context" => new Context(
+                            ["generated" => true],
+                            $context
+                        ),
+                        "_aux" => true,
+                    ]);
                     $analysis->addAnnotation($items, $items->_context);
                     if (!Generator::isDefault($property->ref)) {
                         $property->items->ref = $property->ref;
                         $property->ref = Generator::UNDEFINED;
                     }
-                    $property->type = 'array';
+                    $property->type = "array";
                 }
             }
         }
@@ -138,10 +185,17 @@ class AugmentProperties
             $type = strtolower($context->type);
             if (!$this->mapNativeType($property, $type)) {
                 $refKey = $this->toRefKey($context, $type);
-                if (Generator::isDefault($property->ref) && array_key_exists($refKey, $refs)) {
+                if (
+                    Generator::isDefault($property->ref) &&
+                    array_key_exists($refKey, $refs)
+                ) {
                     $this->applyRef($analysis, $property, $refs[$refKey]);
                 } else {
-                    if ($typeSchema = $analysis->getSchemaForSource($context->type)) {
+                    if (
+                        $typeSchema = $analysis->getSchemaForSource(
+                            $context->type
+                        )
+                    ) {
                         if (Generator::isDefault($property->format)) {
                             $property->ref = Components::ref($typeSchema);
                             $property->type = Generator::UNDEFINED;
@@ -151,7 +205,10 @@ class AugmentProperties
             }
         }
 
-        if (!Generator::isDefault($property->const) && Generator::isDefault($property->type)) {
+        if (
+            !Generator::isDefault($property->const) &&
+            Generator::isDefault($property->type)
+        ) {
             if (!$this->mapNativeType($property, gettype($property->const))) {
                 $property->type = Generator::UNDEFINED;
             }
@@ -160,34 +217,37 @@ class AugmentProperties
 
     protected function isNullable(string $typeDescription): bool
     {
-        return in_array('null', explode('|', strtolower($typeDescription)));
+        return in_array("null", explode("|", strtolower($typeDescription)));
     }
 
     protected function stripNull(string $typeDescription): string
     {
-        if (strpos($typeDescription, '|') === false) {
+        if (strpos($typeDescription, "|") === false) {
             return $typeDescription;
         }
         $types = [];
-        foreach (explode('|', $typeDescription) as $type) {
-            if (strtolower($type) === 'null') {
+        foreach (explode("|", $typeDescription) as $type) {
+            if (strtolower($type) === "null") {
                 continue;
             }
             $types[] = $type;
         }
 
-        return implode('|', $types);
+        return implode("|", $types);
     }
 
-    protected function applyRef(Analysis $analysis, Property $property, string $ref): void
-    {
+    protected function applyRef(
+        Analysis $analysis,
+        Property $property,
+        string $ref
+    ): void {
         if ($property->nullable === true) {
             $property->oneOf = [
-                $schema = new Schema([
-                    'ref' => $ref,
-                    '_context' => $property->_context,
-                    '_aux' => true,
-                ]),
+                ($schema = new Schema([
+                    "ref" => $ref,
+                    "_context" => $property->_context,
+                    "_aux" => true,
+                ])),
             ];
             $analysis->addAnnotation($schema, $schema->_context);
         } else {

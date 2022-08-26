@@ -23,20 +23,39 @@ class ExpandTraits
     public function __invoke(Analysis $analysis)
     {
         /** @var AnnotationSchema[] $schemas */
-        $schemas = $analysis->getAnnotationsOfType([AnnotationSchema::class, AttributeSchema::class], true);
+        $schemas = $analysis->getAnnotationsOfType(
+            [AnnotationSchema::class, AttributeSchema::class],
+            true
+        );
 
         foreach ($schemas as $schema) {
-            if ($schema->_context->is('class') || $schema->_context->is('trait')) {
+            if (
+                $schema->_context->is("class") ||
+                $schema->_context->is("trait")
+            ) {
                 $source = $schema->_context->class ?: $schema->_context->trait;
-                $traits = $analysis->getTraitsOfClass($schema->_context->fullyQualifiedName($source), true);
+                $traits = $analysis->getTraitsOfClass(
+                    $schema->_context->fullyQualifiedName($source),
+                    true
+                );
                 $existing = [];
                 foreach ($traits as $trait) {
-                    $traitSchema = $analysis->getSchemaForSource($trait['context']->fullyQualifiedName($trait['trait']));
+                    $traitSchema = $analysis->getSchemaForSource(
+                        $trait["context"]->fullyQualifiedName($trait["trait"])
+                    );
                     if ($traitSchema) {
-                        $refPath = !Generator::isDefault($traitSchema->schema) ? $traitSchema->schema : $trait['trait'];
-                        $this->inheritFrom($analysis, $schema, $traitSchema, $refPath, $trait['context']);
+                        $refPath = !Generator::isDefault($traitSchema->schema)
+                            ? $traitSchema->schema
+                            : $trait["trait"];
+                        $this->inheritFrom(
+                            $analysis,
+                            $schema,
+                            $traitSchema,
+                            $refPath,
+                            $trait["context"]
+                        );
                     } else {
-                        if ($schema->_context->is('class')) {
+                        if ($schema->_context->is("class")) {
                             $this->mergeAnnotations($schema, $trait, $existing);
                             $this->mergeMethods($schema, $trait, $existing);
                             $this->mergeProperties($schema, $trait, $existing);

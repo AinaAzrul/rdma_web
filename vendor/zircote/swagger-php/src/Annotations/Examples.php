@@ -71,12 +71,12 @@ class Examples extends AbstractAnnotation
     public $externalValue = Generator::UNDEFINED;
 
     public static $_types = [
-        'summary' => 'string',
-        'description' => 'string',
-        'externalValue' => 'string',
+        "summary" => "string",
+        "description" => "string",
+        "externalValue" => "string",
     ];
 
-    public static $_required = ['summary'];
+    public static $_required = ["summary"];
 
     public static $_parents = [
         Components::class,
@@ -91,6 +91,6 @@ class Examples extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_nested = [
-        Attachable::class => ['attachables'],
+        Attachable::class => ["attachables"],
     ];
 }

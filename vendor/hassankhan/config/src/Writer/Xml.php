@@ -42,7 +42,7 @@ class Xml extends AbstractWriter
      */
     public static function getSupportedExtensions()
     {
-        return ['xml'];
+        return ["xml"];
     }
 
     /**
@@ -55,8 +55,11 @@ class Xml extends AbstractWriter
      *
      * @see https://www.kerstner.at/2011/12/php-array-to-xml-conversion/
      */
-    protected function toXML(array $arr, $rootElement = '<config/>', $xml = null)
-    {
+    protected function toXML(
+        array $arr,
+        $rootElement = "<config/>",
+        $xml = null
+    ) {
         if ($xml === null) {
             $xml = new SimpleXMLElement($rootElement);
         }

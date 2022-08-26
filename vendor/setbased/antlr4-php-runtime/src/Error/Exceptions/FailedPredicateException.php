@@ -24,8 +24,11 @@ class FailedPredicateException extends RecognitionException
     /** @var string|null */
     private $predicate;
 
-    public function __construct(Parser $recognizer, string $predicate, ?string $message = null)
-    {
+    public function __construct(
+        Parser $recognizer,
+        string $predicate,
+        ?string $message = null
+    ) {
         parent::__construct(
             $recognizer,
             $recognizer->getInputStream(),
@@ -36,7 +39,7 @@ class FailedPredicateException extends RecognitionException
         $interpreter = $recognizer->getInterpreter();
 
         if ($interpreter === null) {
-            throw new \RuntimeException('Unexpected null interpreter.');
+            throw new \RuntimeException("Unexpected null interpreter.");
         }
 
         $s = $interpreter->atn->states[$recognizer->getState()];
@@ -55,27 +58,29 @@ class FailedPredicateException extends RecognitionException
         $this->setOffendingToken($recognizer->getCurrentToken());
     }
 
-    public function getRuleIndex() : int
+    public function getRuleIndex(): int
     {
         return $this->ruleIndex;
     }
 
-    public function getPredicateIndex() : int
+    public function getPredicateIndex(): int
     {
         return $this->predicateIndex;
     }
 
-    public function getPredicate() : ?string
+    public function getPredicate(): ?string
     {
         return $this->predicate;
     }
 
-    public function formatMessage(string $predicate, ?string $message = null) : string
-    {
+    public function formatMessage(
+        string $predicate,
+        ?string $message = null
+    ): string {
         if ($message !== null) {
             return $message;
         }
 
-        return 'failed predicate: {' . $predicate . '}?';
+        return "failed predicate: {" . $predicate . "}?";
     }
 }

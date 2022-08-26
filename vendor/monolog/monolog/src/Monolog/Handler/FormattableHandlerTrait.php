@@ -29,8 +29,9 @@ trait FormattableHandlerTrait
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         $this->formatter = $formatter;
 
         return $this;

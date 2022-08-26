@@ -24,11 +24,11 @@ class Contact extends \OpenApi\Annotations\Contact
         ?array $attachables = null
     ) {
         parent::__construct([
-            'name' => $name ?? Generator::UNDEFINED,
-            'url' => $url ?? Generator::UNDEFINED,
-            'email' => $email ?? Generator::UNDEFINED,
-            'x' => $x ?? Generator::UNDEFINED,
-            'value' => $this->combine($attachables),
+            "name" => $name ?? Generator::UNDEFINED,
+            "url" => $url ?? Generator::UNDEFINED,
+            "email" => $email ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($attachables),
         ]);
     }
 }

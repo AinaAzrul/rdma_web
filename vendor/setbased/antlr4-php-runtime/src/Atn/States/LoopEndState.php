@@ -9,7 +9,7 @@ final class LoopEndState extends ATNState
     /** @var ATNState|null */
     public $loopBackState;
 
-    public function getStateType() : int
+    public function getStateType(): int
     {
         return self::LOOP_END;
     }

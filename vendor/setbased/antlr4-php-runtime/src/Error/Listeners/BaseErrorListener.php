@@ -25,7 +25,7 @@ class BaseErrorListener implements ANTLRErrorListener
         int $charPositionInLine,
         string $msg,
         ?RecognitionException $e
-    ) : void {
+    ): void {
     }
 
     public function reportAmbiguity(
@@ -36,7 +36,7 @@ class BaseErrorListener implements ANTLRErrorListener
         bool $exact,
         ?BitSet $ambigAlts,
         ATNConfigSet $configs
-    ) : void {
+    ): void {
     }
 
     public function reportAttemptingFullContext(
@@ -46,7 +46,7 @@ class BaseErrorListener implements ANTLRErrorListener
         int $stopIndex,
         ?BitSet $conflictingAlts,
         ATNConfigSet $configs
-    ) : void {
+    ): void {
     }
 
     public function reportContextSensitivity(
@@ -56,6 +56,6 @@ class BaseErrorListener implements ANTLRErrorListener
         int $stopIndex,
         int $prediction,
         ATNConfigSet $configs
-    ) : void {
+    ): void {
     }
 }

@@ -41,7 +41,7 @@ class AbstractParseTreeVisitor implements ParseTreeVisitor
 
         $n = $node->getChildCount();
 
-        for ($i=0; $i < $n; $i++) {
+        for ($i = 0; $i < $n; $i++) {
             if (!$this->shouldVisitNextChild($node, $result)) {
                 break;
             }
@@ -151,8 +151,10 @@ class AbstractParseTreeVisitor implements ParseTreeVisitor
      *              to stop visiting children and immediately return the current
      *              aggregate result from {@see AbstractParseTreeVisitor::visitChildren()}.
      */
-    protected function shouldVisitNextChild(RuleNode $node, $currentResult) : bool
-    {
+    protected function shouldVisitNextChild(
+        RuleNode $node,
+        $currentResult
+    ): bool {
         return true;
     }
 }

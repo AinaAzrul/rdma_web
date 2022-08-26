@@ -24,7 +24,9 @@ namespace Monolog\Handler;
  * @phpstan-import-type Record from \Monolog\Logger
  * @phpstan-type FormattedRecord array{message: string, context: mixed[], level: Level, level_name: LevelName, channel: string, datetime: \DateTimeImmutable, extra: mixed[], formatted: mixed}
  */
-abstract class AbstractProcessingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
+abstract class AbstractProcessingHandler extends AbstractHandler implements
+    ProcessableHandlerInterface,
+    FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
     use FormattableHandlerTrait;
@@ -43,7 +45,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
             $record = $this->processRecord($record);
         }
 
-        $record['formatted'] = $this->getFormatter()->format($record);
+        $record["formatted"] = $this->getFormatter()->format($record);
 
         $this->write($record);
 

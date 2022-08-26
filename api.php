@@ -1,30 +1,30 @@
 <?php
 
-require_once('vendor/autoload.php');
+require_once "vendor/autoload.php";
 
 //User component
-require_once('users/validate_token.php');
-require_once('users/login.php');
-require_once('users/get_user.php');
-require_once('users/update_user.php');
-require_once('users/delete_user.php');
-require_once('users/create_user.php');
+require_once "users/validate_token.php";
+require_once "users/login.php";
+require_once "users/get_user.php";
+require_once "users/update_user.php";
+require_once "users/delete_user.php";
+require_once "users/create_user.php";
 
 //master component
-require_once('master/read_master.php');
-require_once('master/update_master.php');
-require_once('master/create_master.php');
-require_once('master/delete_master.php');
+require_once "master/read_master.php";
+require_once "master/update_master.php";
+require_once "master/create_master.php";
+require_once "master/delete_master.php";
 
 //Asset component
-require_once('asset/read_asset.php');
-require_once('asset/create_asset.php');
-require_once('asset/delete_asset.php');
-require_once('asset/update_asset.php');
-require_once('asset/add_calib_asset.php');
+require_once "asset/read_asset.php";
+require_once "asset/create_asset.php";
+require_once "asset/delete_asset.php";
+require_once "asset/update_asset.php";
+require_once "asset/add_calib_asset.php";
 
 //Logging
-require_once('shared/activity_audit.php');
+require_once "shared/activity_audit.php";
 
 // require_once('asset/asset.php');
 require __DIR__ . "/config/core.php";
@@ -32,11 +32,11 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\KEY;
 
 //Monolog error logging
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . "/vendor/autoload.php";
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
-//symfony 
+//symfony
 // use Symfony\Component\Console\Application;
 
 // $application = new Application();
@@ -49,151 +49,151 @@ use Monolog\Logger;
 ////FINAL EDIT
 $testpoint = new TestPoint();
 
-
-class TestPoint{
+class TestPoint
+{
     private $user, $asset, $master;
-    
-    public function __construct(){
-    //    $database = new Database();
-    //     $db = $database->getConnection();
-    //      $this->user = new authUser();
-    //     $this->asset = new Asset($db);
-    //     $this->master = new Master($db);
-        
-    header("Access-Control-Allow-Origin: *");
-    header("Content-Type: application/json; charset=UTF-8");
-    header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, POST, DELETE, OPTIONS");
-    header("Access-Control-Max-Age: 86400");
-    header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-    
-    $input = json_decode(file_get_contents("php://input"));
-   //  $meth = "login";
-    $meth = $input->{"method"};
-    $jwt = isset($input->token) ? $input->token : "";
 
-    
-    // if ($this->authGuard()==401){
-    //     echo authToken();
-    //     error_log("false");
-    //     login();
-    // }
-    // else {
-    //     error_log("valid token");
-    // }
+    public function __construct()
+    {
+        //    $database = new Database();
+        //     $db = $database->getConnection();
+        //      $this->user = new authUser();
+        //     $this->asset = new Asset($db);
+        //     $this->master = new Master($db);
 
-    //Routes
-    switch($meth){
+        header("Access-Control-Allow-Origin: *");
+        header("Content-Type: application/json; charset=UTF-8");
+        header(
+            "Access-Control-Allow-Methods: GET, POST, PUT, PATCH, POST, DELETE, OPTIONS"
+        );
+        header("Access-Control-Max-Age: 86400");
+        header(
+            "Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+        );
 
-        case "login":
-           login();
-        break;
+        $input = json_decode(file_get_contents("php://input"));
+        //  $meth = "login";
+        $meth = $input->{"method"};
+        $jwt = isset($input->token) ? $input->token : "";
 
-        case "validate_token":
-             echo authToken();
-         break;
+        // if ($this->authGuard()==401){
+        //     echo authToken();
+        //     error_log("false");
+        //     login();
+        // }
+        // else {
+        //     error_log("valid token");
+        // }
 
-        //for user class
-        case "get_user": 
-            // get_user();
-            if ($this->authGuard()==200){
-               get_user();
-            }
-            else{
+        //Routes
+        switch ($meth) {
+            case "login":
+                login();
+                break;
+
+            case "validate_token":
                 echo authToken();
-            }
-        break;
+                break;
 
-        case "update_user":
-            update_user();
-         break;
+            //for user class
+            case "get_user":
+                // get_user();
+                if ($this->authGuard() == 200) {
+                    get_user();
+                } else {
+                    echo authToken();
+                }
+                break;
 
-         case "delete_user":
-            delete_user();
-         break;
+            case "update_user":
+                update_user();
+                break;
 
-         case "create_user":
-            create_user();
-         break;
+            case "delete_user":
+                delete_user();
+                break;
 
-         //for master class
-         case "read_master":
-            read_master();
-         break;
+            case "create_user":
+                create_user();
+                break;
 
-         case "create_master":
-            create_master();
-         break;
+            //for master class
+            case "read_master":
+                read_master();
+                break;
 
-         case "update_master":
-            update_master();
-         break;
+            case "create_master":
+                create_master();
+                break;
 
-         case "delete_master":
-            delete_master();
-         break;
+            case "update_master":
+                update_master();
+                break;
 
-         //for Asset class
-         case "read_asset";
-            read_asset();
-         break;
+            case "delete_master":
+                delete_master();
+                break;
 
-         case "read_asset_list";
-            read_asset_list();
-         break;
+            //for Asset class
+            case "read_asset":
+                read_asset();
+                break;
 
-         case "create_asset";
-            create_asset();
-         break;
+            case "read_asset_list":
+                read_asset_list();
+                break;
 
-         case "delete_asset";
-            delete_asset();
-         break;
-         
-         case "update_asset";
-            update_asset();
-         break;
+            case "create_asset":
+                create_asset();
+                break;
 
-         case "update_calib";
-            update_calib();
-         break;
+            case "delete_asset":
+                delete_asset();
+                break;
 
-         case "create_calib";
-            create_calib();
-         break;
+            case "update_asset":
+                update_asset();
+                break;
 
-         case "delete_calib";
-            delete_calib();
-         break;
+            case "update_calib":
+                update_calib();
+                break;
 
-         case "get_log";
-            get_log();
-         break;
+            case "create_calib":
+                create_calib();
+                break;
 
-        default:
-        break;
-    
+            case "delete_calib":
+                delete_calib();
+                break;
+
+            case "get_log":
+                get_log();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public function authGuard()
+    {
+        // Call function auth token
+        $result = authToken();
+        $try = json_decode($result, true);
+        return $try["status"];
+        // $result = 44;
+        // echo json_decode(var_dump($result));
+        // if($result == false){
+        //     error_log("Invalid token");
+        //     return false;
+        // }
+        // else {
+        //     error_log("valid token");
+        //     return true;
+        // }
+    }
 }
-}
-
-
-public function authGuard() {
-    // Call function auth token
-    $result = authToken();
-    $try = json_decode($result,true);
-    return $try['status'];
-    // $result = 44;
-    // echo json_decode(var_dump($result)); 
-    // if($result == false){
-    //     error_log("Invalid token");
-    //     return false;
-    // }
-    // else {
-    //     error_log("valid token");
-    //     return true;
-    // }
-}
-}
-
 
 // // required headers (15/7)
 // header("Access-Control-Allow-Origin: *");
@@ -205,7 +205,6 @@ public function authGuard() {
 // $input = json_decode(file_get_contents("php://input"));
 // $meth = $input->method;
 // $url = "http://localhost/rdma_web/api.php";
-
 
 // if(true){
 // //execute method
@@ -221,22 +220,22 @@ public function authGuard() {
 
 //     //for user class
 //     case "get_user":
-            
+
 //             // $result= $this->user->validate_token();
 //            include 'users/get_user.php';
 //            //header('Location: http://localhost/rdma_web/users/get_user.php');
-//            /*$url = 'http://localhost/rdma_web/users/get_user.php'; 
+//            /*$url = 'http://localhost/rdma_web/users/get_user.php';
 //            redirect($url);*/
 //        break;
 
 //     case "create_user":
 //             include 'users/create_user.php';
 //         break;
-    
+
 //     case "delete_user":
 //             include 'users/delete_user.php';
 //         break;
-        
+
 //     case "search_user":
 //             include 'users/search_user.php';
 //         break;
@@ -310,7 +309,7 @@ public function authGuard() {
 
 // default:
 //         break;
-        
+
 // }
 // }
 
@@ -319,7 +318,5 @@ public function authGuard() {
 //     header('HTTP/1.0 400 Bad Request');
 //     exit;
 // }
-
-
 
 ?>

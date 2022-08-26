@@ -82,13 +82,16 @@ class Ini implements ParserInterface
     protected function expandDottedKey($data)
     {
         foreach ($data as $key => $value) {
-            if (($found = strpos($key, '.')) !== false) {
+            if (($found = strpos($key, ".")) !== false) {
                 $newKey = substr($key, 0, $found);
                 $remainder = substr($key, $found + 1);
 
                 $expandedValue = $this->expandDottedKey([$remainder => $value]);
                 if (isset($data[$newKey])) {
-                    $data[$newKey] = array_merge_recursive($data[$newKey], $expandedValue);
+                    $data[$newKey] = array_merge_recursive(
+                        $data[$newKey],
+                        $expandedValue
+                    );
                 } else {
                     $data[$newKey] = $expandedValue;
                 }
@@ -103,6 +106,6 @@ class Ini implements ParserInterface
      */
     public static function getSupportedExtensions()
     {
-        return ['ini'];
+        return ["ini"];
     }
 }

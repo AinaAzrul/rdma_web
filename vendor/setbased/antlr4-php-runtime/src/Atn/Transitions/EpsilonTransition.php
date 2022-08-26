@@ -11,8 +11,10 @@ final class EpsilonTransition extends Transition
     /** @var int */
     private $outermostPrecedenceReturn;
 
-    public function __construct(ATNState $target, int $outermostPrecedenceReturn = -1)
-    {
+    public function __construct(
+        ATNState $target,
+        int $outermostPrecedenceReturn = -1
+    ) {
         parent::__construct($target);
 
         $this->outermostPrecedenceReturn = $outermostPrecedenceReturn;
@@ -26,42 +28,46 @@ final class EpsilonTransition extends Transition
      * @see ATNConfig::isPrecedenceFilterSuppressed()
      * @see ParserATNSimulator::applyPrecedenceFilter()
      */
-    public function getOutermostPrecedenceReturn() : int
+    public function getOutermostPrecedenceReturn(): int
     {
         return $this->outermostPrecedenceReturn;
     }
 
-    public function matches(int $symbol, int $minVocabSymbol, int $maxVocabSymbol) : bool
-    {
+    public function matches(
+        int $symbol,
+        int $minVocabSymbol,
+        int $maxVocabSymbol
+    ): bool {
         return false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isEpsilon() : bool
+    public function isEpsilon(): bool
     {
         return true;
     }
 
-    public function getSerializationType() : int
+    public function getSerializationType(): int
     {
         return self::EPSILON;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        return $other instanceof self
-            && $this->outermostPrecedenceReturn === $other->outermostPrecedenceReturn
-            && $this->target->equals($other->target);
+        return $other instanceof self &&
+            $this->outermostPrecedenceReturn ===
+                $other->outermostPrecedenceReturn &&
+            $this->target->equals($other->target);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return 'epsilon';
+        return "epsilon";
     }
 }

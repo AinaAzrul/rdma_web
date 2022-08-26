@@ -39,8 +39,12 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * @param self::BATCH_MODE_* $batchMode
      */
-    public function __construct(int $batchMode = self::BATCH_MODE_JSON, bool $appendNewline = true, bool $ignoreEmptyContextAndExtra = false, bool $includeStacktraces = false)
-    {
+    public function __construct(
+        int $batchMode = self::BATCH_MODE_JSON,
+        bool $appendNewline = true,
+        bool $ignoreEmptyContextAndExtra = false,
+        bool $includeStacktraces = false
+    ) {
         $this->batchMode = $batchMode;
         $this->appendNewline = $appendNewline;
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
@@ -76,22 +80,23 @@ class JsonFormatter extends NormalizerFormatter
     {
         $normalized = $this->normalize($record);
 
-        if (isset($normalized['context']) && $normalized['context'] === []) {
+        if (isset($normalized["context"]) && $normalized["context"] === []) {
             if ($this->ignoreEmptyContextAndExtra) {
-                unset($normalized['context']);
+                unset($normalized["context"]);
             } else {
-                $normalized['context'] = new \stdClass;
+                $normalized["context"] = new \stdClass();
             }
         }
-        if (isset($normalized['extra']) && $normalized['extra'] === []) {
+        if (isset($normalized["extra"]) && $normalized["extra"] === []) {
             if ($this->ignoreEmptyContextAndExtra) {
-                unset($normalized['extra']);
+                unset($normalized["extra"]);
             } else {
-                $normalized['extra'] = new \stdClass;
+                $normalized["extra"] = new \stdClass();
             }
         }
 
-        return $this->toJson($normalized, true) . ($this->appendNewline ? "\n" : '');
+        return $this->toJson($normalized, true) .
+            ($this->appendNewline ? "\n" : "");
     }
 
     /**
@@ -159,7 +164,9 @@ class JsonFormatter extends NormalizerFormatter
     protected function normalize($data, int $depth = 0)
     {
         if ($depth > $this->maxNormalizeDepth) {
-            return 'Over '.$this->maxNormalizeDepth.' levels deep, aborting normalization';
+            return "Over " .
+                $this->maxNormalizeDepth .
+                " levels deep, aborting normalization";
         }
 
         if (is_array($data)) {
@@ -168,7 +175,12 @@ class JsonFormatter extends NormalizerFormatter
             $count = 1;
             foreach ($data as $key => $value) {
                 if ($count++ > $this->maxNormalizeItemCount) {
-                    $normalized['...'] = 'Over '.$this->maxNormalizeItemCount.' items ('.count($data).' total), aborting normalization';
+                    $normalized["..."] =
+                        "Over " .
+                        $this->maxNormalizeItemCount .
+                        " items (" .
+                        count($data) .
+                        " total), aborting normalization";
                     break;
                 }
 
@@ -203,7 +215,7 @@ class JsonFormatter extends NormalizerFormatter
     {
         $data = parent::normalizeException($e, $depth);
         if (!$this->includeStacktraces) {
-            unset($data['trace']);
+            unset($data["trace"]);
         }
 
         return $data;

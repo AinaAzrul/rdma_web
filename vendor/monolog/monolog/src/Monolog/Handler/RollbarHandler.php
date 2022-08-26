@@ -40,14 +40,14 @@ class RollbarHandler extends AbstractProcessingHandler
 
     /** @var string[] */
     protected $levelMap = [
-        Logger::DEBUG     => 'debug',
-        Logger::INFO      => 'info',
-        Logger::NOTICE    => 'info',
-        Logger::WARNING   => 'warning',
-        Logger::ERROR     => 'error',
-        Logger::CRITICAL  => 'critical',
-        Logger::ALERT     => 'critical',
-        Logger::EMERGENCY => 'critical',
+        Logger::DEBUG => "debug",
+        Logger::INFO => "info",
+        Logger::NOTICE => "info",
+        Logger::WARNING => "warning",
+        Logger::ERROR => "error",
+        Logger::CRITICAL => "critical",
+        Logger::ALERT => "critical",
+        Logger::EMERGENCY => "critical",
     ];
 
     /**
@@ -63,8 +63,11 @@ class RollbarHandler extends AbstractProcessingHandler
     /**
      * @param RollbarLogger $rollbarLogger RollbarLogger object constructed with valid token
      */
-    public function __construct(RollbarLogger $rollbarLogger, $level = Logger::ERROR, bool $bubble = true)
-    {
+    public function __construct(
+        RollbarLogger $rollbarLogger,
+        $level = Logger::ERROR,
+        bool $bubble = true
+    ) {
         $this->rollbarLogger = $rollbarLogger;
 
         parent::__construct($level, $bubble);
@@ -77,28 +80,31 @@ class RollbarHandler extends AbstractProcessingHandler
     {
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors
-            register_shutdown_function(array($this, 'close'));
+            register_shutdown_function([$this, "close"]);
             $this->initialized = true;
         }
 
-        $context = $record['context'];
-        $context = array_merge($context, $record['extra'], [
-            'level' => $this->levelMap[$record['level']],
-            'monolog_level' => $record['level_name'],
-            'channel' => $record['channel'],
-            'datetime' => $record['datetime']->format('U'),
+        $context = $record["context"];
+        $context = array_merge($context, $record["extra"], [
+            "level" => $this->levelMap[$record["level"]],
+            "monolog_level" => $record["level_name"],
+            "channel" => $record["channel"],
+            "datetime" => $record["datetime"]->format("U"),
         ]);
 
-        if (isset($context['exception']) && $context['exception'] instanceof Throwable) {
-            $exception = $context['exception'];
-            unset($context['exception']);
+        if (
+            isset($context["exception"]) &&
+            $context["exception"] instanceof Throwable
+        ) {
+            $exception = $context["exception"];
+            unset($context["exception"]);
             $toLog = $exception;
         } else {
-            $toLog = $record['message'];
+            $toLog = $record["message"];
         }
 
         // @phpstan-ignore-next-line
-        $this->rollbarLogger->log($context['level'], $toLog, $context);
+        $this->rollbarLogger->log($context["level"], $toLog, $context);
 
         $this->hasRecords = true;
     }

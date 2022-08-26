@@ -25,7 +25,7 @@ interface ANTLRErrorListener
         int $charPositionInLine,
         string $msg,
         ?RecognitionException $e
-    ) : void;
+    ): void;
 
     public function reportAmbiguity(
         Parser $recognizer,
@@ -35,7 +35,7 @@ interface ANTLRErrorListener
         bool $exact,
         ?BitSet $ambigAlts,
         ATNConfigSet $configs
-    ) : void;
+    ): void;
 
     public function reportAttemptingFullContext(
         Parser $recognizer,
@@ -44,7 +44,7 @@ interface ANTLRErrorListener
         int $stopIndex,
         ?BitSet $conflictingAlts,
         ATNConfigSet $configs
-    ) : void;
+    ): void;
 
     public function reportContextSensitivity(
         Parser $recognizer,
@@ -53,5 +53,5 @@ interface ANTLRErrorListener
         int $stopIndex,
         int $prediction,
         ATNConfigSet $configs
-    ) : void;
+    ): void;
 }

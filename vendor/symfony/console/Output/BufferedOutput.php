@@ -16,7 +16,7 @@ namespace Symfony\Component\Console\Output;
  */
 class BufferedOutput extends Output
 {
-    private $buffer = '';
+    private $buffer = "";
 
     /**
      * Empties buffer and returns its content.
@@ -26,7 +26,7 @@ class BufferedOutput extends Output
     public function fetch()
     {
         $content = $this->buffer;
-        $this->buffer = '';
+        $this->buffer = "";
 
         return $content;
     }

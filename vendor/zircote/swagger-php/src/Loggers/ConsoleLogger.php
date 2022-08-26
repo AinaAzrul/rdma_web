@@ -43,45 +43,48 @@ class ConsoleLogger extends AbstractLogger implements LoggerInterface
      */
     public function log($level, $message, array $context = []): void
     {
-        $prefix = '';
-        $color = '';
+        $prefix = "";
+        $color = "";
         // level adjustments
         switch ($level) {
             case LogLevel::DEBUG:
                 if (!$this->debug) {
                     return;
                 }
-                // no break
+            // no break
             case LogLevel::WARNING:
-                $prefix = $context['prefix'] ?? 'Warning: ';
+                $prefix = $context["prefix"] ?? "Warning: ";
                 $color = static::COLOR_WARNING;
                 break;
             case LogLevel::ERROR:
-                $prefix = $context['prefix'] ?? 'Error: ';
+                $prefix = $context["prefix"] ?? "Error: ";
                 $color = static::COLOR_ERROR;
                 break;
         }
-        $stop = !empty($color) ? static::COLOR_STOP : '';
+        $stop = !empty($color) ? static::COLOR_STOP : "";
 
         if (!in_array($level, self::LOG_LEVELS_UP_TO_NOTICE, true)) {
             $this->loggedMessageAboveNotice = true;
         }
 
         /** @var ?\Exception $exception */
-        $exception = $context['exception'] ?? null;
+        $exception = $context["exception"] ?? null;
         if ($message instanceof \Exception) {
             $exception = $message;
             $message = $exception->getMessage();
         }
 
-        $logLine = sprintf('%s%s%s%s', $color, $prefix, $message, $stop);
+        $logLine = sprintf("%s%s%s%s", $color, $prefix, $message, $stop);
         error_log($logLine);
 
         if ($this->debug) {
             if ($exception) {
                 error_log($exception->getTraceAsString());
             } elseif (!empty($logLine)) {
-                $stack = explode(PHP_EOL, (new \Exception())->getTraceAsString());
+                $stack = explode(
+                    PHP_EOL,
+                    (new \Exception())->getTraceAsString()
+                );
                 // self
                 array_shift($stack);
                 // AbstractLogger

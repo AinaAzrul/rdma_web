@@ -10,56 +10,62 @@ use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
  */
 class NoneWrapper extends Wrapper
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function getDocBlockReturnType(): string
-  {
-    return 'int';
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function getDocBlockReturnType(): string
+    {
+        return "int";
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function getReturnTypeDeclaration(): string
-  {
-    return ': int';
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function getReturnTypeDeclaration(): string
+    {
+        return ": int";
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function writeResultHandler(): void
-  {
-    $this->throws(MySqlQueryErrorException::class);
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function writeResultHandler(): void
+    {
+        $this->throws(MySqlQueryErrorException::class);
 
-    $routineArgs = $this->getRoutineArgs();
-    $this->codeStore->append('return $this->executeNone(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
-  }
+        $routineArgs = $this->getRoutineArgs();
+        $this->codeStore->append(
+            'return $this->executeNone(\'call ' .
+                $this->routine["routine_name"] .
+                "(" .
+                $routineArgs .
+                ')\');'
+        );
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function writeRoutineFunctionLobFetchData(): void
-  {
-    $this->codeStore->append('$ret = $this->mysqli->affected_rows;');
-    $this->codeStore->append('');
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function writeRoutineFunctionLobFetchData(): void
+    {
+        $this->codeStore->append('$ret = $this->mysqli->affected_rows;');
+        $this->codeStore->append("");
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @inheritdoc
-   */
-  protected function writeRoutineFunctionLobReturnData(): void
-  {
-    $this->codeStore->append('return $ret;');
-  }
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * @inheritdoc
+     */
+    protected function writeRoutineFunctionLobReturnData(): void
+    {
+        $this->codeStore->append('return $ret;');
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

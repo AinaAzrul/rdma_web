@@ -21,7 +21,9 @@ use Monolog\ResettableInterface;
  *
  * @phpstan-import-type Record from \Monolog\Logger
  */
-class GroupHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface
+class GroupHandler extends Handler implements
+    ProcessableHandlerInterface,
+    ResettableInterface
 {
     use ProcessableHandlerTrait;
 
@@ -38,7 +40,9 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     {
         foreach ($handlers as $handler) {
             if (!$handler instanceof HandlerInterface) {
-                throw new \InvalidArgumentException('The first argument of the GroupHandler must be an array of HandlerInterface instances.');
+                throw new \InvalidArgumentException(
+                    "The first argument of the GroupHandler must be an array of HandlerInterface instances."
+                );
             }
         }
 
@@ -119,8 +123,9 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         foreach ($this->handlers as $handler) {
             if ($handler instanceof FormattableHandlerInterface) {
                 $handler->setFormatter($formatter);

@@ -33,9 +33,16 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      * @param string|null $foreground The style foreground color name
      * @param string|null $background The style background color name
      */
-    public function __construct(string $foreground = null, string $background = null, array $options = [])
-    {
-        $this->color = new Color($this->foreground = $foreground ?: '', $this->background = $background ?: '', $this->options = $options);
+    public function __construct(
+        string $foreground = null,
+        string $background = null,
+        array $options = []
+    ) {
+        $this->color = new Color(
+            ($this->foreground = $foreground ?: ""),
+            ($this->background = $background ?: ""),
+            ($this->options = $options)
+        );
     }
 
     /**
@@ -43,7 +50,11 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      */
     public function setForeground(string $color = null)
     {
-        $this->color = new Color($this->foreground = $color ?: '', $this->background, $this->options);
+        $this->color = new Color(
+            ($this->foreground = $color ?: ""),
+            $this->background,
+            $this->options
+        );
     }
 
     /**
@@ -51,7 +62,11 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      */
     public function setBackground(string $color = null)
     {
-        $this->color = new Color($this->foreground, $this->background = $color ?: '', $this->options);
+        $this->color = new Color(
+            $this->foreground,
+            ($this->background = $color ?: ""),
+            $this->options
+        );
     }
 
     public function setHref(string $url): void
@@ -65,7 +80,11 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
     public function setOption(string $option)
     {
         $this->options[] = $option;
-        $this->color = new Color($this->foreground, $this->background, $this->options);
+        $this->color = new Color(
+            $this->foreground,
+            $this->background,
+            $this->options
+        );
     }
 
     /**
@@ -78,7 +97,11 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
             unset($this->options[$pos]);
         }
 
-        $this->color = new Color($this->foreground, $this->background, $this->options);
+        $this->color = new Color(
+            $this->foreground,
+            $this->background,
+            $this->options
+        );
     }
 
     /**
@@ -86,7 +109,11 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      */
     public function setOptions(array $options)
     {
-        $this->color = new Color($this->foreground, $this->background, $this->options = $options);
+        $this->color = new Color(
+            $this->foreground,
+            $this->background,
+            ($this->options = $options)
+        );
     }
 
     /**
@@ -95,8 +122,10 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
     public function apply(string $text)
     {
         if (null === $this->handlesHrefGracefully) {
-            $this->handlesHrefGracefully = 'JetBrains-JediTerm' !== getenv('TERMINAL_EMULATOR')
-                && (!getenv('KONSOLE_VERSION') || (int) getenv('KONSOLE_VERSION') > 201100);
+            $this->handlesHrefGracefully =
+                "JetBrains-JediTerm" !== getenv("TERMINAL_EMULATOR") &&
+                (!getenv("KONSOLE_VERSION") ||
+                    (int) getenv("KONSOLE_VERSION") > 201100);
         }
 
         if (null !== $this->href && $this->handlesHrefGracefully) {

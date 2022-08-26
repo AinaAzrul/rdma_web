@@ -31,12 +31,12 @@ class WebProcessor implements ProcessorInterface
      * @var array<string, string>
      */
     protected $extraFields = [
-        'url'         => 'REQUEST_URI',
-        'ip'          => 'REMOTE_ADDR',
-        'http_method' => 'REQUEST_METHOD',
-        'server'      => 'SERVER_NAME',
-        'referrer'    => 'HTTP_REFERER',
-        'user_agent'  => 'HTTP_USER_AGENT',
+        "url" => "REQUEST_URI",
+        "ip" => "REMOTE_ADDR",
+        "http_method" => "REQUEST_METHOD",
+        "server" => "SERVER_NAME",
+        "referrer" => "HTTP_REFERER",
+        "user_agent" => "HTTP_USER_AGENT",
     ];
 
     /**
@@ -47,16 +47,21 @@ class WebProcessor implements ProcessorInterface
     {
         if (null === $serverData) {
             $this->serverData = &$_SERVER;
-        } elseif (is_array($serverData) || $serverData instanceof \ArrayAccess) {
+        } elseif (
+            is_array($serverData) ||
+            $serverData instanceof \ArrayAccess
+        ) {
             $this->serverData = $serverData;
         } else {
-            throw new \UnexpectedValueException('$serverData must be an array or object implementing ArrayAccess.');
+            throw new \UnexpectedValueException(
+                '$serverData must be an array or object implementing ArrayAccess.'
+            );
         }
 
-        $defaultEnabled = ['url', 'ip', 'http_method', 'server', 'referrer'];
-        if (isset($this->serverData['UNIQUE_ID'])) {
-            $this->extraFields['unique_id'] = 'UNIQUE_ID';
-            $defaultEnabled[] = 'unique_id';
+        $defaultEnabled = ["url", "ip", "http_method", "server", "referrer"];
+        if (isset($this->serverData["UNIQUE_ID"])) {
+            $this->extraFields["unique_id"] = "UNIQUE_ID";
+            $defaultEnabled[] = "unique_id";
         }
 
         if (null === $extraFields) {
@@ -80,11 +85,11 @@ class WebProcessor implements ProcessorInterface
     {
         // skip processing if for some reason request data
         // is not present (CLI or wonky SAPIs)
-        if (!isset($this->serverData['REQUEST_URI'])) {
+        if (!isset($this->serverData["REQUEST_URI"])) {
             return $record;
         }
 
-        $record['extra'] = $this->appendExtraFields($record['extra']);
+        $record["extra"] = $this->appendExtraFields($record["extra"]);
 
         return $record;
     }

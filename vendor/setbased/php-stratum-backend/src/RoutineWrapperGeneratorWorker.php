@@ -8,16 +8,16 @@ namespace SetBased\Stratum\Backend;
  */
 interface RoutineWrapperGeneratorWorker
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Does the actual execution of the routine wrapper generator loader command for the backend. Returns 0 on success.
-   * Otherwise returns nonzero.
-   *
-   * @return int
-   */
-  public function execute(): int;
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * Does the actual execution of the routine wrapper generator loader command for the backend. Returns 0 on success.
+     * Otherwise returns nonzero.
+     *
+     * @return int
+     */
+    public function execute(): int;
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

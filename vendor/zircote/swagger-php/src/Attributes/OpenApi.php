@@ -32,10 +32,18 @@ class OpenApi extends \OpenApi\Annotations\OpenApi
         ?array $attachables = null
     ) {
         parent::__construct([
-                'openapi' => $openapi,
-                'security' => $security ?? Generator::UNDEFINED,
-                'x' => $x ?? Generator::UNDEFINED,
-                'value' => $this->combine($info, $servers, $tags, $externalDocs, $paths, $components, $attachables),
-            ]);
+            "openapi" => $openapi,
+            "security" => $security ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine(
+                $info,
+                $servers,
+                $tags,
+                $externalDocs,
+                $paths,
+                $components,
+                $attachables
+            ),
+        ]);
     }
 }

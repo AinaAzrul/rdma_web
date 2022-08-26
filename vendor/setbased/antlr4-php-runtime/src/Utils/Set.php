@@ -25,17 +25,17 @@ final class Set implements Equatable, \IteratorAggregate, \Countable
         $this->equivalence = $equivalence ?? new DefaultEquivalence();
     }
 
-    public function isEmpty() : bool
+    public function isEmpty(): bool
     {
         return $this->count() === 0;
     }
 
-    public function count() : int
+    public function count(): int
     {
         return $this->size;
     }
 
-    public function contains($value) : bool
+    public function contains($value): bool
     {
         if (!$value instanceof Hashable) {
             return false;
@@ -56,7 +56,7 @@ final class Set implements Equatable, \IteratorAggregate, \Countable
         return false;
     }
 
-    public function getOrAdd(Hashable $value) : Hashable
+    public function getOrAdd(Hashable $value): Hashable
     {
         $hash = $this->equivalence->hash($value);
 
@@ -77,7 +77,7 @@ final class Set implements Equatable, \IteratorAggregate, \Countable
         return $value;
     }
 
-    public function get(Hashable $value) : ?Hashable
+    public function get(Hashable $value): ?Hashable
     {
         $hash = $this->equivalence->hash($value);
 
@@ -97,14 +97,14 @@ final class Set implements Equatable, \IteratorAggregate, \Countable
     /**
      * @param iterable<Hashable> $values
      */
-    public function addAll(iterable $values) : void
+    public function addAll(iterable $values): void
     {
         foreach ($values as $value) {
             $this->add($value);
         }
     }
 
-    public function add(Hashable $value) : bool
+    public function add(Hashable $value): bool
     {
         $hash = $this->equivalence->hash($value);
 
@@ -125,7 +125,7 @@ final class Set implements Equatable, \IteratorAggregate, \Countable
         return true;
     }
 
-    public function remove(Hashable $value) : void
+    public function remove(Hashable $value): void
     {
         $hash = $this->equivalence->hash($value);
 
@@ -150,20 +150,25 @@ final class Set implements Equatable, \IteratorAggregate, \Countable
         }
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        if (!$other instanceof self
-            || $this->size !== $other->size
-            || !$this->equivalence->equals($other)) {
+        if (
+            !$other instanceof self ||
+            $this->size !== $other->size ||
+            !$this->equivalence->equals($other)
+        ) {
             return false;
         }
 
         foreach ($this->table as $hash => $bucket) {
-            if (!isset($other->table[$hash]) || \count($bucket) !== \count($other->table[$hash])) {
+            if (
+                !isset($other->table[$hash]) ||
+                \count($bucket) !== \count($other->table[$hash])
+            ) {
                 return false;
             }
 
@@ -182,7 +187,7 @@ final class Set implements Equatable, \IteratorAggregate, \Countable
     /**
      * @return array<mixed>
      */
-    public function getValues() : array
+    public function getValues(): array
     {
         $values = [];
         foreach ($this->table as $bucket) {
@@ -194,7 +199,7 @@ final class Set implements Equatable, \IteratorAggregate, \Countable
         return $values;
     }
 
-    public function getIterator() : \Iterator
+    public function getIterator(): \Iterator
     {
         foreach ($this->table as $bucket) {
             foreach ($bucket as $value) {

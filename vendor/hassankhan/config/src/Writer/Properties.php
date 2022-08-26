@@ -29,7 +29,7 @@ class Properties extends AbstractWriter
      */
     public static function getSupportedExtensions()
     {
-        return ['properties'];
+        return ["properties"];
     }
 
     /**
@@ -40,7 +40,7 @@ class Properties extends AbstractWriter
      */
     protected function toProperties(array $arr)
     {
-        $converted = '';
+        $converted = "";
 
         foreach ($arr as $key => $value) {
             if (is_array($value)) {
@@ -48,12 +48,12 @@ class Properties extends AbstractWriter
             }
 
             // Escape all space, ; and = characters in the key:
-            $key = addcslashes($key, ' :=');
+            $key = addcslashes($key, " :=");
 
             // Escape all backslashes and newlines in the value:
             $value = preg_replace('/([\r\n\t\f\v\\\])/', '\\\$1', $value);
 
-            $converted .= $key.' = '.$value.PHP_EOL;
+            $converted .= $key . " = " . $value . PHP_EOL;
         }
 
         return $converted;

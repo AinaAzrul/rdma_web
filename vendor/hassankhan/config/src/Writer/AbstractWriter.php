@@ -25,7 +25,7 @@ abstract class AbstractWriter implements WriterInterface
         $contents = $this->toString($config);
         $success = @file_put_contents($filename, $contents);
         if ($success === false) {
-            throw new WriteException(['file' => $filename]);
+            throw new WriteException(["file" => $filename]);
         }
 
         return $contents;

@@ -25,7 +25,9 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @phpstan-import-type Record from \Monolog\Logger
  */
-class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
+class BufferHandler extends AbstractHandler implements
+    ProcessableHandlerInterface,
+    FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
 
@@ -47,8 +49,13 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
      * @param int              $bufferLimit     How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
      * @param bool             $flushOnOverflow If true, the buffer is flushed when the max size has been reached, by default oldest entries are discarded
      */
-    public function __construct(HandlerInterface $handler, int $bufferLimit = 0, $level = Logger::DEBUG, bool $bubble = true, bool $flushOnOverflow = false)
-    {
+    public function __construct(
+        HandlerInterface $handler,
+        int $bufferLimit = 0,
+        $level = Logger::DEBUG,
+        bool $bubble = true,
+        bool $flushOnOverflow = false
+    ) {
         parent::__construct($level, $bubble);
         $this->handler = $handler;
         $this->bufferLimit = $bufferLimit;
@@ -60,17 +67,20 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
      */
     public function handle(array $record): bool
     {
-        if ($record['level'] < $this->level) {
+        if ($record["level"] < $this->level) {
             return false;
         }
 
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors
-            register_shutdown_function([$this, 'close']);
+            register_shutdown_function([$this, "close"]);
             $this->initialized = true;
         }
 
-        if ($this->bufferLimit > 0 && $this->bufferSize === $this->bufferLimit) {
+        if (
+            $this->bufferLimit > 0 &&
+            $this->bufferSize === $this->bufferLimit
+        ) {
             if ($this->flushOnOverflow) {
                 $this->flush();
             } else {
@@ -142,15 +152,20 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         if ($this->handler instanceof FormattableHandlerInterface) {
             $this->handler->setFormatter($formatter);
 
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($this->handler).' does not support formatters.');
+        throw new \UnexpectedValueException(
+            "The nested handler of type " .
+                get_class($this->handler) .
+                " does not support formatters."
+        );
     }
 
     /**
@@ -162,6 +177,10 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
             return $this->handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($this->handler).' does not support formatters.');
+        throw new \UnexpectedValueException(
+            "The nested handler of type " .
+                get_class($this->handler) .
+                " does not support formatters."
+        );
     }
 }

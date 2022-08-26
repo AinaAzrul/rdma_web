@@ -101,14 +101,14 @@ class Logger implements LoggerInterface, ResettableInterface
      * @phpstan-var array<Level, LevelName> $levels Logging levels with the levels as key
      */
     protected static $levels = [
-        self::DEBUG     => 'DEBUG',
-        self::INFO      => 'INFO',
-        self::NOTICE    => 'NOTICE',
-        self::WARNING   => 'WARNING',
-        self::ERROR     => 'ERROR',
-        self::CRITICAL  => 'CRITICAL',
-        self::ALERT     => 'ALERT',
-        self::EMERGENCY => 'EMERGENCY',
+        self::DEBUG => "DEBUG",
+        self::INFO => "INFO",
+        self::NOTICE => "NOTICE",
+        self::WARNING => "WARNING",
+        self::ERROR => "ERROR",
+        self::CRITICAL => "CRITICAL",
+        self::ALERT => "ALERT",
+        self::EMERGENCY => "EMERGENCY",
     ];
 
     /**
@@ -155,12 +155,17 @@ class Logger implements LoggerInterface, ResettableInterface
      * @param callable[]         $processors Optional array of processors
      * @param DateTimeZone|null  $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
      */
-    public function __construct(string $name, array $handlers = [], array $processors = [], ?DateTimeZone $timezone = null)
-    {
+    public function __construct(
+        string $name,
+        array $handlers = [],
+        array $processors = [],
+        ?DateTimeZone $timezone = null
+    ) {
         $this->name = $name;
         $this->setHandlers($handlers);
         $this->processors = $processors;
-        $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        $this->timezone =
+            $timezone ?: new DateTimeZone(date_default_timezone_get() ?: "UTC");
     }
 
     public function getName(): string
@@ -197,7 +202,9 @@ class Logger implements LoggerInterface, ResettableInterface
     public function popHandler(): HandlerInterface
     {
         if (!$this->handlers) {
-            throw new \LogicException('You tried to pop from an empty handler stack.');
+            throw new \LogicException(
+                "You tried to pop from an empty handler stack."
+            );
         }
 
         return array_shift($this->handlers);
@@ -247,7 +254,9 @@ class Logger implements LoggerInterface, ResettableInterface
     public function popProcessor(): callable
     {
         if (!$this->processors) {
-            throw new \LogicException('You tried to pop from an empty processor stack.');
+            throw new \LogicException(
+                "You tried to pop from an empty processor stack."
+            );
         }
 
         return array_shift($this->processors);
@@ -289,27 +298,33 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @phpstan-param Level $level
      */
-    public function addRecord(int $level, string $message, array $context = []): bool
-    {
+    public function addRecord(
+        int $level,
+        string $message,
+        array $context = []
+    ): bool {
         $record = null;
 
         foreach ($this->handlers as $handler) {
             if (null === $record) {
                 // skip creating the record as long as no handler is going to handle it
-                if (!$handler->isHandling(['level' => $level])) {
+                if (!$handler->isHandling(["level" => $level])) {
                     continue;
                 }
 
                 $levelName = static::getLevelName($level);
 
                 $record = [
-                    'message' => $message,
-                    'context' => $context,
-                    'level' => $level,
-                    'level_name' => $levelName,
-                    'channel' => $this->name,
-                    'datetime' => new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
-                    'extra' => [],
+                    "message" => $message,
+                    "context" => $context,
+                    "level" => $level,
+                    "level_name" => $levelName,
+                    "channel" => $this->name,
+                    "datetime" => new DateTimeImmutable(
+                        $this->microsecondTimestamps,
+                        $this->timezone
+                    ),
+                    "extra" => [],
                 ];
 
                 try {
@@ -402,7 +417,12 @@ class Logger implements LoggerInterface, ResettableInterface
     public static function getLevelName(int $level): string
     {
         if (!isset(static::$levels[$level])) {
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
+            throw new InvalidArgumentException(
+                'Level "' .
+                    $level .
+                    '" is not defined, use one of: ' .
+                    implode(", ", array_keys(static::$levels))
+            );
         }
 
         return static::$levels[$level];
@@ -427,16 +447,26 @@ class Logger implements LoggerInterface, ResettableInterface
 
             // Contains chars of all log levels and avoids using strtoupper() which may have
             // strange results depending on locale (for example, "i" will become "İ" in Turkish locale)
-            $upper = strtr($level, 'abcdefgilmnortuwy', 'ABCDEFGILMNORTUWY');
-            if (defined(__CLASS__.'::'.$upper)) {
-                return constant(__CLASS__ . '::' . $upper);
+            $upper = strtr($level, "abcdefgilmnortuwy", "ABCDEFGILMNORTUWY");
+            if (defined(__CLASS__ . "::" . $upper)) {
+                return constant(__CLASS__ . "::" . $upper);
             }
 
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels) + static::$levels));
+            throw new InvalidArgumentException(
+                'Level "' .
+                    $level .
+                    '" is not defined, use one of: ' .
+                    implode(", ", array_keys(static::$levels) + static::$levels)
+            );
         }
 
         if (!is_int($level)) {
-            throw new InvalidArgumentException('Level "'.var_export($level, true).'" is not defined, use one of: '.implode(', ', array_keys(static::$levels) + static::$levels));
+            throw new InvalidArgumentException(
+                'Level "' .
+                    var_export($level, true) .
+                    '" is not defined, use one of: ' .
+                    implode(", ", array_keys(static::$levels) + static::$levels)
+            );
         }
 
         return $level;
@@ -450,7 +480,7 @@ class Logger implements LoggerInterface, ResettableInterface
     public function isHandling(int $level): bool
     {
         $record = [
-            'level' => $level,
+            "level" => $level,
         ];
 
         foreach ($this->handlers as $handler) {
@@ -493,7 +523,9 @@ class Logger implements LoggerInterface, ResettableInterface
     public function log($level, $message, array $context = []): void
     {
         if (!is_int($level) && !is_string($level)) {
-            throw new \InvalidArgumentException('$level is expected to be a string or int');
+            throw new \InvalidArgumentException(
+                '$level is expected to be a string or int'
+            );
         }
 
         $level = static::toMonologLevel($level);

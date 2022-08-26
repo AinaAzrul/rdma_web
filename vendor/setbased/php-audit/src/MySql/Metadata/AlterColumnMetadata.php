@@ -8,20 +8,22 @@ namespace SetBased\Audit\MySql\Metadata;
  */
 class AlterColumnMetadata extends ColumnMetadata
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * The properties of table columns that are stored by this class.
-   *
-   * var string[]
-   */
-  protected static array $fields = ['column_name',
-                                    'column_type',
-                                    'is_nullable',
-                                    'character_set_name',
-                                    'collation_name',
-                                    'after'];
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * The properties of table columns that are stored by this class.
+     *
+     * var string[]
+     */
+    protected static array $fields = [
+        "column_name",
+        "column_type",
+        "is_nullable",
+        "character_set_name",
+        "collation_name",
+        "after",
+    ];
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

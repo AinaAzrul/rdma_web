@@ -120,32 +120,30 @@ class PathItem extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_types = [
-        'path' => 'string',
-        'summary' => 'string',
+        "path" => "string",
+        "summary" => "string",
     ];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Get::class => 'get',
-        Post::class => 'post',
-        Put::class => 'put',
-        Delete::class => 'delete',
-        Patch::class => 'patch',
-        Trace::class => 'trace',
-        Head::class => 'head',
-        Options::class => 'options',
-        Parameter::class => ['parameters'],
-        PathParameter::class => ['parameters'],
-        Server::class => ['servers'],
-        Attachable::class => ['attachables'],
+        Get::class => "get",
+        Post::class => "post",
+        Put::class => "put",
+        Delete::class => "delete",
+        Patch::class => "patch",
+        Trace::class => "trace",
+        Head::class => "head",
+        Options::class => "options",
+        Parameter::class => ["parameters"],
+        PathParameter::class => ["parameters"],
+        Server::class => ["servers"],
+        Attachable::class => ["attachables"],
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        OpenApi::class,
-    ];
+    public static $_parents = [OpenApi::class];
 }

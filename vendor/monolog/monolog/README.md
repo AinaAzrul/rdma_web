@@ -3,7 +3,6 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/monolog/monolog.svg)](https://packagist.org/packages/monolog/monolog)
 [![Latest Stable Version](https://img.shields.io/packagist/v/monolog/monolog.svg)](https://packagist.org/packages/monolog/monolog)
 
-
 Monolog sends your logs to files, sockets, inboxes, databases and various
 web services. See the complete list of handlers below. Special handlers
 allow you to build advanced logging strategies.
@@ -32,12 +31,12 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 // create a log channel
-$log = new Logger('name');
-$log->pushHandler(new StreamHandler('path/to/your.log', Logger::WARNING));
+$log = new Logger("name");
+$log->pushHandler(new StreamHandler("path/to/your.log", Logger::WARNING));
 
 // add records to the log
-$log->warning('Foo');
-$log->error('Bar');
+$log->warning("Foo");
+$log->error("Bar");
 ```
 
 ## Documentation
@@ -50,7 +49,7 @@ $log->error('Bar');
 
 ## Support Monolog Financially
 
-Get supported Monolog and help fund the project with the [Tidelift Subscription](https://tidelift.com/subscription/pkg/packagist-monolog-monolog?utm_source=packagist-monolog-monolog&utm_medium=referral&utm_campaign=enterprise) or via [GitHub sponsorship](https://github.com/sponsors/Seldaek). 
+Get supported Monolog and help fund the project with the [Tidelift Subscription](https://tidelift.com/subscription/pkg/packagist-monolog-monolog?utm_source=packagist-monolog-monolog&utm_medium=referral&utm_campaign=enterprise) or via [GitHub sponsorship](https://github.com/sponsors/Seldaek).
 
 Tidelift delivers commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use.
 

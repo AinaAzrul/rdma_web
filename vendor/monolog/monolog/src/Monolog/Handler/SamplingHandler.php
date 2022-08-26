@@ -30,7 +30,9 @@ use Monolog\Formatter\FormatterInterface;
  * @phpstan-import-type Record from \Monolog\Logger
  * @phpstan-import-type Level from \Monolog\Logger
  */
-class SamplingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
+class SamplingHandler extends AbstractHandler implements
+    ProcessableHandlerInterface,
+    FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
 
@@ -57,8 +59,15 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
         $this->handler = $handler;
         $this->factor = $factor;
 
-        if (!$this->handler instanceof HandlerInterface && !is_callable($this->handler)) {
-            throw new \RuntimeException("The given handler (".json_encode($this->handler).") is not a callable nor a Monolog\Handler\HandlerInterface object");
+        if (
+            !$this->handler instanceof HandlerInterface &&
+            !is_callable($this->handler)
+        ) {
+            throw new \RuntimeException(
+                "The given handler (" .
+                    json_encode($this->handler) .
+                    ") is not a callable nor a Monolog\Handler\HandlerInterface object"
+            );
         }
     }
 
@@ -95,7 +104,9 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
         if (!$this->handler instanceof HandlerInterface) {
             $this->handler = ($this->handler)($record, $this);
             if (!$this->handler instanceof HandlerInterface) {
-                throw new \RuntimeException("The factory callable should return a HandlerInterface");
+                throw new \RuntimeException(
+                    "The factory callable should return a HandlerInterface"
+                );
             }
         }
 
@@ -105,8 +116,9 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         $handler = $this->getHandler();
         if ($handler instanceof FormattableHandlerInterface) {
             $handler->setFormatter($formatter);
@@ -114,7 +126,11 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException(
+            "The nested handler of type " .
+                get_class($handler) .
+                " does not support formatters."
+        );
     }
 
     /**
@@ -127,6 +143,10 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
             return $handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException(
+            "The nested handler of type " .
+                get_class($handler) .
+                " does not support formatters."
+        );
     }
 }

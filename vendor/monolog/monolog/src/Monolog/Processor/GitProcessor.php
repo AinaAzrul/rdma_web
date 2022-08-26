@@ -46,11 +46,11 @@ class GitProcessor implements ProcessorInterface
     public function __invoke(array $record): array
     {
         // return if the level is not high enough
-        if ($record['level'] < $this->level) {
+        if ($record["level"] < $this->level) {
             return $record;
         }
 
-        $record['extra']['git'] = self::getGitInfo();
+        $record["extra"]["git"] = self::getGitInfo();
 
         return $record;
     }
@@ -65,10 +65,17 @@ class GitProcessor implements ProcessorInterface
         }
 
         $branches = `git branch -v --no-abbrev`;
-        if ($branches && preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
+        if (
+            $branches &&
+            preg_match(
+                '{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m',
+                $branches,
+                $matches
+            )
+        ) {
             return self::$cache = [
-                'branch' => $matches[1],
-                'commit' => $matches[2],
+                "branch" => $matches[1],
+                "commit" => $matches[2],
             ];
         }
 

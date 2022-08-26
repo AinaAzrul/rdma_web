@@ -23,8 +23,8 @@ final class PredPrediction
         $this->alt = $alt;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return \sprintf('(%s, %d)', (string) $this->pred, $this->alt);
+        return \sprintf("(%s, %d)", (string) $this->pred, $this->alt);
     }
 }

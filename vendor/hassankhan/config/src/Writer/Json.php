@@ -24,9 +24,9 @@ class Json extends AbstractWriter
     public function toFile($config, $filename)
     {
         $data = $this->toString($config);
-        $success = @file_put_contents($filename, $data.PHP_EOL);
+        $success = @file_put_contents($filename, $data . PHP_EOL);
         if ($success === false) {
-            throw new WriteException(['file' => $filename]);
+            throw new WriteException(["file" => $filename]);
         }
 
         return $data;
@@ -38,7 +38,10 @@ class Json extends AbstractWriter
      */
     public function toString($config, $pretty = true)
     {
-        return json_encode($config, $pretty ? (JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) : 0);
+        return json_encode(
+            $config,
+            $pretty ? JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT : 0
+        );
     }
 
     /**
@@ -46,6 +49,6 @@ class Json extends AbstractWriter
      */
     public static function getSupportedExtensions()
     {
-        return ['json'];
+        return ["json"];
     }
 }

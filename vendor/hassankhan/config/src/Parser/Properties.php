@@ -40,13 +40,25 @@ class Properties implements ParserInterface
         $result = [];
 
         // first remove all escaped whitespace characters:
-        $txtProperties = preg_replace('/(?<!\\\\)\\\\[\r\n\t\f\v][ \r]*/', '', $txtProperties);
+        $txtProperties = preg_replace(
+            '/(?<!\\\\)\\\\[\r\n\t\f\v][ \r]*/',
+            "",
+            $txtProperties
+        );
 
         // next split all lines not starting with # or ! on characters = or : (unless escaped):
-        preg_match_all('/^([^#!].*)(?<!\\\\)[=:](.*)$/mU', $txtProperties, $matches, PREG_SET_ORDER, 0);
+        preg_match_all(
+            '/^([^#!].*)(?<!\\\\)[=:](.*)$/mU',
+            $txtProperties,
+            $matches,
+            PREG_SET_ORDER,
+            0
+        );
 
         foreach ($matches as $match) {
-            $result[trim(stripslashes($match[1]))] = trim(stripslashes($match[2]));
+            $result[trim(stripslashes($match[1]))] = trim(
+                stripslashes($match[2])
+            );
         }
 
         return $result;
@@ -57,6 +69,6 @@ class Properties implements ParserInterface
      */
     public static function getSupportedExtensions()
     {
-        return ['properties'];
+        return ["properties"];
     }
 }

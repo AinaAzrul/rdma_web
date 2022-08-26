@@ -44,28 +44,26 @@ class License extends AbstractAnnotation
      * @inheritdoc
      */
     public static $_types = [
-        'name' => 'string',
-        'identifier' => 'string',
-        'url' => 'string',
+        "name" => "string",
+        "identifier" => "string",
+        "url" => "string",
     ];
 
     /**
      * @inheritdoc
      */
-    public static $_required = ['name'];
+    public static $_required = ["name"];
 
     /**
      * @inheritdoc
      */
-    public static $_parents = [
-        Info::class,
-    ];
+    public static $_parents = [Info::class];
 
     /**
      * @inheritdoc
      */
     public static $_nested = [
-        Attachable::class => ['attachables'],
+        Attachable::class => ["attachables"],
     ];
 
     /**
@@ -86,13 +84,23 @@ class License extends AbstractAnnotation
     /**
      * @inheritdoc
      */
-    public function validate(array $stack = [], array $skip = [], string $ref = '', $context = null): bool
-    {
+    public function validate(
+        array $stack = [],
+        array $skip = [],
+        string $ref = "",
+        $context = null
+    ): bool {
         $valid = parent::validate($stack, $skip, $ref, $context);
 
         if ($this->_context->isVersion(OpenApi::VERSION_3_1_0)) {
-            if (!Generator::isDefault($this->url) && $this->identifier !== Generator::UNDEFINED) {
-                $this->_context->logger->warning($this->identity() . ' url and identifier are mutually exclusive');
+            if (
+                !Generator::isDefault($this->url) &&
+                $this->identifier !== Generator::UNDEFINED
+            ) {
+                $this->_context->logger->warning(
+                    $this->identity() .
+                        " url and identifier are mutually exclusive"
+                );
                 $valid = false;
             }
         }

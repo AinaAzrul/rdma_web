@@ -39,10 +39,20 @@ class Components extends \OpenApi\Annotations\Components
         ?array $attachables = null
     ) {
         parent::__construct([
-            'callbacks' => $callbacks ?? Generator::UNDEFINED,
-            'x' => $x ?? Generator::UNDEFINED,
-            'attachables' => $attachables ?? Generator::UNDEFINED,
-            'value' => $this->combine($schemas, $responses, $parameters, $examples, $requestBodies, $headers, $securitySchemes, $links, $attachables),
+            "callbacks" => $callbacks ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "attachables" => $attachables ?? Generator::UNDEFINED,
+            "value" => $this->combine(
+                $schemas,
+                $responses,
+                $parameters,
+                $examples,
+                $requestBodies,
+                $headers,
+                $securitySchemes,
+                $links,
+                $attachables
+            ),
         ]);
     }
 }

@@ -27,13 +27,13 @@ class Config extends AbstractConfig
      * @var array
      */
     protected $supportedParsers = [
-        'Noodlehaus\Parser\Php',
-        'Noodlehaus\Parser\Ini',
-        'Noodlehaus\Parser\Json',
-        'Noodlehaus\Parser\Xml',
-        'Noodlehaus\Parser\Yaml',
-        'Noodlehaus\Parser\Properties',
-        'Noodlehaus\Parser\Serialize'
+        "Noodlehaus\Parser\Php",
+        "Noodlehaus\Parser\Ini",
+        "Noodlehaus\Parser\Json",
+        "Noodlehaus\Parser\Xml",
+        "Noodlehaus\Parser\Yaml",
+        "Noodlehaus\Parser\Properties",
+        "Noodlehaus\Parser\Serialize",
     ];
 
     /**
@@ -42,12 +42,12 @@ class Config extends AbstractConfig
      * @var array
      */
     protected $supportedWriters = [
-        'Noodlehaus\Writer\Ini',
-        'Noodlehaus\Writer\Json',
-        'Noodlehaus\Writer\Xml',
-        'Noodlehaus\Writer\Yaml',
-        'Noodlehaus\Writer\Properties',
-        'Noodlehaus\Writer\Serialize'
+        "Noodlehaus\Writer\Ini",
+        "Noodlehaus\Writer\Json",
+        "Noodlehaus\Writer\Xml",
+        "Noodlehaus\Writer\Yaml",
+        "Noodlehaus\Writer\Properties",
+        "Noodlehaus\Writer\Serialize",
     ];
 
     /**
@@ -71,8 +71,11 @@ class Config extends AbstractConfig
      * @param  ParserInterface $parser Configuration parser
      * @param  bool            $string Enable loading from string
      */
-    public function __construct($values, ParserInterface $parser = null, $string = false)
-    {
+    public function __construct(
+        $values,
+        ParserInterface $parser = null,
+        $string = false
+    ) {
         if ($string === true) {
             $this->loadFromString($values, $parser);
         } else {
@@ -92,18 +95,18 @@ class Config extends AbstractConfig
      */
     protected function loadFromFile($path, ParserInterface $parser = null)
     {
-        $paths      = $this->getValidPath($path);
+        $paths = $this->getValidPath($path);
         $this->data = [];
 
         foreach ($paths as $path) {
             if ($parser === null) {
                 // Get file information
-                $info      = pathinfo($path);
-                $parts     = explode('.', $info['basename']);
+                $info = pathinfo($path);
+                $parts = explode(".", $info["basename"]);
                 $extension = array_pop($parts);
 
                 // Skip the `dist` extension
-                if ($extension === 'dist') {
+                if ($extension === "dist") {
                     $extension = array_pop($parts);
                 }
 
@@ -111,13 +114,19 @@ class Config extends AbstractConfig
                 $parser = $this->getParser($extension);
 
                 // Try to load file
-                $this->data = array_replace_recursive($this->data, $parser->parseFile($path));
+                $this->data = array_replace_recursive(
+                    $this->data,
+                    $parser->parseFile($path)
+                );
 
                 // Clean parser
                 $parser = null;
             } else {
                 // Try to load file using specified parser
-                $this->data = array_replace_recursive($this->data, $parser->parseFile($path));
+                $this->data = array_replace_recursive(
+                    $this->data,
+                    $parser->parseFile($path)
+                );
             }
         }
     }
@@ -134,12 +143,12 @@ class Config extends AbstractConfig
     {
         if ($writer === null) {
             // Get file information
-            $info      = pathinfo($filename);
-            $parts     = explode('.', $info['basename']);
+            $info = pathinfo($filename);
+            $parts = explode(".", $info["basename"]);
             $extension = array_pop($parts);
 
             // Skip the `dist` extension
-            if ($extension === 'dist') {
+            if ($extension === "dist") {
                 $extension = array_pop($parts);
             }
 
@@ -168,7 +177,10 @@ class Config extends AbstractConfig
         $this->data = [];
 
         // Try to parse string
-        $this->data = array_replace_recursive($this->data, $parser->parseString($configuration));
+        $this->data = array_replace_recursive(
+            $this->data,
+            $parser->parseString($configuration)
+        );
     }
 
     /**
@@ -200,7 +212,9 @@ class Config extends AbstractConfig
         }
 
         // If none exist, then throw an exception
-        throw new UnsupportedFormatException('Unsupported configuration format');
+        throw new UnsupportedFormatException(
+            "Unsupported configuration format"
+        );
     }
 
     /**
@@ -221,7 +235,9 @@ class Config extends AbstractConfig
         }
 
         // If none exist, then throw an exception
-        throw new UnsupportedFormatException('Unsupported configuration format'.$extension);
+        throw new UnsupportedFormatException(
+            "Unsupported configuration format" . $extension
+        );
     }
 
     /**
@@ -242,16 +258,22 @@ class Config extends AbstractConfig
                 // Check if `$unverifiedPath` is optional
                 // If it exists, then it's added to the list
                 // If it doesn't, it throws an exception which we catch
-                if ($unverifiedPath[0] !== '?') {
-                    $paths = array_merge($paths, $this->getValidPath($unverifiedPath));
+                if ($unverifiedPath[0] !== "?") {
+                    $paths = array_merge(
+                        $paths,
+                        $this->getValidPath($unverifiedPath)
+                    );
                     continue;
                 }
 
-                $optionalPath = ltrim($unverifiedPath, '?');
-                $paths = array_merge($paths, $this->getValidPath($optionalPath));
+                $optionalPath = ltrim($unverifiedPath, "?");
+                $paths = array_merge(
+                    $paths,
+                    $this->getValidPath($optionalPath)
+                );
             } catch (FileNotFoundException $e) {
                 // If `$unverifiedPath` is optional, then skip it
-                if ($unverifiedPath[0] === '?') {
+                if ($unverifiedPath[0] === "?") {
                     continue;
                 }
 
@@ -283,9 +305,11 @@ class Config extends AbstractConfig
 
         // If `$path` is a directory
         if (is_dir($path)) {
-            $paths = glob($path . '/*.*');
+            $paths = glob($path . "/*.*");
             if (empty($paths)) {
-                throw new EmptyDirectoryException("Configuration directory: [$path] is empty");
+                throw new EmptyDirectoryException(
+                    "Configuration directory: [$path] is empty"
+                );
             }
 
             return $paths;
@@ -293,7 +317,9 @@ class Config extends AbstractConfig
 
         // If `$path` is not a file, throw an exception
         if (!file_exists($path)) {
-            throw new FileNotFoundException("Configuration file: [$path] cannot be found");
+            throw new FileNotFoundException(
+                "Configuration file: [$path] cannot be found"
+            );
         }
 
         return [$path];

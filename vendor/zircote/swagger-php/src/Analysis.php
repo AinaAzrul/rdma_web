@@ -64,8 +64,10 @@ class Analysis
      */
     public $context = null;
 
-    public function __construct(array $annotations = [], Context $context = null)
-    {
+    public function __construct(
+        array $annotations = [],
+        Context $context = null
+    ) {
         $this->annotations = new \SplObjectStorage();
         $this->context = $context;
 
@@ -81,7 +83,7 @@ class Analysis
         if ($annotation instanceof OpenApi) {
             $this->openapi = $this->openapi ?: $annotation;
         } else {
-            if ($context->is('annotations') === false) {
+            if ($context->is("annotations") === false) {
                 $context->annotations = [];
             }
 
@@ -90,10 +92,12 @@ class Analysis
             }
         }
         $this->annotations->attach($annotation, $context);
-        $blacklist = property_exists($annotation, '_blacklist') ? $annotation::$_blacklist : [];
+        $blacklist = property_exists($annotation, "_blacklist")
+            ? $annotation::$_blacklist
+            : [];
         foreach ($annotation as $property => $value) {
             if (in_array($property, $blacklist)) {
-                if ($property === '_unmerged') {
+                if ($property === "_unmerged") {
                     foreach ($value as $item) {
                         $this->addAnnotation($item, $context);
                     }
@@ -120,35 +124,47 @@ class Analysis
 
     public function addClassDefinition(array $definition): void
     {
-        $class = $definition['context']->fullyQualifiedName($definition['class']);
+        $class = $definition["context"]->fullyQualifiedName(
+            $definition["class"]
+        );
         $this->classes[$class] = $definition;
     }
 
     public function addInterfaceDefinition(array $definition): void
     {
-        $interface = $definition['context']->fullyQualifiedName($definition['interface']);
+        $interface = $definition["context"]->fullyQualifiedName(
+            $definition["interface"]
+        );
         $this->interfaces[$interface] = $definition;
     }
 
     public function addTraitDefinition(array $definition): void
     {
-        $trait = $definition['context']->fullyQualifiedName($definition['trait']);
+        $trait = $definition["context"]->fullyQualifiedName(
+            $definition["trait"]
+        );
         $this->traits[$trait] = $definition;
     }
 
     public function addEnumDefinition(array $definition): void
     {
-        $enum = $definition['context']->fullyQualifiedName($definition['enum']);
+        $enum = $definition["context"]->fullyQualifiedName($definition["enum"]);
         $this->enums[$enum] = $definition;
     }
 
     public function addAnalysis(Analysis $analysis): void
     {
         foreach ($analysis->annotations as $annotation) {
-            $this->addAnnotation($annotation, $analysis->annotations[$annotation]);
+            $this->addAnnotation(
+                $annotation,
+                $analysis->annotations[$annotation]
+            );
         }
         $this->classes = array_merge($this->classes, $analysis->classes);
-        $this->interfaces = array_merge($this->interfaces, $analysis->interfaces);
+        $this->interfaces = array_merge(
+            $this->interfaces,
+            $analysis->interfaces
+        );
         $this->traits = array_merge($this->traits, $analysis->traits);
         $this->enums = array_merge($this->enums, $analysis->enums);
         if ($this->openapi === null && $analysis->openapi !== null) {
@@ -167,9 +183,12 @@ class Analysis
     {
         $definitions = [];
         foreach ($this->classes as $class => $classDefinition) {
-            if ($classDefinition['extends'] === $parent) {
+            if ($classDefinition["extends"] === $parent) {
                 $definitions[$class] = $classDefinition;
-                $definitions = array_merge($definitions, $this->getSubClasses($class));
+                $definitions = array_merge(
+                    $definitions,
+                    $this->getSubClasses($class)
+                );
             }
         }
 
@@ -186,14 +205,18 @@ class Analysis
      */
     public function getSuperClasses(string $class, bool $direct = false): array
     {
-        $classDefinition = isset($this->classes[$class]) ? $this->classes[$class] : null;
-        if (!$classDefinition || empty($classDefinition['extends'])) {
+        $classDefinition = isset($this->classes[$class])
+            ? $this->classes[$class]
+            : null;
+        if (!$classDefinition || empty($classDefinition["extends"])) {
             // unknown class, or no inheritance
             return [];
         }
 
-        $extends = $classDefinition['extends'];
-        $extendsDefinition = isset($this->classes[$extends]) ? $this->classes[$extends] : null;
+        $extends = $classDefinition["extends"];
+        $extendsDefinition = isset($this->classes[$extends])
+            ? $this->classes[$extends]
+            : null;
         if (!$extendsDefinition) {
             return [];
         }
@@ -215,8 +238,10 @@ class Analysis
      *
      * @return array map of class => definition pairs of interfaces
      */
-    public function getInterfacesOfClass(string $class, bool $direct = false): array
-    {
+    public function getInterfacesOfClass(
+        string $class,
+        bool $direct = false
+    ): array {
         $classes = $direct ? [] : array_keys($this->getSuperClasses($class));
         // add self
         $classes[] = $class;
@@ -225,10 +250,11 @@ class Analysis
         foreach ($classes as $clazz) {
             if (isset($this->classes[$clazz])) {
                 $definition = $this->classes[$clazz];
-                if (isset($definition['implements'])) {
-                    foreach ($definition['implements'] as $interface) {
+                if (isset($definition["implements"])) {
+                    foreach ($definition["implements"] as $interface) {
                         if (array_key_exists($interface, $this->interfaces)) {
-                            $definitions[$interface] = $this->interfaces[$interface];
+                            $definitions[$interface] =
+                                $this->interfaces[$interface];
                         }
                     }
                 }
@@ -239,9 +265,12 @@ class Analysis
             // expand recursively for interfaces extending other interfaces
             $collect = function ($interfaces, $cb) use (&$definitions): void {
                 foreach ($interfaces as $interface) {
-                    if (isset($this->interfaces[$interface]['extends'])) {
-                        $cb($this->interfaces[$interface]['extends'], $cb);
-                        foreach ($this->interfaces[$interface]['extends'] as $fqdn) {
+                    if (isset($this->interfaces[$interface]["extends"])) {
+                        $cb($this->interfaces[$interface]["extends"], $cb);
+                        foreach (
+                            $this->interfaces[$interface]["extends"]
+                            as $fqdn
+                        ) {
                             $definitions[$fqdn] = $this->interfaces[$fqdn];
                         }
                     }
@@ -261,18 +290,25 @@ class Analysis
      *
      * @return array map of class => definition pairs of traits
      */
-    public function getTraitsOfClass(string $source, bool $direct = false): array
-    {
+    public function getTraitsOfClass(
+        string $source,
+        bool $direct = false
+    ): array {
         $sources = $direct ? [] : array_keys($this->getSuperClasses($source));
         // add self
         $sources[] = $source;
 
         $definitions = [];
         foreach ($sources as $sourze) {
-            if (isset($this->classes[$sourze]) || isset($this->traits[$sourze])) {
-                $definition = isset($this->classes[$sourze]) ? $this->classes[$sourze] : $this->traits[$sourze];
-                if (isset($definition['traits'])) {
-                    foreach ($definition['traits'] as $trait) {
+            if (
+                isset($this->classes[$sourze]) ||
+                isset($this->traits[$sourze])
+            ) {
+                $definition = isset($this->classes[$sourze])
+                    ? $this->classes[$sourze]
+                    : $this->traits[$sourze];
+                if (isset($definition["traits"])) {
+                    foreach ($definition["traits"] as $trait) {
                         if (array_key_exists($trait, $this->traits)) {
                             $definitions[$trait] = $this->traits[$trait];
                         }
@@ -285,9 +321,9 @@ class Analysis
             // expand recursively for traits using other traits
             $collect = function ($traits, $cb) use (&$definitions): void {
                 foreach ($traits as $trait) {
-                    if (isset($this->traits[$trait]['traits'])) {
-                        $cb($this->traits[$trait]['traits'], $cb);
-                        foreach ($this->traits[$trait]['traits'] as $fqdn) {
+                    if (isset($this->traits[$trait]["traits"])) {
+                        $cb($this->traits[$trait]["traits"], $cb);
+                        foreach ($this->traits[$trait]["traits"] as $fqdn) {
                             $definitions[$fqdn] = $this->traits[$fqdn];
                         }
                     }
@@ -334,14 +370,26 @@ class Analysis
      */
     public function getSchemaForSource(string $fqdn): ?AnnotationSchema
     {
-        $fqdn = '\\' . ltrim($fqdn, '\\');
+        $fqdn = "\\" . ltrim($fqdn, "\\");
 
-        foreach ([$this->classes, $this->interfaces, $this->traits, $this->enums] as $definitions) {
+        foreach (
+            [$this->classes, $this->interfaces, $this->traits, $this->enums]
+            as $definitions
+        ) {
             if (array_key_exists($fqdn, $definitions)) {
                 $definition = $definitions[$fqdn];
-                if (is_iterable($definition['context']->annotations)) {
-                    foreach (array_reverse($definition['context']->annotations) as $annotation) {
-                        if (in_array(get_class($annotation), [AnnotationSchema::class, AttributeSchema::class]) && !$annotation->_aux) {
+                if (is_iterable($definition["context"]->annotations)) {
+                    foreach (
+                        array_reverse($definition["context"]->annotations)
+                        as $annotation
+                    ) {
+                        if (
+                            in_array(get_class($annotation), [
+                                AnnotationSchema::class,
+                                AttributeSchema::class,
+                            ]) &&
+                            !$annotation->_aux
+                        ) {
                             return $annotation;
                         }
                     }
@@ -358,14 +406,14 @@ class Analysis
             return $annotation->_context;
         }
         if ($this->annotations->contains($annotation) === false) {
-            throw new \Exception('Annotation not found');
+            throw new \Exception("Annotation not found");
         }
         $context = $this->annotations[$annotation];
         if ($context instanceof Context) {
             return $context;
         }
         // Weird, did you use the addAnnotation/addAnnotations methods?
-        throw new \Exception('Annotation has no context');
+        throw new \Exception("Annotation has no context");
     }
 
     /**
@@ -374,7 +422,9 @@ class Analysis
     public function merged(): Analysis
     {
         if ($this->openapi === null) {
-            throw new \Exception('No openapi target set. Run the MergeIntoOpenApi processor');
+            throw new \Exception(
+                "No openapi target set. Run the MergeIntoOpenApi processor"
+            );
         }
         $unmerged = $this->openapi->_unmerged;
         $this->openapi->_unmerged = [];
@@ -405,7 +455,10 @@ class Analysis
         $result->unmerged = new Analysis([], $this->context);
         foreach ($this->annotations as $annotation) {
             if ($result->merged->annotations->contains($annotation) === false) {
-                $result->unmerged->annotations->attach($annotation, $this->annotations[$annotation]);
+                $result->unmerged->annotations->attach(
+                    $annotation,
+                    $this->annotations[$annotation]
+                );
             }
         }
 
@@ -433,7 +486,9 @@ class Analysis
             return $this->openapi->validate();
         }
 
-        $this->context->logger->warning('No openapi target set. Run the MergeIntoOpenApi processor before validate()');
+        $this->context->logger->warning(
+            "No openapi target set. Run the MergeIntoOpenApi processor before validate()"
+        );
 
         return false;
     }

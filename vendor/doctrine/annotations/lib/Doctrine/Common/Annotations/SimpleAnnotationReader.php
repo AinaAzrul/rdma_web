@@ -45,7 +45,10 @@ class SimpleAnnotationReader implements Reader
      */
     public function getClassAnnotations(ReflectionClass $class)
     {
-        return $this->parser->parse($class->getDocComment(), 'class ' . $class->getName());
+        return $this->parser->parse(
+            $class->getDocComment(),
+            "class " . $class->getName()
+        );
     }
 
     /**
@@ -55,7 +58,11 @@ class SimpleAnnotationReader implements Reader
     {
         return $this->parser->parse(
             $method->getDocComment(),
-            'method ' . $method->getDeclaringClass()->name . '::' . $method->getName() . '()'
+            "method " .
+                $method->getDeclaringClass()->name .
+                "::" .
+                $method->getName() .
+                "()"
         );
     }
 
@@ -66,7 +73,10 @@ class SimpleAnnotationReader implements Reader
     {
         return $this->parser->parse(
             $property->getDocComment(),
-            'property ' . $property->getDeclaringClass()->name . '::$' . $property->getName()
+            "property " .
+                $property->getDeclaringClass()->name .
+                '::$' .
+                $property->getName()
         );
     }
 
@@ -87,8 +97,10 @@ class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
-    {
+    public function getMethodAnnotation(
+        ReflectionMethod $method,
+        $annotationName
+    ) {
         foreach ($this->getMethodAnnotations($method) as $annot) {
             if ($annot instanceof $annotationName) {
                 return $annot;
@@ -101,8 +113,10 @@ class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
-    {
+    public function getPropertyAnnotation(
+        ReflectionProperty $property,
+        $annotationName
+    ) {
         foreach ($this->getPropertyAnnotations($property) as $annot) {
             if ($annot instanceof $annotationName) {
                 return $annot;

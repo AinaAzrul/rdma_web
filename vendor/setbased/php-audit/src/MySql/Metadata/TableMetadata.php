@@ -10,19 +10,21 @@ use SetBased\Audit\Metadata\TableMetadata as BaseTableMetadata;
  */
 class TableMetadata extends BaseTableMetadata
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * The properties of the table that are stored by this class.
-   *
-   * var string[]
-   */
-  protected static array $fields = ['table_schema',
-                                    'table_name',
-                                    'engine',
-                                    'character_set_name',
-                                    'table_collation'];
+    //--------------------------------------------------------------------------------------------------------------------
+    /**
+     * The properties of the table that are stored by this class.
+     *
+     * var string[]
+     */
+    protected static array $fields = [
+        "table_schema",
+        "table_name",
+        "engine",
+        "character_set_name",
+        "table_collation",
+    ];
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

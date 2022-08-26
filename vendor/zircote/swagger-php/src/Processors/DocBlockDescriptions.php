@@ -34,7 +34,7 @@ class DocBlockDescriptions
     {
         /** @var AbstractAnnotation $annotation */
         foreach ($analysis->annotations as $annotation) {
-            if (property_exists($annotation, '_context') === false) {
+            if (property_exists($annotation, "_context") === false) {
                 // only annotations with context
                 continue;
             }
@@ -44,8 +44,8 @@ class DocBlockDescriptions
                 continue;
             }
 
-            $hasSummary = property_exists($annotation, 'summary');
-            $hasDescription = property_exists($annotation, 'description');
+            $hasSummary = property_exists($annotation, "summary");
+            $hasDescription = property_exists($annotation, "description");
             if (!$hasSummary && !$hasDescription) {
                 continue;
             }
@@ -71,14 +71,17 @@ class DocBlockDescriptions
             return;
         }
 
-        $annotation->description = $this->extractContent($annotation->_context->comment);
+        $annotation->description = $this->extractContent(
+            $annotation->_context->comment
+        );
     }
 
     /**
      * @param Operation|Property|Parameter|Schema $annotation
      */
-    protected function summaryAndDescription(AbstractAnnotation $annotation): void
-    {
+    protected function summaryAndDescription(
+        AbstractAnnotation $annotation
+    ): void {
         $ignoreSummary = !Generator::isDefault($annotation->summary);
         $ignoreDescription = !Generator::isDefault($annotation->description);
         if ($annotation->summary === null) {
@@ -93,12 +96,20 @@ class DocBlockDescriptions
             return;
         }
         if ($ignoreSummary) {
-            $annotation->description = $this->extractContent($annotation->_context->comment);
+            $annotation->description = $this->extractContent(
+                $annotation->_context->comment
+            );
         } elseif ($ignoreDescription) {
-            $annotation->summary = $this->extractContent($annotation->_context->comment);
+            $annotation->summary = $this->extractContent(
+                $annotation->_context->comment
+            );
         } else {
-            $annotation->summary = $this->extractSummary($annotation->_context->comment);
-            $annotation->description = $this->extractDescription($annotation->_context->comment);
+            $annotation->summary = $this->extractSummary(
+                $annotation->_context->comment
+            );
+            $annotation->description = $this->extractDescription(
+                $annotation->_context->comment
+            );
         }
     }
 }

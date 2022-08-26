@@ -73,7 +73,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      * {@see DefaultErrorStrategy::endErrorCondition()} to ensure that
      * the handler is not in error recovery mode.
      */
-    public function reset(Parser $recognizer) : void
+    public function reset(Parser $recognizer): void
     {
         $this->endErrorCondition($recognizer);
     }
@@ -84,12 +84,12 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *
      * @param Parser $recognizer The parser instance.
      */
-    protected function beginErrorCondition(Parser $recognizer) : void
+    protected function beginErrorCondition(Parser $recognizer): void
     {
         $this->errorRecoveryMode = true;
     }
 
-    public function inErrorRecoveryMode(Parser $recognizer) : bool
+    public function inErrorRecoveryMode(Parser $recognizer): bool
     {
         return $this->errorRecoveryMode;
     }
@@ -98,7 +98,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      * This method is called to leave error recovery mode after recovering from
      * a recognition exception.
      */
-    protected function endErrorCondition(Parser $recognizer) : void
+    protected function endErrorCondition(Parser $recognizer): void
     {
         $this->errorRecoveryMode = false;
         $this->lastErrorStates = null;
@@ -111,7 +111,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      * The default implementation simply calls
      * {@see DefaultErrorStrategy::endErrorCondition()}.
      */
-    public function reportMatch(Parser $recognizer) : void
+    public function reportMatch(Parser $recognizer): void
     {
         $this->endErrorCondition($recognizer);
     }
@@ -134,8 +134,10 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      * - All other types: calls {@see Parser#notifyErrorListeners} to report
      * the exception
      */
-    public function reportError(Parser $recognizer, RecognitionException $e) : void
-    {
+    public function reportError(
+        Parser $recognizer,
+        RecognitionException $e
+    ): void {
         // if we've already reported an error and have not matched a token
         // yet successfully, don't report any errors.
         if ($this->inErrorRecoveryMode($recognizer)) {
@@ -152,7 +154,11 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
         } elseif ($e instanceof FailedPredicateException) {
             $this->reportFailedPredicate($recognizer, $e);
         } else {
-            $recognizer->notifyErrorListeners($e->getMessage(), $e->getOffendingToken(), $e);
+            $recognizer->notifyErrorListeners(
+                $e->getMessage(),
+                $e->getOffendingToken(),
+                $e
+            );
         }
     }
 
@@ -163,17 +169,18 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      * until we find one in the resynchronization set--loosely the set of tokens
      * that can follow the current rule.
      */
-    public function recover(Parser $recognizer, RecognitionException $e) : void
+    public function recover(Parser $recognizer, RecognitionException $e): void
     {
         $inputStream = $recognizer->getInputStream();
 
         if ($inputStream === null) {
-            throw new \RuntimeException('Unexpected null input stream.');
+            throw new \RuntimeException("Unexpected null input stream.");
         }
 
-        if ($this->lastErrorStates !== null
-            && $this->lastErrorIndex === $inputStream->getIndex()
-            && $this->lastErrorStates->contains($recognizer->getState())
+        if (
+            $this->lastErrorStates !== null &&
+            $this->lastErrorIndex === $inputStream->getIndex() &&
+            $this->lastErrorStates->contains($recognizer->getState())
         ) {
             // uh oh, another error at same token index and previously-visited
             // state in ATN; must be a case where LT(1) is in the recovery
@@ -239,12 +246,12 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *
      * @throws RecognitionException
      */
-    public function sync(Parser $recognizer) : void
+    public function sync(Parser $recognizer): void
     {
         $interpreter = $recognizer->getInterpreter();
 
         if ($interpreter === null) {
-            throw new \RuntimeException('Unexpected null interpreter.');
+            throw new \RuntimeException("Unexpected null interpreter.");
         }
 
         /** @var ATNState $s */
@@ -258,7 +265,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
         $tokens = $recognizer->getInputStream();
 
         if ($tokens === null) {
-            throw new \RuntimeException('Unexpected null input stream.');
+            throw new \RuntimeException("Unexpected null input stream.");
         }
 
         $la = $tokens->LA(1);
@@ -300,8 +307,13 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
             case ATNState::STAR_LOOP_BACK:
                 $this->reportUnwantedToken($recognizer);
                 $expecting = $recognizer->getExpectedTokens();
-                $whatFollowsLoopIterationOrRule = $expecting->orSet($this->getErrorRecoverySet($recognizer));
-                $this->consumeUntil($recognizer, $whatFollowsLoopIterationOrRule);
+                $whatFollowsLoopIterationOrRule = $expecting->orSet(
+                    $this->getErrorRecoverySet($recognizer)
+                );
+                $this->consumeUntil(
+                    $recognizer,
+                    $whatFollowsLoopIterationOrRule
+                );
                 break;
 
             default:
@@ -319,27 +331,35 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *
      * @see DefaultErrorStrategy::reportError()
      */
-    protected function reportNoViableAlternative(Parser $recognizer, NoViableAltException $e) : void
-    {
+    protected function reportNoViableAlternative(
+        Parser $recognizer,
+        NoViableAltException $e
+    ): void {
         $tokens = $recognizer->getTokenStream();
 
-        $input = '<unknown input>';
+        $input = "<unknown input>";
 
         if ($tokens !== null) {
             $startToken = $e->getStartToken();
 
             if ($startToken === null) {
-                throw new \RuntimeException('Unexpected null start token.');
+                throw new \RuntimeException("Unexpected null start token.");
             }
 
             if ($startToken->getType() === Token::EOF) {
-                $input = '<EOF>';
+                $input = "<EOF>";
             } else {
-                $input = $tokens->getTextByTokens($e->getStartToken(), $e->getOffendingToken());
+                $input = $tokens->getTextByTokens(
+                    $e->getStartToken(),
+                    $e->getOffendingToken()
+                );
             }
         }
 
-        $msg = \sprintf('no viable alternative at input %s', $this->escapeWSAndQuote($input));
+        $msg = \sprintf(
+            "no viable alternative at input %s",
+            $this->escapeWSAndQuote($input)
+        );
 
         $recognizer->notifyErrorListeners($msg, $e->getOffendingToken(), $e);
     }
@@ -353,16 +373,18 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *
      * @see DefaultErrorStrategy::reportError()
      */
-    protected function reportInputMismatch(Parser $recognizer, InputMismatchException $e) : void
-    {
+    protected function reportInputMismatch(
+        Parser $recognizer,
+        InputMismatchException $e
+    ): void {
         $expectedTokens = $e->getExpectedTokens();
 
         if ($expectedTokens === null) {
-            throw new \RuntimeException('Unexpected null expected tokens.');
+            throw new \RuntimeException("Unexpected null expected tokens.");
         }
 
         $msg = \sprintf(
-            'mismatched input %s expecting %s',
+            "mismatched input %s expecting %s",
             $this->getTokenErrorDisplay($e->getOffendingToken()),
             $expectedTokens->toStringVocabulary($recognizer->getVocabulary())
         );
@@ -379,9 +401,15 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *
      * @see DefaultErrorStrategy::reportError()
      */
-    protected function reportFailedPredicate(Parser $recognizer, FailedPredicateException $e) : void
-    {
-        $msg = \sprintf('rule %s %s', $recognizer->getCurrentRuleName(), $e->getMessage());
+    protected function reportFailedPredicate(
+        Parser $recognizer,
+        FailedPredicateException $e
+    ): void {
+        $msg = \sprintf(
+            "rule %s %s",
+            $recognizer->getCurrentRuleName(),
+            $e->getMessage()
+        );
 
         $recognizer->notifyErrorListeners($msg, $e->getOffendingToken(), $e);
     }
@@ -404,7 +432,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *
      * @param Parser $recognizer The parser instance.
      */
-    protected function reportUnwantedToken(Parser $recognizer) : void
+    protected function reportUnwantedToken(Parser $recognizer): void
     {
         if ($this->inErrorRecoveryMode($recognizer)) {
             return;
@@ -417,7 +445,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
         $expecting = $this->getExpectedTokens($recognizer);
 
         $msg = \sprintf(
-            'extraneous input %s expecting %s',
+            "extraneous input %s expecting %s",
             $tokenName,
             $expecting->toStringVocabulary($recognizer->getVocabulary())
         );
@@ -442,7 +470,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *
      * @param Parser $recognizer the parser instance
      */
-    protected function reportMissingToken(Parser $recognizer) : void
+    protected function reportMissingToken(Parser $recognizer): void
     {
         if ($this->inErrorRecoveryMode($recognizer)) {
             return;
@@ -454,7 +482,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
         $expecting = $this->getExpectedTokens($recognizer);
 
         $msg = \sprintf(
-            'missing %s at %s',
+            "missing %s at %s",
             $expecting->toStringVocabulary($recognizer->getVocabulary()),
             $this->getTokenErrorDisplay($t)
         );
@@ -512,7 +540,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *
      * @throws RecognitionException
      */
-    public function recoverInline(Parser $recognizer) : Token
+    public function recoverInline(Parser $recognizer): Token
     {
         // SINGLE TOKEN DELETION
         $matchedSymbol = $this->singleTokenDeletion($recognizer);
@@ -535,7 +563,11 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
             throw new InputMismatchException($recognizer);
         }
 
-        throw new InputMismatchException($recognizer, $this->nextTokensState, $this->nextTokensContext);
+        throw new InputMismatchException(
+            $recognizer,
+            $this->nextTokensState,
+            $this->nextTokensContext
+        );
     }
 
     /**
@@ -556,18 +588,18 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      * @return bool `true` If single-token insertion is a viable recovery
      *              strategy for the current mismatched input, otherwise `false`.
      */
-    protected function singleTokenInsertion(Parser $recognizer) : bool
+    protected function singleTokenInsertion(Parser $recognizer): bool
     {
         $stream = $recognizer->getInputStream();
 
         if ($stream === null) {
-            throw new \RuntimeException('Unexpected null input stream.');
+            throw new \RuntimeException("Unexpected null input stream.");
         }
 
         $interpreter = $recognizer->getInterpreter();
 
         if ($interpreter === null) {
-            throw new \RuntimeException('Unexpected null interpreter.');
+            throw new \RuntimeException("Unexpected null interpreter.");
         }
 
         $currentSymbolType = $stream->LA(1);
@@ -580,7 +612,10 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
         /** @var ATNState $currentState */
         $currentState = $atn->states[$recognizer->getState()];
         $next = $currentState->getTransition(0)->target;
-        $expectingAtLL2 = $atn->nextTokensInContext($next, $recognizer->getContext());
+        $expectingAtLL2 = $atn->nextTokensInContext(
+            $next,
+            $recognizer->getContext()
+        );
 
         if ($expectingAtLL2->contains($currentSymbolType)) {
             $this->reportMissingToken($recognizer);
@@ -611,12 +646,12 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *               single-token deletion successfully recovers from
      *               the mismatched input, otherwise `null`.
      */
-    protected function singleTokenDeletion(Parser $recognizer) : ?Token
+    protected function singleTokenDeletion(Parser $recognizer): ?Token
     {
         $inputStream = $recognizer->getInputStream();
 
         if ($inputStream === null) {
-            throw new \RuntimeException('Unexpected null input stream.');
+            throw new \RuntimeException("Unexpected null input stream.");
         }
 
         $nextTokenType = $inputStream->LA(2);
@@ -627,7 +662,7 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
             $recognizer->consume(); // simply delete extra token
             // we want to return the token we're actually matching
             $matchedSymbol = $recognizer->getCurrentToken();
-            $this->reportMatch($recognizer);  // we know current token is correct
+            $this->reportMatch($recognizer); // we know current token is correct
 
             return $matchedSymbol;
         }
@@ -654,24 +689,24 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      *  If you change what tokens must be created by the lexer,
      *  override this method to create the appropriate tokens.
      */
-    protected function getMissingSymbol(Parser $recognizer) : Token
+    protected function getMissingSymbol(Parser $recognizer): Token
     {
         $currentSymbol = $recognizer->getCurrentToken();
 
         if ($currentSymbol === null) {
-            throw new \RuntimeException('Unexpected null current token.');
+            throw new \RuntimeException("Unexpected null current token.");
         }
 
         $inputStream = $recognizer->getInputStream();
 
         if ($inputStream === null) {
-            throw new \RuntimeException('Unexpected null input stream.');
+            throw new \RuntimeException("Unexpected null input stream.");
         }
 
         $tokenSource = $currentSymbol->getTokenSource();
 
         if ($tokenSource === null) {
-            throw new \RuntimeException('Unexpected null token source.');
+            throw new \RuntimeException("Unexpected null token source.");
         }
 
         $expecting = $this->getExpectedTokens($recognizer);
@@ -683,9 +718,12 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
         }
 
         if ($expectedTokenType === Token::EOF) {
-            $tokenText = '<missing EOF>';
+            $tokenText = "<missing EOF>";
         } else {
-            $tokenText = \sprintf('<missing %s>', $recognizer->getVocabulary()->getDisplayName($expectedTokenType));
+            $tokenText = \sprintf(
+                "<missing %s>",
+                $recognizer->getVocabulary()->getDisplayName($expectedTokenType)
+            );
         }
 
         $current = $currentSymbol;
@@ -695,22 +733,21 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
             $current = $lookback;
         }
 
-        return $recognizer->getTokenFactory()->createEx(
-            new Pair(
-                $tokenSource,
-                $tokenSource->getInputStream()
-            ),
-            $expectedTokenType,
-            $tokenText,
-            Token::DEFAULT_CHANNEL,
-            -1,
-            -1,
-            $current->getLine(),
-            $current->getCharPositionInLine()
-        );
+        return $recognizer
+            ->getTokenFactory()
+            ->createEx(
+                new Pair($tokenSource, $tokenSource->getInputStream()),
+                $expectedTokenType,
+                $tokenText,
+                Token::DEFAULT_CHANNEL,
+                -1,
+                -1,
+                $current->getLine(),
+                $current->getCharPositionInLine()
+            );
     }
 
-    protected function getExpectedTokens(Parser $recognizer) : IntervalSet
+    protected function getExpectedTokens(Parser $recognizer): IntervalSet
     {
         return $recognizer->getExpectedTokens();
     }
@@ -724,36 +761,36 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      * your token objects because you don't have to go modify your lexer
      * so that it creates a new Java type.
      */
-    protected function getTokenErrorDisplay(?Token $t) : string
+    protected function getTokenErrorDisplay(?Token $t): string
     {
         if ($t === null) {
-            return '<no token>';
+            return "<no token>";
         }
 
         $s = $this->getSymbolText($t);
 
         if ($s === null) {
             if ($this->getSymbolType($t) === Token::EOF) {
-                $s = '<EOF>';
+                $s = "<EOF>";
             } else {
-                $s = '<' . $this->getSymbolType($t) . '>';
+                $s = "<" . $this->getSymbolType($t) . ">";
             }
         }
 
         return $this->escapeWSAndQuote($s);
     }
 
-    protected function getSymbolText(Token $symbol) : ?string
+    protected function getSymbolText(Token $symbol): ?string
     {
         return $symbol->getText();
     }
 
-    protected function getSymbolType(Token $symbol) : int
+    protected function getSymbolType(Token $symbol): int
     {
         return $symbol->getType();
     }
 
-    protected function escapeWSAndQuote(string $s) : string
+    protected function escapeWSAndQuote(string $s): string
     {
         return "'" . StringUtils::escapeWhitespace($s) . "'";
     }
@@ -852,12 +889,12 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
      * Like Grosch I implement context-sensitive FOLLOW sets that are combined
      * at run-time upon error to avoid overhead during parsing.
      */
-    protected function getErrorRecoverySet(Parser $recognizer) : IntervalSet
+    protected function getErrorRecoverySet(Parser $recognizer): IntervalSet
     {
         $interpreter = $recognizer->getInterpreter();
 
         if ($interpreter === null) {
-            throw new \RuntimeException('Unexpected null interpreter.');
+            throw new \RuntimeException("Unexpected null interpreter.");
         }
 
         $atn = $interpreter->atn;
@@ -883,12 +920,12 @@ class DefaultErrorStrategy implements ANTLRErrorStrategy
     /**
      * Consume tokens until one matches the given token set.
      */
-    protected function consumeUntil(Parser $recognizer, IntervalSet $set) : void
+    protected function consumeUntil(Parser $recognizer, IntervalSet $set): void
     {
         $inputStream = $recognizer->getInputStream();
 
         if ($inputStream === null) {
-            throw new \RuntimeException('Unexpected null input stream.');
+            throw new \RuntimeException("Unexpected null input stream.");
         }
 
         $ttype = $inputStream->LA(1);

@@ -45,7 +45,9 @@ trait ProcessableHandlerTrait
     public function popProcessor(): callable
     {
         if (!$this->processors) {
-            throw new \LogicException('You tried to pop from an empty processor stack.');
+            throw new \LogicException(
+                "You tried to pop from an empty processor stack."
+            );
         }
 
         return array_shift($this->processors);

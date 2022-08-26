@@ -34,23 +34,41 @@ class CleanUnusedComponents
     {
         $usedRefs = [];
         foreach ($analysis->annotations as $annotation) {
-            if (property_exists($annotation, 'ref') && !Generator::isDefault($annotation->ref) && $annotation->ref !== null) {
+            if (
+                property_exists($annotation, "ref") &&
+                !Generator::isDefault($annotation->ref) &&
+                $annotation->ref !== null
+            ) {
                 $usedRefs[$annotation->ref] = $annotation->ref;
             }
-            foreach (['allOf', 'anyOf', 'oneOff'] as $sub) {
-                if (property_exists($annotation, $sub) && !Generator::isDefault($annotation->{$sub})) {
+            foreach (["allOf", "anyOf", "oneOff"] as $sub) {
+                if (
+                    property_exists($annotation, $sub) &&
+                    !Generator::isDefault($annotation->{$sub})
+                ) {
                     foreach ($annotation->{$sub} as $subElem) {
-                        if (is_object($subElem) && property_exists($subElem, 'ref') && !Generator::isDefault($subElem->ref) && $subElem->ref !== null) {
+                        if (
+                            is_object($subElem) &&
+                            property_exists($subElem, "ref") &&
+                            !Generator::isDefault($subElem->ref) &&
+                            $subElem->ref !== null
+                        ) {
                             $usedRefs[$subElem->ref] = $subElem->ref;
                         }
                     }
                 }
             }
-            if ($annotation instanceof OpenApi || $annotation instanceof Operation) {
+            if (
+                $annotation instanceof OpenApi ||
+                $annotation instanceof Operation
+            ) {
                 if (!Generator::isDefault($annotation->security)) {
                     foreach ($annotation->security as $security) {
                         foreach (array_keys($security) as $securityName) {
-                            $ref = Components::COMPONENTS_PREFIX . 'securitySchemes/' . $securityName;
+                            $ref =
+                                Components::COMPONENTS_PREFIX .
+                                "securitySchemes/" .
+                                $securityName;
                             $usedRefs[$ref] = $ref;
                         }
                     }
@@ -63,8 +81,15 @@ class CleanUnusedComponents
             if (2 == count($nested)) {
                 // $nested[1] is the name of the property that holds the component name
                 [$componentType, $nameProperty] = $nested;
-                if (!Generator::isDefault($analysis->openapi->components->{$componentType})) {
-                    foreach ($analysis->openapi->components->{$componentType} as $component) {
+                if (
+                    !Generator::isDefault(
+                        $analysis->openapi->components->{$componentType}
+                    )
+                ) {
+                    foreach (
+                        $analysis->openapi->components->{$componentType}
+                        as $component
+                    ) {
                         $ref = Components::ref($component);
                         if (!in_array($ref, $usedRefs)) {
                             $unusedRefs[$ref] = [$ref, $nameProperty];
@@ -74,7 +99,11 @@ class CleanUnusedComponents
             }
         }
 
-        $detachNested = function (Analysis $analysis, AbstractAnnotation $annotation, callable $detachNested): void {
+        $detachNested = function (
+            Analysis $analysis,
+            AbstractAnnotation $annotation,
+            callable $detachNested
+        ): void {
             foreach ($annotation::$_nested as $nested) {
                 $nestedKey = ((array) $nested)[0];
                 if (!Generator::isDefault($annotation->{$nestedKey})) {
@@ -84,8 +113,12 @@ class CleanUnusedComponents
                                 $detachNested($analysis, $elem, $detachNested);
                             }
                         }
-                    } elseif ($annotation->{$nestedKey} instanceof AbstractAnnotation) {
-                        $analysis->annotations->detach($annotation->{$nestedKey});
+                    } elseif (
+                        $annotation->{$nestedKey} instanceof AbstractAnnotation
+                    ) {
+                        $analysis->annotations->detach(
+                            $annotation->{$nestedKey}
+                        );
                     }
                 }
             }
@@ -95,12 +128,18 @@ class CleanUnusedComponents
         // remove unused
         foreach ($unusedRefs as $refDetails) {
             [$ref, $nameProperty] = $refDetails;
-            [$hash, $components, $componentType, $name] = explode('/', $ref);
-            foreach ($analysis->openapi->components->{$componentType} as $ii => $component) {
+            [$hash, $components, $componentType, $name] = explode("/", $ref);
+            foreach (
+                $analysis->openapi->components->{$componentType}
+                as $ii => $component
+            ) {
                 if ($component->{$nameProperty} == $name) {
-                    $annotation = $analysis->openapi->components->{$componentType}[$ii];
+                    $annotation =
+                        $analysis->openapi->components->{$componentType}[$ii];
                     $detachNested($analysis, $annotation, $detachNested);
-                    unset($analysis->openapi->components->{$componentType}[$ii]);
+                    unset(
+                        $analysis->openapi->components->{$componentType}[$ii]
+                    );
                 }
             }
         }

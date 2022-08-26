@@ -31,8 +31,11 @@ abstract class MultiplePcreFilterIterator extends \FilterIterator
      * @param string[]                $matchPatterns   An array of patterns that need to match
      * @param string[]                $noMatchPatterns An array of patterns that need to not match
      */
-    public function __construct(\Iterator $iterator, array $matchPatterns, array $noMatchPatterns)
-    {
+    public function __construct(
+        \Iterator $iterator,
+        array $matchPatterns,
+        array $noMatchPatterns
+    ) {
         foreach ($matchPatterns as $pattern) {
             $this->matchRegexps[] = $this->toRegex($pattern);
         }
@@ -80,21 +83,26 @@ abstract class MultiplePcreFilterIterator extends \FilterIterator
      */
     protected function isRegex(string $str): bool
     {
-        $availableModifiers = 'imsxuADU';
+        $availableModifiers = "imsxuADU";
 
         if (\PHP_VERSION_ID >= 80200) {
-            $availableModifiers .= 'n';
+            $availableModifiers .= "n";
         }
 
-        if (preg_match('/^(.{3,}?)['.$availableModifiers.']*$/', $str, $m)) {
+        if (
+            preg_match("/^(.{3,}?)[" . $availableModifiers . ']*$/', $str, $m)
+        ) {
             $start = substr($m[1], 0, 1);
             $end = substr($m[1], -1);
 
             if ($start === $end) {
-                return !preg_match('/[*?[:alnum:] \\\\]/', $start);
+                return !preg_match("/[*?[:alnum:] \\\\]/", $start);
             }
 
-            foreach ([['{', '}'], ['(', ')'], ['[', ']'], ['<', '>']] as $delimiters) {
+            foreach (
+                [["{", "}"], ["(", ")"], ["[", "]"], ["<", ">"]]
+                as $delimiters
+            ) {
                 if ($start === $delimiters[0] && $end === $delimiters[1]) {
                     return true;
                 }

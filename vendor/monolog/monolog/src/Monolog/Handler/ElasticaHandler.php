@@ -50,15 +50,19 @@ class ElasticaHandler extends AbstractProcessingHandler
      * @param Client  $client  Elastica Client object
      * @param mixed[] $options Handler configuration
      */
-    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        Client $client,
+        array $options = [],
+        $level = Logger::DEBUG,
+        bool $bubble = true
+    ) {
         parent::__construct($level, $bubble);
         $this->client = $client;
         $this->options = array_merge(
             [
-                'index'          => 'monolog',      // Elastic index name
-                'type'           => 'record',       // Elastic document type
-                'ignore_error'   => false,          // Suppress Elastica exceptions
+                "index" => "monolog", // Elastic index name
+                "type" => "record", // Elastic document type
+                "ignore_error" => false, // Suppress Elastica exceptions
             ],
             $options
         );
@@ -69,19 +73,22 @@ class ElasticaHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        $this->bulkSend([$record['formatted']]);
+        $this->bulkSend([$record["formatted"]]);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
+    public function setFormatter(
+        FormatterInterface $formatter
+    ): HandlerInterface {
         if ($formatter instanceof ElasticaFormatter) {
             return parent::setFormatter($formatter);
         }
 
-        throw new \InvalidArgumentException('ElasticaHandler is only compatible with ElasticaFormatter');
+        throw new \InvalidArgumentException(
+            "ElasticaHandler is only compatible with ElasticaFormatter"
+        );
     }
 
     /**
@@ -97,7 +104,10 @@ class ElasticaHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
-        return new ElasticaFormatter($this->options['index'], $this->options['type']);
+        return new ElasticaFormatter(
+            $this->options["index"],
+            $this->options["type"]
+        );
     }
 
     /**
@@ -121,8 +131,12 @@ class ElasticaHandler extends AbstractProcessingHandler
         try {
             $this->client->addDocuments($documents);
         } catch (ExceptionInterface $e) {
-            if (!$this->options['ignore_error']) {
-                throw new \RuntimeException("Error sending messages to Elasticsearch", 0, $e);
+            if (!$this->options["ignore_error"]) {
+                throw new \RuntimeException(
+                    "Error sending messages to Elasticsearch",
+                    0,
+                    $e
+                );
             }
         }
     }

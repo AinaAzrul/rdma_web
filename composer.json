@@ -1,9 +1,9 @@
 {
-    "require": {
-        "firebase/php-jwt": "^6.1",
-        "monolog/monolog": "^2.5",
-        "setbased/php-audit": "*",
-        "zircote/swagger-php": "^4.4",
-        "doctrine/annotations": "^1.13"
-    }
+  "require": {
+    "firebase/php-jwt": "^6.1",
+    "monolog/monolog": "^2.5",
+    "setbased/php-audit": "*",
+    "zircote/swagger-php": "^4.4",
+    "doctrine/annotations": "^1.13"
+  }
 }

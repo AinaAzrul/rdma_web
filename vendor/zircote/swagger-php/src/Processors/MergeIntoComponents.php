@@ -20,11 +20,19 @@ class MergeIntoComponents
     {
         $components = $analysis->openapi->components;
         if (Generator::isDefault($components)) {
-            $components = new Components(['_context' => new Context(['generated' => true], $analysis->context)]);
+            $components = new Components([
+                "_context" => new Context(
+                    ["generated" => true],
+                    $analysis->context
+                ),
+            ]);
         }
 
         foreach ($analysis->annotations as $annotation) {
-            if (Components::matchNested(get_class($annotation)) && $annotation->_context->is('nested') === false) {
+            if (
+                Components::matchNested(get_class($annotation)) &&
+                $annotation->_context->is("nested") === false
+            ) {
                 // A top level annotation.
                 $components->merge([$annotation], true);
                 $analysis->openapi->components = $components;

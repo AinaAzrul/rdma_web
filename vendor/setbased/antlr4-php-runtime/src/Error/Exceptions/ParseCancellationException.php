@@ -6,8 +6,12 @@ namespace Antlr\Antlr4\Runtime\Error\Exceptions;
 
 class ParseCancellationException extends \LogicException
 {
-    public static function from(\Throwable $exception) : self
+    public static function from(\Throwable $exception): self
     {
-        return new self($exception->getMessage(), $exception->getCode(), $exception);
+        return new self(
+            $exception->getMessage(),
+            $exception->getCode(),
+            $exception
+        );
     }
 }

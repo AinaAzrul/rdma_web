@@ -93,7 +93,7 @@ abstract class AbstractLexer
      */
     public function setInput($input)
     {
-        $this->input  = $input;
+        $this->input = $input;
         $this->tokens = [];
 
         $this->reset();
@@ -108,9 +108,9 @@ abstract class AbstractLexer
     public function reset()
     {
         $this->lookahead = null;
-        $this->token     = null;
-        $this->peek      = 0;
-        $this->position  = 0;
+        $this->token = null;
+        $this->peek = 0;
+        $this->position = 0;
     }
 
     /**
@@ -156,7 +156,7 @@ abstract class AbstractLexer
      */
     public function isNextToken($type)
     {
-        return $this->lookahead !== null && $this->lookahead['type'] === $type;
+        return $this->lookahead !== null && $this->lookahead["type"] === $type;
     }
 
     /**
@@ -168,7 +168,8 @@ abstract class AbstractLexer
      */
     public function isNextTokenAny(array $types)
     {
-        return $this->lookahead !== null && in_array($this->lookahead['type'], $types, true);
+        return $this->lookahead !== null &&
+            in_array($this->lookahead["type"], $types, true);
     }
 
     /**
@@ -178,10 +179,11 @@ abstract class AbstractLexer
      */
     public function moveNext()
     {
-        $this->peek      = 0;
-        $this->token     = $this->lookahead;
+        $this->peek = 0;
+        $this->token = $this->lookahead;
         $this->lookahead = isset($this->tokens[$this->position])
-            ? $this->tokens[$this->position++] : null;
+            ? $this->tokens[$this->position++]
+            : null;
 
         return $this->lookahead !== null;
     }
@@ -195,7 +197,10 @@ abstract class AbstractLexer
      */
     public function skipUntil($type)
     {
-        while ($this->lookahead !== null && $this->lookahead['type'] !== $type) {
+        while (
+            $this->lookahead !== null &&
+            $this->lookahead["type"] !== $type
+        ) {
             $this->moveNext();
         }
     }
@@ -236,7 +241,7 @@ abstract class AbstractLexer
      */
     public function glimpse()
     {
-        $peek       = $this->peek();
+        $peek = $this->peek();
         $this->peek = 0;
 
         return $peek;
@@ -251,16 +256,19 @@ abstract class AbstractLexer
      */
     protected function scan($input)
     {
-        if (! isset($this->regex)) {
+        if (!isset($this->regex)) {
             $this->regex = sprintf(
-                '/(%s)|%s/%s',
-                implode(')|(', $this->getCatchablePatterns()),
-                implode('|', $this->getNonCatchablePatterns()),
+                "/(%s)|%s/%s",
+                implode(")|(", $this->getCatchablePatterns()),
+                implode("|", $this->getNonCatchablePatterns()),
                 $this->getModifiers()
             );
         }
 
-        $flags   = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE;
+        $flags =
+            PREG_SPLIT_NO_EMPTY |
+            PREG_SPLIT_DELIM_CAPTURE |
+            PREG_SPLIT_OFFSET_CAPTURE;
         $matches = preg_split($this->regex, $input, -1, $flags);
 
         if ($matches === false) {
@@ -273,9 +281,9 @@ abstract class AbstractLexer
             $type = $this->getType($match[0]);
 
             $this->tokens[] = [
-                'value' => $match[0],
-                'type'  => $type,
-                'position' => $match[1],
+                "value" => $match[0],
+                "type" => $type,
+                "position" => $match[1],
             ];
         }
     }
@@ -295,7 +303,7 @@ abstract class AbstractLexer
 
         foreach ($constants as $name => $value) {
             if ($value === $token) {
-                return $className . '::' . $name;
+                return $className . "::" . $name;
             }
         }
 
@@ -309,7 +317,7 @@ abstract class AbstractLexer
      */
     protected function getModifiers()
     {
-        return 'iu';
+        return "iu";
     }
 
     /**

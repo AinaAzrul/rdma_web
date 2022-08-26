@@ -25,9 +25,12 @@ class FormatterHelper extends Helper
      *
      * @return string The format section
      */
-    public function formatSection(string $section, string $message, string $style = 'info')
-    {
-        return sprintf('<%s>[%s]</%s> %s', $style, $section, $style, $message);
+    public function formatSection(
+        string $section,
+        string $message,
+        string $style = "info"
+    ) {
+        return sprintf("<%s>[%s]</%s> %s", $style, $section, $style, $message);
     }
 
     /**
@@ -47,20 +50,26 @@ class FormatterHelper extends Helper
         $lines = [];
         foreach ($messages as $message) {
             $message = OutputFormatter::escape($message);
-            $lines[] = sprintf($large ? '  %s  ' : ' %s ', $message);
+            $lines[] = sprintf($large ? "  %s  " : " %s ", $message);
             $len = max(self::width($message) + ($large ? 4 : 2), $len);
         }
 
-        $messages = $large ? [str_repeat(' ', $len)] : [];
+        $messages = $large ? [str_repeat(" ", $len)] : [];
         for ($i = 0; isset($lines[$i]); ++$i) {
-            $messages[] = $lines[$i].str_repeat(' ', $len - self::width($lines[$i]));
+            $messages[] =
+                $lines[$i] . str_repeat(" ", $len - self::width($lines[$i]));
         }
         if ($large) {
-            $messages[] = str_repeat(' ', $len);
+            $messages[] = str_repeat(" ", $len);
         }
 
         for ($i = 0; isset($messages[$i]); ++$i) {
-            $messages[$i] = sprintf('<%s>%s</%s>', $style, $messages[$i], $style);
+            $messages[$i] = sprintf(
+                "<%s>%s</%s>",
+                $style,
+                $messages[$i],
+                $style
+            );
         }
 
         return implode("\n", $messages);
@@ -71,15 +80,18 @@ class FormatterHelper extends Helper
      *
      * @return string
      */
-    public function truncate(string $message, int $length, string $suffix = '...')
-    {
+    public function truncate(
+        string $message,
+        int $length,
+        string $suffix = "..."
+    ) {
         $computedLength = $length - self::width($suffix);
 
         if ($computedLength > self::width($message)) {
             return $message;
         }
 
-        return self::substr($message, 0, $length).$suffix;
+        return self::substr($message, 0, $length) . $suffix;
     }
 
     /**
@@ -87,6 +99,6 @@ class FormatterHelper extends Helper
      */
     public function getName()
     {
-        return 'formatter';
+        return "formatter";
     }
 }

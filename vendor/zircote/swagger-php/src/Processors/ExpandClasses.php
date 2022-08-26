@@ -23,17 +23,38 @@ class ExpandClasses
     public function __invoke(Analysis $analysis)
     {
         /** @var AnnotationSchema[] $schemas */
-        $schemas = $analysis->getAnnotationsOfType([AnnotationSchema::class, AttributeSchema::class], true);
+        $schemas = $analysis->getAnnotationsOfType(
+            [AnnotationSchema::class, AttributeSchema::class],
+            true
+        );
 
         foreach ($schemas as $schema) {
-            if ($schema->_context->is('class')) {
-                $ancestors = $analysis->getSuperClasses($schema->_context->fullyQualifiedName($schema->_context->class));
+            if ($schema->_context->is("class")) {
+                $ancestors = $analysis->getSuperClasses(
+                    $schema->_context->fullyQualifiedName(
+                        $schema->_context->class
+                    )
+                );
                 $existing = [];
                 foreach ($ancestors as $ancestor) {
-                    $ancestorSchema = $analysis->getSchemaForSource($ancestor['context']->fullyQualifiedName($ancestor['class']));
+                    $ancestorSchema = $analysis->getSchemaForSource(
+                        $ancestor["context"]->fullyQualifiedName(
+                            $ancestor["class"]
+                        )
+                    );
                     if ($ancestorSchema) {
-                        $refPath = !Generator::isDefault($ancestorSchema->schema) ? $ancestorSchema->schema : $ancestor['class'];
-                        $this->inheritFrom($analysis, $schema, $ancestorSchema, $refPath, $ancestor['context']);
+                        $refPath = !Generator::isDefault(
+                            $ancestorSchema->schema
+                        )
+                            ? $ancestorSchema->schema
+                            : $ancestor["class"];
+                        $this->inheritFrom(
+                            $analysis,
+                            $schema,
+                            $ancestorSchema,
+                            $refPath,
+                            $ancestor["context"]
+                        );
 
                         // one ancestor is enough
                         break;

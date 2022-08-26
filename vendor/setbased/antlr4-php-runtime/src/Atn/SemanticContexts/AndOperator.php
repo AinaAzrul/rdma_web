@@ -54,7 +54,7 @@ final class AndOperator extends Operator
     /**
      * @return array<SemanticContext>
      */
-    public function getOperands() : array
+    public function getOperands(): array
     {
         return $this->operands;
     }
@@ -65,7 +65,7 @@ final class AndOperator extends Operator
      * The evaluation of predicates by this context is short-circuiting, but
      * unordered.
      */
-    public function eval(Recognizer $parser, RuleContext $parserCallStack) : bool
+    public function eval(Recognizer $parser, RuleContext $parserCallStack): bool
     {
         foreach ($this->operands as $operand) {
             if (!$operand->eval($parser, $parserCallStack)) {
@@ -75,8 +75,10 @@ final class AndOperator extends Operator
         return true;
     }
 
-    public function evalPrecedence(Recognizer $parser, RuleContext $parserCallStack) : ?SemanticContext
-    {
+    public function evalPrecedence(
+        Recognizer $parser,
+        RuleContext $parserCallStack
+    ): ?SemanticContext {
         $differs = false;
 
         $operands = [];
@@ -107,13 +109,16 @@ final class AndOperator extends Operator
 
         $result = null;
         foreach ($operands as $operand) {
-            $result = $result === null ? $operand : self::andContext($result, $operand);
+            $result =
+                $result === null
+                    ? $operand
+                    : self::andContext($result, $operand);
         }
 
         return $result;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
@@ -126,16 +131,16 @@ final class AndOperator extends Operator
         return Equality::equals($this->operands, $other->operands);
     }
 
-    public function hashCode() : int
+    public function hashCode(): int
     {
         return Hasher::hash(41, $this->operands);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        $s = '';
+        $s = "";
         foreach ($this->operands as $o) {
-            $s .= '&& ' . $o;
+            $s .= "&& " . $o;
         }
 
         return \strlen($s) > 3 ? (string) \substr($s, 3) : $s;
@@ -144,7 +149,7 @@ final class AndOperator extends Operator
     /**
      * @param array<PrecedencePredicate> $predicates
      */
-    private static function minPredicate(array $predicates) : object
+    private static function minPredicate(array $predicates): object
     {
         $iterator = new \ArrayIterator($predicates);
 

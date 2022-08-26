@@ -27,8 +27,12 @@ final class RuleTransition extends Transition
      */
     public $followState;
 
-    public function __construct(RuleStartState $ruleStart, int $ruleIndex, int $precedence, ATNState $followState)
-    {
+    public function __construct(
+        RuleStartState $ruleStart,
+        int $ruleIndex,
+        int $precedence,
+        ATNState $followState
+    ) {
         parent::__construct($ruleStart);
 
         $this->ruleIndex = $ruleIndex;
@@ -36,38 +40,46 @@ final class RuleTransition extends Transition
         $this->followState = $followState;
     }
 
-    public function matches(int $symbol, int $minVocabSymbol, int $maxVocabSymbol) : bool
-    {
+    public function matches(
+        int $symbol,
+        int $minVocabSymbol,
+        int $maxVocabSymbol
+    ): bool {
         return false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isEpsilon() : bool
+    public function isEpsilon(): bool
     {
         return true;
     }
 
-    public function getSerializationType() : int
+    public function getSerializationType(): int
     {
         return self::RULE;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
         }
 
-        return $other instanceof self
-            && $this->ruleIndex === $other->ruleIndex
-            && $this->precedence === $other->precedence
-            && $this->target->equals($other->target);
+        return $other instanceof self &&
+            $this->ruleIndex === $other->ruleIndex &&
+            $this->precedence === $other->precedence &&
+            $this->target->equals($other->target);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return \sprintf('rule_%d:%d,%s', $this->ruleIndex, $this->precedence, $this->followState);
+        return \sprintf(
+            "rule_%d:%d,%s",
+            $this->ruleIndex,
+            $this->precedence,
+            $this->followState
+        );
     }
 }

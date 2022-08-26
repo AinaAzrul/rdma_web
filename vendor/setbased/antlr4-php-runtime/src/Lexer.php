@@ -24,7 +24,7 @@ abstract class Lexer extends Recognizer implements TokenSource
     public const DEFAULT_TOKEN_CHANNEL = Token::DEFAULT_CHANNEL;
     public const HIDDEN = Token::HIDDEN_CHANNEL;
     public const MIN_CHAR_VALUE = 0x0000;
-    public const MAX_CHAR_VALUE = 0x10FFFF;
+    public const MAX_CHAR_VALUE = 0x10ffff;
 
     /** @var CharStream|null */
     public $input;
@@ -120,14 +120,14 @@ abstract class Lexer extends Recognizer implements TokenSource
         $this->tokenFactorySourcePair = new Pair($this, $input);
 
         // @todo remove this property
-        $this->interp = null;// child classes must populate this
+        $this->interp = null; // child classes must populate this
     }
 
-    public function reset() : void
+    public function reset(): void
     {
         // wack Lexer state variables
         if ($this->input !== null) {
-            $this->input->seek(0);// rewind the input
+            $this->input->seek(0); // rewind the input
         }
 
         $this->token = null;
@@ -150,10 +150,12 @@ abstract class Lexer extends Recognizer implements TokenSource
     /**
      * Return a token from this source; i.e., match a token on the char stream.
      */
-    public function nextToken() : ?Token
+    public function nextToken(): ?Token
     {
         if ($this->input === null) {
-            throw new \RuntimeException('NextToken requires a non-null input stream.');
+            throw new \RuntimeException(
+                "NextToken requires a non-null input stream."
+            );
         }
 
         // Mark start location in char stream so unbuffered streams are
@@ -168,8 +170,11 @@ abstract class Lexer extends Recognizer implements TokenSource
                     return $this->token;
                 }
 
-                if ($this->interp === null || !$this->interp instanceof LexerATNSimulator) {
-                    throw new \RuntimeException('Unexpected interpreter type.');
+                if (
+                    $this->interp === null ||
+                    !$this->interp instanceof LexerATNSimulator
+                ) {
+                    throw new \RuntimeException("Unexpected interpreter type.");
                 }
 
                 $this->token = null;
@@ -184,7 +189,10 @@ abstract class Lexer extends Recognizer implements TokenSource
                     $this->type = Token::INVALID_TYPE;
                     $ttype = self::SKIP;
                     try {
-                        $ttype = $this->interp->match($this->input, $this->mode);
+                        $ttype = $this->interp->match(
+                            $this->input,
+                            $this->mode
+                        );
                     } catch (LexerNoViableAltException $e) {
                         $this->notifyListeners($e); // report error
                         $this->recover($e);
@@ -233,32 +241,32 @@ abstract class Lexer extends Recognizer implements TokenSource
      * if `token === null` at end of any token rule, it creates one for you
      * and emits it.
      */
-    public function skip() : void
+    public function skip(): void
     {
         $this->type = self::SKIP;
     }
 
-    public function more() : void
+    public function more(): void
     {
         $this->type = self::MORE;
     }
 
-    public function mode(int $m) : void
+    public function mode(int $m): void
     {
         $this->mode = $m;
     }
 
-    public function pushMode(int $m) : void
+    public function pushMode(int $m): void
     {
         $this->modeStack[] = $this->mode;
 
         $this->mode($m);
     }
 
-    public function popMode() : int
+    public function popMode(): int
     {
         if (\count($this->modeStack) === 0) {
-            throw new \RuntimeException('Empty Stack');
+            throw new \RuntimeException("Empty Stack");
         }
 
         $this->mode(\array_pop($this->modeStack));
@@ -266,27 +274,27 @@ abstract class Lexer extends Recognizer implements TokenSource
         return $this->mode;
     }
 
-    public function getSourceName() : string
+    public function getSourceName(): string
     {
-        return $this->input === null ? '' : $this->input->getSourceName();
+        return $this->input === null ? "" : $this->input->getSourceName();
     }
 
-    public function getInputStream() : ?IntStream
+    public function getInputStream(): ?IntStream
     {
         return $this->input;
     }
 
-    public function getTokenFactory() : TokenFactory
+    public function getTokenFactory(): TokenFactory
     {
         return $this->factory;
     }
 
-    public function setTokenFactory(TokenFactory $factory) : void
+    public function setTokenFactory(TokenFactory $factory): void
     {
         $this->factory = $factory;
     }
 
-    public function setInputStream(IntStream $input) : void
+    public function setInputStream(IntStream $input): void
     {
         $this->input = null;
         $this->tokenFactorySourcePair = new Pair($this, $this->input);
@@ -294,7 +302,7 @@ abstract class Lexer extends Recognizer implements TokenSource
         $this->reset();
 
         if (!$input instanceof CharStream) {
-            throw new \RuntimeException('Input must be CharStream.');
+            throw new \RuntimeException("Input must be CharStream.");
         }
 
         $this->input = $input;
@@ -307,7 +315,7 @@ abstract class Lexer extends Recognizer implements TokenSource
      * and getToken (to push tokens into a list and pull from that list
      * rather than a single variable as this implementation does).
      */
-    public function emitToken(Token $token) : void
+    public function emitToken(Token $token): void
     {
         $this->token = $token;
     }
@@ -319,7 +327,7 @@ abstract class Lexer extends Recognizer implements TokenSource
      * use that to set the token's text. Override this method to emit
      * custom Token objects or provide a new factory.
      */
-    public function emit() : Token
+    public function emit(): Token
     {
         $token = $this->factory->createEx(
             $this->tokenFactorySourcePair,
@@ -337,10 +345,10 @@ abstract class Lexer extends Recognizer implements TokenSource
         return $token;
     }
 
-    public function emitEOF() : Token
+    public function emitEOF(): Token
     {
         if ($this->input === null) {
-            throw new \RuntimeException('Cannot emit EOF for null stream.');
+            throw new \RuntimeException("Cannot emit EOF for null stream.");
         }
 
         $cpos = $this->getCharPositionInLine();
@@ -361,37 +369,49 @@ abstract class Lexer extends Recognizer implements TokenSource
         return $eof;
     }
 
-    public function getLine() : int
+    public function getLine(): int
     {
-        if ($this->interp === null || !$this->interp instanceof LexerATNSimulator) {
-            throw new \RuntimeException('Unexpected interpreter type.');
+        if (
+            $this->interp === null ||
+            !$this->interp instanceof LexerATNSimulator
+        ) {
+            throw new \RuntimeException("Unexpected interpreter type.");
         }
 
         return $this->interp->getLine();
     }
 
-    public function setLine(int $line) : void
+    public function setLine(int $line): void
     {
-        if ($this->interp === null || !$this->interp instanceof LexerATNSimulator) {
-            throw new \RuntimeException('Unexpected interpreter type.');
+        if (
+            $this->interp === null ||
+            !$this->interp instanceof LexerATNSimulator
+        ) {
+            throw new \RuntimeException("Unexpected interpreter type.");
         }
 
         $this->interp->setLine($line);
     }
 
-    public function getCharPositionInLine() : int
+    public function getCharPositionInLine(): int
     {
-        if ($this->interp === null || !$this->interp instanceof LexerATNSimulator) {
-            throw new \RuntimeException('Unexpected interpreter type.');
+        if (
+            $this->interp === null ||
+            !$this->interp instanceof LexerATNSimulator
+        ) {
+            throw new \RuntimeException("Unexpected interpreter type.");
         }
 
         return $this->interp->getCharPositionInLine();
     }
 
-    public function setCharPositionInLine(int $charPositionInLine) : void
+    public function setCharPositionInLine(int $charPositionInLine): void
     {
-        if ($this->interp === null || !$this->interp instanceof LexerATNSimulator) {
-            throw new \RuntimeException('Unexpected interpreter type.');
+        if (
+            $this->interp === null ||
+            !$this->interp instanceof LexerATNSimulator
+        ) {
+            throw new \RuntimeException("Unexpected interpreter type.");
         }
 
         $this->interp->setCharPositionInLine($charPositionInLine);
@@ -400,10 +420,12 @@ abstract class Lexer extends Recognizer implements TokenSource
     /**
      * What is the index of the current character of lookahead?
      */
-    public function getCharIndex() : int
+    public function getCharIndex(): int
     {
         if ($this->input === null) {
-            throw new \RuntimeException('Cannot know char index for null stream.');
+            throw new \RuntimeException(
+                "Cannot know char index for null stream."
+            );
         }
 
         return $this->input->getIndex();
@@ -412,28 +434,33 @@ abstract class Lexer extends Recognizer implements TokenSource
     /**
      * Return the text matched so far for the current token or any text override.
      */
-    public function getText() : string
+    public function getText(): string
     {
         if ($this->text !== null) {
             return $this->text;
         }
 
-        if ($this->interp === null || !$this->interp instanceof LexerATNSimulator) {
-            throw new \RuntimeException('Unexpected interpreter type.');
+        if (
+            $this->interp === null ||
+            !$this->interp instanceof LexerATNSimulator
+        ) {
+            throw new \RuntimeException("Unexpected interpreter type.");
         }
 
-        return $this->input === null ? '' : $this->interp->getText($this->input);
+        return $this->input === null
+            ? ""
+            : $this->interp->getText($this->input);
     }
 
     /**
      * Set the complete text of this token; it wipes any previous changes to the text.
      */
-    public function setText(string $text) : void
+    public function setText(string $text): void
     {
         $this->text = $text;
     }
 
-    public function getToken() : ?Token
+    public function getToken(): ?Token
     {
         return $this->token;
     }
@@ -441,27 +468,27 @@ abstract class Lexer extends Recognizer implements TokenSource
     /**
      * Override if emitting multiple tokens.
      */
-    public function setToken(Token $token) : void
+    public function setToken(Token $token): void
     {
         $this->token = $token;
     }
 
-    public function getType() : int
+    public function getType(): int
     {
         return $this->type;
     }
 
-    public function setType(int $type) : void
+    public function setType(int $type): void
     {
         $this->type = $type;
     }
 
-    public function getChannel() : int
+    public function getChannel(): int
     {
         return $this->channel;
     }
 
-    public function setChannel(int $channel) : void
+    public function setChannel(int $channel): void
     {
         $this->channel = $channel;
     }
@@ -469,7 +496,7 @@ abstract class Lexer extends Recognizer implements TokenSource
     /**
      * @return array<string>|null
      */
-    public function getChannelNames() : ?array
+    public function getChannelNames(): ?array
     {
         return null;
     }
@@ -477,7 +504,7 @@ abstract class Lexer extends Recognizer implements TokenSource
     /**
      * @return array<string>|null
      */
-    public function getModeNames() : ?array
+    public function getModeNames(): ?array
     {
         return null;
     }
@@ -488,7 +515,7 @@ abstract class Lexer extends Recognizer implements TokenSource
      *
      * @return array<Token>
      */
-    public function getAllTokens() : array
+    public function getAllTokens(): array
     {
         $tokens = [];
         $token = $this->nextToken();
@@ -507,10 +534,13 @@ abstract class Lexer extends Recognizer implements TokenSource
      * it all works out. You can instead use the rule invocation stack
      * to do sophisticated error recovery if you are in a fragment rule.
      */
-    public function recover(RecognitionException $re) : void
+    public function recover(RecognitionException $re): void
     {
         if ($this->input !== null && $this->input->LA(1) !== Token::EOF) {
-            if ($re instanceof LexerNoViableAltException && $this->interp !== null) {
+            if (
+                $re instanceof LexerNoViableAltException &&
+                $this->interp !== null
+            ) {
                 // skip a char and try again
                 $this->interp->consume($this->input);
             } else {
@@ -520,12 +550,12 @@ abstract class Lexer extends Recognizer implements TokenSource
         }
     }
 
-    public function notifyListeners(LexerNoViableAltException $e) : void
+    public function notifyListeners(LexerNoViableAltException $e): void
     {
         $start = $this->tokenStartCharIndex;
 
         if ($this->input === null) {
-            $text = '';
+            $text = "";
         } else {
             $stop = $this->input->getIndex();
             $text = $this->input->getText($start, $stop);

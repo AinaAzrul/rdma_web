@@ -22,8 +22,12 @@ final class ConsoleSignalEvent extends ConsoleEvent
 {
     private $handlingSignal;
 
-    public function __construct(Command $command, InputInterface $input, OutputInterface $output, int $handlingSignal)
-    {
+    public function __construct(
+        Command $command,
+        InputInterface $input,
+        OutputInterface $output,
+        int $handlingSignal
+    ) {
         parent::__construct($command, $input, $output);
         $this->handlingSignal = $handlingSignal;
     }

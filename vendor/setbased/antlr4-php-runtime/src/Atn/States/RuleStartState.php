@@ -12,7 +12,7 @@ final class RuleStartState extends ATNState
     /** @var bool */
     public $isLeftRecursiveRule = false;
 
-    public function getStateType() : int
+    public function getStateType(): int
     {
         return self::RULE_START;
     }

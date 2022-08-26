@@ -24,11 +24,11 @@ class License extends \OpenApi\Annotations\License
         ?array $attachables = null
     ) {
         parent::__construct([
-            'name' => $name ?? Generator::UNDEFINED,
-            'identifier' => $identifier ?? Generator::UNDEFINED,
-            'url' => $url ?? Generator::UNDEFINED,
-            'x' => $x ?? Generator::UNDEFINED,
-            'value' => $this->combine($attachables),
+            "name" => $name ?? Generator::UNDEFINED,
+            "identifier" => $identifier ?? Generator::UNDEFINED,
+            "url" => $url ?? Generator::UNDEFINED,
+            "x" => $x ?? Generator::UNDEFINED,
+            "value" => $this->combine($attachables),
         ]);
     }
 }

@@ -31,7 +31,9 @@ class ReflectionAnalyser implements AnalyserInterface
     {
         $this->annotationFactories = $annotationFactories;
         if (!$this->annotationFactories) {
-            throw new \InvalidArgumentException('Need at least one annotation factory');
+            throw new \InvalidArgumentException(
+                "Need at least one annotation factory"
+            );
         }
     }
 
@@ -59,10 +61,10 @@ class ReflectionAnalyser implements AnalyserInterface
 
     public function fromFqdn(string $fqdn, Analysis $analysis): Analysis
     {
-        $fqdn = ltrim($fqdn, '\\');
+        $fqdn = ltrim($fqdn, "\\");
 
         $rc = new \ReflectionClass($fqdn);
-        if (!$filename = $rc->getFileName()) {
+        if (!($filename = $rc->getFileName())) {
             return $analysis;
         }
 
@@ -74,98 +76,145 @@ class ReflectionAnalyser implements AnalyserInterface
         return $analysis;
     }
 
-    protected function analyzeFqdn(string $fqdn, Analysis $analysis, array $details): Analysis
-    {
-        if (!class_exists($fqdn) && !interface_exists($fqdn) && !trait_exists($fqdn) && (!function_exists('enum_exists') || !enum_exists($fqdn))) {
-            $analysis->context->logger->warning('Skipping unknown ' . $fqdn);
+    protected function analyzeFqdn(
+        string $fqdn,
+        Analysis $analysis,
+        array $details
+    ): Analysis {
+        if (
+            !class_exists($fqdn) &&
+            !interface_exists($fqdn) &&
+            !trait_exists($fqdn) &&
+            (!function_exists("enum_exists") || !enum_exists($fqdn))
+        ) {
+            $analysis->context->logger->warning("Skipping unknown " . $fqdn);
 
             return $analysis;
         }
 
         $rc = new \ReflectionClass($fqdn);
-        $contextType = $rc->isInterface() ? 'interface' : ($rc->isTrait() ? 'trait' : ((method_exists($rc, 'isEnum') && $rc->isEnum()) ? 'enum' : 'class'));
-        $context = new Context([
-            $contextType => $rc->getShortName(),
-            'namespace' => $rc->getNamespaceName() ?: null,
-            'uses' => $details['uses'],
-            'comment' => $rc->getDocComment() ?: null,
-            'filename' => $rc->getFileName() ?: null,
-            'line' => $rc->getStartLine(),
-            'annotations' => [],
-            'scanned' => $details,
-        ], $analysis->context);
+        $contextType = $rc->isInterface()
+            ? "interface"
+            : ($rc->isTrait()
+                ? "trait"
+                : (method_exists($rc, "isEnum") && $rc->isEnum()
+                    ? "enum"
+                    : "class"));
+        $context = new Context(
+            [
+                $contextType => $rc->getShortName(),
+                "namespace" => $rc->getNamespaceName() ?: null,
+                "uses" => $details["uses"],
+                "comment" => $rc->getDocComment() ?: null,
+                "filename" => $rc->getFileName() ?: null,
+                "line" => $rc->getStartLine(),
+                "annotations" => [],
+                "scanned" => $details,
+            ],
+            $analysis->context
+        );
 
         $definition = [
             $contextType => $rc->getShortName(),
-            'extends' => null,
-            'implements' => [],
-            'traits' => [],
-            'properties' => [],
-            'methods' => [],
-            'context' => $context,
+            "extends" => null,
+            "implements" => [],
+            "traits" => [],
+            "properties" => [],
+            "methods" => [],
+            "context" => $context,
         ];
         $normaliseClass = function (string $name): string {
-            return '\\' . $name;
+            return "\\" . $name;
         };
         if ($parentClass = $rc->getParentClass()) {
-            $definition['extends'] = $normaliseClass($parentClass->getName());
+            $definition["extends"] = $normaliseClass($parentClass->getName());
         }
-        $definition[$contextType == 'class' ? 'implements' : 'extends'] = array_map($normaliseClass, $details['interfaces']);
-        $definition['traits'] = array_map($normaliseClass, $details['traits']);
+        $definition[
+            $contextType == "class" ? "implements" : "extends"
+        ] = array_map($normaliseClass, $details["interfaces"]);
+        $definition["traits"] = array_map($normaliseClass, $details["traits"]);
 
         foreach ($this->annotationFactories as $annotationFactory) {
-            $analysis->addAnnotations($annotationFactory->build($rc, $context), $context);
+            $analysis->addAnnotations(
+                $annotationFactory->build($rc, $context),
+                $context
+            );
         }
 
         foreach ($rc->getMethods() as $method) {
-            if (in_array($method->name, $details['methods'])) {
-                $definition['methods'][$method->getName()] = $ctx = new Context([
-                    'method' => $method->getName(),
-                    'comment' => $method->getDocComment() ?: null,
-                    'filename' => $method->getFileName() ?: null,
-                    'line' => $method->getStartLine(),
-                    'annotations' => [],
-                ], $context);
+            if (in_array($method->name, $details["methods"])) {
+                $definition["methods"][$method->getName()] = $ctx = new Context(
+                    [
+                        "method" => $method->getName(),
+                        "comment" => $method->getDocComment() ?: null,
+                        "filename" => $method->getFileName() ?: null,
+                        "line" => $method->getStartLine(),
+                        "annotations" => [],
+                    ],
+                    $context
+                );
                 foreach ($this->annotationFactories as $annotationFactory) {
-                    $analysis->addAnnotations($annotationFactory->build($method, $ctx), $ctx);
+                    $analysis->addAnnotations(
+                        $annotationFactory->build($method, $ctx),
+                        $ctx
+                    );
                 }
             }
         }
 
         foreach ($rc->getProperties() as $property) {
-            if (in_array($property->name, $details['properties'])) {
-                $definition['properties'][$property->getName()] = $ctx = new Context([
-                    'property' => $property->getName(),
-                    'comment' => $property->getDocComment() ?: null,
-                    'annotations' => [],
-                ], $context);
+            if (in_array($property->name, $details["properties"])) {
+                $definition["properties"][
+                    $property->getName()
+                ] = $ctx = new Context(
+                    [
+                        "property" => $property->getName(),
+                        "comment" => $property->getDocComment() ?: null,
+                        "annotations" => [],
+                    ],
+                    $context
+                );
                 if ($property->isStatic()) {
                     $ctx->static = true;
                 }
-                if (\PHP_VERSION_ID >= 70400 && ($type = $property->getType())) {
+                if (
+                    \PHP_VERSION_ID >= 70400 &&
+                    ($type = $property->getType())
+                ) {
                     $ctx->nullable = $type->allowsNull();
                     if ($type instanceof \ReflectionNamedType) {
                         $ctx->type = $type->getName();
                         // Context::fullyQualifiedName(...) expects this
-                        if (class_exists($absFqn = '\\' . $ctx->type)) {
+                        if (class_exists($absFqn = "\\" . $ctx->type)) {
                             $ctx->type = $absFqn;
                         }
                     }
                 }
                 foreach ($this->annotationFactories as $annotationFactory) {
-                    $analysis->addAnnotations($annotationFactory->build($property, $ctx), $ctx);
+                    $analysis->addAnnotations(
+                        $annotationFactory->build($property, $ctx),
+                        $ctx
+                    );
                 }
             }
         }
 
         foreach ($rc->getReflectionConstants() as $constant) {
             foreach ($this->annotationFactories as $annotationFactory) {
-                $definition['constants'][$constant->getName()] = $ctx = new Context([
-                    'constant' => $constant->getName(),
-                    'comment' => $constant->getDocComment() ?: null,
-                    'annotations' => [],
-                ], $context);
-                foreach ($annotationFactory->build($constant, $ctx) as $annotation) {
+                $definition["constants"][
+                    $constant->getName()
+                ] = $ctx = new Context(
+                    [
+                        "constant" => $constant->getName(),
+                        "comment" => $constant->getDocComment() ?: null,
+                        "annotations" => [],
+                    ],
+                    $context
+                );
+                foreach (
+                    $annotationFactory->build($constant, $ctx)
+                    as $annotation
+                ) {
                     if ($annotation instanceof Property) {
                         if (Generator::isDefault($annotation->property)) {
                             $annotation->property = $constant->getName();
@@ -179,7 +228,7 @@ class ReflectionAnalyser implements AnalyserInterface
             }
         }
 
-        $addDefinition = 'add' . ucfirst($contextType) . 'Definition';
+        $addDefinition = "add" . ucfirst($contextType) . "Definition";
         $analysis->{$addDefinition}($definition);
 
         return $analysis;

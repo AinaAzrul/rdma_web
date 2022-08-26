@@ -12,22 +12,19 @@ use SetBased\Exception\FallenException;
  */
 class FallenExceptionTest extends TestCase
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  public function testName(): void
-  {
-    try
+    //--------------------------------------------------------------------------------------------------------------------
+    public function testName(): void
     {
-      throw new FallenException('foo', 'bar');
+        try {
+            throw new FallenException("foo", "bar");
+        } catch (Exception $e) {
+            self::assertStringContainsString("foo", $e->getMessage());
+            self::assertStringContainsString("bar", $e->getMessage());
+            self::assertInstanceOf(\LogicException::class, $e);
+        }
     }
-    catch (Exception $e)
-    {
-      self::assertStringContainsString('foo', $e->getMessage());
-      self::assertStringContainsString('bar', $e->getMessage());
-      self::assertInstanceOf(\LogicException::class, $e);
-    }
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

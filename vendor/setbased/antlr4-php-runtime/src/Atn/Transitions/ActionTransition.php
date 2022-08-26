@@ -21,8 +21,12 @@ final class ActionTransition extends Transition
      */
     public $isCtxDependent;
 
-    public function __construct(ATNState $target, int $ruleIndex, int $actionIndex = -1, bool $isCtxDependent = false)
-    {
+    public function __construct(
+        ATNState $target,
+        int $ruleIndex,
+        int $actionIndex = -1,
+        bool $isCtxDependent = false
+    ) {
         parent::__construct($target);
 
         $this->ruleIndex = $ruleIndex;
@@ -30,25 +34,28 @@ final class ActionTransition extends Transition
         $this->isCtxDependent = $isCtxDependent;
     }
 
-    public function matches(int $symbol, int $minVocabSymbol, int $maxVocabSymbol) : bool
-    {
+    public function matches(
+        int $symbol,
+        int $minVocabSymbol,
+        int $maxVocabSymbol
+    ): bool {
         return false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isEpsilon() : bool
+    public function isEpsilon(): bool
     {
         return true;
     }
 
-    public function getSerializationType() : int
+    public function getSerializationType(): int
     {
         return self::ACTION;
     }
 
-    public function equals(object $other) : bool
+    public function equals(object $other): bool
     {
         if ($this === $other) {
             return true;
@@ -58,14 +65,14 @@ final class ActionTransition extends Transition
             return false;
         }
 
-        return $this->ruleIndex === $other->ruleIndex
-            && $this->actionIndex === $other->actionIndex
-            && $this->isCtxDependent === $other->isCtxDependent
-            && $this->target->equals($other->target);
+        return $this->ruleIndex === $other->ruleIndex &&
+            $this->actionIndex === $other->actionIndex &&
+            $this->isCtxDependent === $other->isCtxDependent &&
+            $this->target->equals($other->target);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return \sprintf('action_%d:%d', $this->ruleIndex, $this->actionIndex);
+        return \sprintf("action_%d:%d", $this->ruleIndex, $this->actionIndex);
     }
 }
